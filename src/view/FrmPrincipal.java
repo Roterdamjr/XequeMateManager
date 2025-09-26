@@ -20,7 +20,10 @@ public class FrmPrincipal extends JFrame {
     private FrmComprarOpcao frmComprarOpcao;
     private FrmVenderAcao frmVenderAcao;
     private FrmVenderOpcao frmVenderOpcao;
-
+/*
+ * 
+ * comentario
+ */
     public FrmPrincipal() {
         setTitle("XequeMate Investimentos - Principal");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
