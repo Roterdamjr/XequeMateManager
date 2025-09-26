@@ -40,7 +40,7 @@ public class FrmPrincipal extends JFrame {
         desktopPane.setBackground(Color.LIGHT_GRAY);
         this.setContentPane(desktopPane);
     }
-
+ 
     private void setupMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         
