@@ -1,0 +1,67 @@
+package dao;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import model.Acao;
+
+public class AcaoDAO {
+
+    public void comprarAcao(String ativo, String dataCompra, String quantidade, String preco) {
+        String sql = "INSERT INTO TB_ACAO (ativo, data_compra, quantidade, preco_compra) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseManager.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, ativo);
+            pstmt.setString(2, dataCompra);
+            pstmt.setDouble(3, Double.parseDouble(quantidade.replace(",", ".")));
+            pstmt.setDouble(4, Double.parseDouble(preco.replace(",", ".")));
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void venderAcao(int id, double precoVenda, String dataVenda) {
+        String sql = "UPDATE TB_ACAO SET preco_venda = ?, data_venda = ? WHERE id = ?";
+
+        try (Connection conn = DatabaseManager.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setDouble(1, precoVenda);
+            pstmt.setString(2, dataVenda);
+            pstmt.setInt(3, id);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public List<Acao> obterAcoesNaoVendidas() {
+        String sql = "SELECT id, ativo, quantidade, preco_compra, preco_venda "
+        		+ "FROM TB_ACAO WHERE data_venda IS NULL ORDER BY ativo";
+        List<Acao> acoes = new ArrayList<>();
+
+        try (Connection conn = DatabaseManager.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Acao acao = new Acao();
+                acao.setId(rs.getInt("id"));
+                acao.setAtivo(rs.getString("ativo"));
+                acao.setQuantidade(rs.getDouble("quantidade"));
+                acao.setPrecoCompra(rs.getDouble("preco_compra"));
+                acao.setPrecoVenda(rs.getDouble("preco_venda"));
+                acoes.add(acao);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return acoes;
+    }
+}
