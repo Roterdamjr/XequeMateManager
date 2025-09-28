@@ -10,13 +10,9 @@ public class Opcao {
     private int idAcao;
     private String dataCompra;
     private double precoCompra;
-    // ... Construtor e Getters/Setters
 
-    // ADICIONADO: Para exibir corretamente na JComboBox
-    @Override
-    public String toString() {
-        return opcao;
-    }
+
+
 
     // Seus getters e setters existentes
     public int getId() { return id; }
@@ -37,5 +33,18 @@ public class Opcao {
     public void setDataCompra(String dataCompra) { this.dataCompra = dataCompra; }
     public double getPrecoCompra() { return precoCompra; }
     public void setPrecoCompra(double precoCompra) { this.precoCompra = precoCompra; }
+    @Override
+    public String toString() {
+        return "ID: " + id +
+               " | Opção: " + opcao +
+               " | Data Compra: " + dataCompra +
+               " | Preço Compra: " + precoCompra +
+               " | Data Venda: " + dataVenda +
+               " | Preço Venda: " + precoVenda +
+               " | Quantidade: " + quantidade +
+               " | Strike: " + strike +
+               " | Id Ação: " + idAcao;
+    }
+
  
 }

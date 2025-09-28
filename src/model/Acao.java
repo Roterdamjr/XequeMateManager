@@ -52,8 +52,13 @@ public class Acao {
 	}
 	@Override
 	public String toString() {
-	    // A JComboBox usa este método para exibir o item.
-	    // Retornamos apenas o nome do ativo.
-	    return ativo;
+	    return "ID: " + id +
+	           " | Ativo: " + ativo +
+	           " | Data Compra: " + dataCompra +
+	           " | Quantidade: " + quantidade +
+	           " | Preço Compra: " + precoCompra +
+	           " | Data Venda: " + dataVenda +
+	           " | Preço Venda: " + precoVenda;
 	}
+
 }

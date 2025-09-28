@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Acao;
 import model.Opcao;
 
 // Assumindo que você tem uma tabela TB_OPCAO com campos semelhantes a TB_ACAO
@@ -29,7 +30,6 @@ public class OpcaoDAO {
                 opcao.setQuantidade(rs.getDouble("quantidade"));
                 opcao.setPrecoVenda(rs.getDouble("preco_venda"));
                 opcao.setStrike(rs.getDouble("strike"));
-                // Os campos dataCompra e precoCompra estarão NULL no BD
                 opcoes.add(opcao);
             }
         } catch (SQLException e) {
@@ -38,6 +38,37 @@ public class OpcaoDAO {
         return opcoes;
     }
 
+    
+    public List<Opcao> obterOpcoesPorIdAcao(int idAcao) {
+    	
+        String sql = "SELECT opcao, quantidade, preco_compra, preco_venda,strike "
+        		+ "FROM TB_OPCAO WHERE id_Acao = ?";
+        
+        List<Opcao> opcoes = new ArrayList<>();
+        
+        try (Connection conn = DatabaseManager.connect();
+        	PreparedStatement stmt = conn.prepareStatement(sql);
+        	) {
+        	stmt.setInt(1, idAcao);
+      	
+            try (ResultSet rs = stmt.executeQuery()) {
+            	while (rs.next()) {
+                	Opcao opcao = new Opcao();
+                    opcao.setOpcao(rs.getString("opcao"));
+                    opcao.setQuantidade(rs.getDouble("quantidade"));
+                    opcao.setPrecoVenda(rs.getDouble("preco_venda"));
+                    opcao.setStrike(rs.getDouble("strike"));
+                    opcoes.add(opcao);
+                }
+            }
+            
+       } catch (SQLException e) {
+           System.out.println(e.getMessage());
+       }
+        
+        return opcoes;
+    }
+    
     /**
      * Registra a compra de uma opção existente.
      */

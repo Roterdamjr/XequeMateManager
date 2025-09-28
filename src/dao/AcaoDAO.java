@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Acao;
+import model.Opcao;
 
 public class AcaoDAO {
 
@@ -44,6 +45,7 @@ public class AcaoDAO {
     public List<Acao> obterAcoesNaoVendidas() {
         String sql = "SELECT id, ativo, quantidade, preco_compra, preco_venda "
         		+ "FROM TB_ACAO WHERE data_venda IS NULL ORDER BY ativo";
+        
         List<Acao> acoes = new ArrayList<>();
 
         try (Connection conn = DatabaseManager.connect();
@@ -64,4 +66,36 @@ public class AcaoDAO {
         }
         return acoes;
     }
+    
+
+    
+    public Acao obterAcaoPorId(int idAcao) {
+        Acao acao = null;
+
+        try (Connection conn = DatabaseManager.connect();
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM TB_ACAO WHERE id = ?")
+            ) {
+
+            stmt.setInt(1, idAcao);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    acao = new Acao();
+                    acao.setId(rs.getInt("id"));
+                    acao.setAtivo(rs.getString("ativo"));
+                    acao.setQuantidade(rs.getDouble("quantidade"));
+                    acao.setPrecoCompra(rs.getDouble("preco_compra"));
+                    acao.setPrecoVenda(rs.getDouble("preco_venda"));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao obter ação: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return acao;
+    }
+
+    
 }
