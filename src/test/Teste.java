@@ -31,6 +31,7 @@ public class Teste {
 	        Double precoMedio =  acao.getPrecoCompra() + acum ;
 	        Double cotacao = new CotacaoDAO().buscarCotacaoPorAtivo(acao.getAtivo());
 	        int quantidade = acao.getQuantidade();
+	        //Double resultado = 
 	        System.out.println("precoMedio:" + precoMedio +", Cotação "+cotacao + ", Qtde "+ quantidade);
 
 	    } else {
