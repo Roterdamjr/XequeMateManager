@@ -41,7 +41,7 @@ public class OpcaoDAO {
     
     public List<Opcao> obterOpcoesPorIdAcao(int idAcao) {
     	
-        String sql = "SELECT opcao, quantidade, preco_compra, preco_venda,strike "
+        String sql = "SELECT opcao, quantidade, data_compra, data_venda, preco_compra, preco_venda,strike "
         		+ "FROM TB_OPCAO WHERE id_Acao = ?";
         
         List<Opcao> opcoes = new ArrayList<>();
@@ -55,7 +55,10 @@ public class OpcaoDAO {
             	while (rs.next()) {
                 	Opcao opcao = new Opcao();
                     opcao.setOpcao(rs.getString("opcao"));
+                    opcao.setDataCompra(rs.getString("data_compra"));
+                    opcao.setDataVenda(rs.getString("data_venda"));
                     opcao.setQuantidade(rs.getDouble("quantidade"));
+                    opcao.setPrecoCompra(rs.getDouble("preco_compra"));
                     opcao.setPrecoVenda(rs.getDouble("preco_venda"));
                     opcao.setStrike(rs.getDouble("strike"));
                     opcoes.add(opcao);
