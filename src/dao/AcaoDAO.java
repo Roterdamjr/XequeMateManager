@@ -56,7 +56,7 @@ public class AcaoDAO {
                 Acao acao = new Acao();
                 acao.setId(rs.getInt("id"));
                 acao.setAtivo(rs.getString("ativo"));
-                acao.setQuantidade(rs.getDouble("quantidade"));
+                acao.setQuantidade(rs.getInt("quantidade"));
                 acao.setPrecoCompra(rs.getDouble("preco_compra"));
                 acao.setPrecoVenda(rs.getDouble("preco_venda"));
                 acoes.add(acao);
@@ -83,7 +83,7 @@ public class AcaoDAO {
                     acao = new Acao();
                     acao.setId(rs.getInt("id"));
                     acao.setAtivo(rs.getString("ativo"));
-                    acao.setQuantidade(rs.getDouble("quantidade"));
+                    acao.setQuantidade(rs.getInt("quantidade"));
                     acao.setPrecoCompra(rs.getDouble("preco_compra"));
                     acao.setPrecoVenda(rs.getDouble("preco_venda"));
                 }

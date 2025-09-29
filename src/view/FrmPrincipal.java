@@ -11,6 +11,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import util.CotacaoManager;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 public class FrmPrincipal extends JFrame {
 
     private JDesktopPane desktopPane;
@@ -79,6 +84,13 @@ public class FrmPrincipal extends JFrame {
         menuBar.add(menuVisualizar);
         
         setJMenuBar(menuBar);
+        
+        JMenu mnNewMenu = new JMenu("Ferramentas");
+        menuBar.add(mnNewMenu);
+        
+        JMenuItem itemCotacoes = new JMenuItem("Atualizar Cotações");
+        itemCotacoes.addActionListener(e -> atualizarCotacoes());
+        mnNewMenu.add(itemCotacoes);
     }
     
     private void callOnlyOnce(String className) {
@@ -131,6 +143,14 @@ public class FrmPrincipal extends JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "A tabela 'Ações Não Vendidas' não está aberta.", "Atenção", JOptionPane.INFORMATION_MESSAGE);
         }
+    }
+    
+    private void atualizarCotacoes() {
+    	CotacaoManager.atualizarCotacoesNoDatabase();
+    	JOptionPane.showMessageDialog(this, 
+    			"Cotações atualizadas com sucesso!", 
+    			"Sucesso", 
+    			JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {

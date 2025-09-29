@@ -19,7 +19,7 @@ public class CotacaoDAO {
      *
      * @param novasCotacoes Um Mapa com (Ativo -> Cotação) para inserção.
      */
-    public void limparEInserir(Map<String, Double> novasCotacoes) {
+	public void limparEInserir(Map<String, Double> novasCotacoes) {
         // Query para limpar a tabela
         final String SQL_TRUNCATE = "DELETE FROM TB_COTACAO";
         // Query para inserir

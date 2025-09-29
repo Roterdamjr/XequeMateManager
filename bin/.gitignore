@@ -1,6 +1,5 @@
-/dao/
-/main/
-/model/
-/test/
 /util/
+/dao/
 /view/
+/test/
+/model/

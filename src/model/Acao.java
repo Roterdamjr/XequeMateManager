@@ -4,7 +4,7 @@ public class Acao {
     private int id;
     private String ativo;
     private String dataCompra;
-    private double quantidade;
+    private int quantidade;
     private double precoCompra;
     private String dataVenda;
     private double precoVenda;
@@ -26,10 +26,10 @@ public class Acao {
 	public void setDataCompra(String dataCompra) {
 		this.dataCompra = dataCompra;
 	}
-	public double getQuantidade() {
+	public int getQuantidade() {
 		return quantidade;
 	}
-	public void setQuantidade(double quantidade) {
+	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
 	}
 	public double getPrecoCompra() {

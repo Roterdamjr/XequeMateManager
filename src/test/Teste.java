@@ -2,6 +2,8 @@ package test;
 
 import java.util.List;
 
+import dao.AcaoDAO;
+import dao.CotacaoDAO;
 import dao.OperacaoDAO;
 import model.Acao;
 import model.Opcao;
@@ -19,7 +21,7 @@ public class Teste {
 		List<Opcao> opcoes= operacao.getOpcoes();
 		Acao acao = operacao.getAcao();
 		
-
+		
 	    if (opcoes != null && !opcoes.isEmpty()) {
 	    	Double acum = 0.0;
 	        for (Opcao opcao : opcoes) {
@@ -27,8 +29,9 @@ public class Teste {
 
 	        }
 	        Double precoMedio =  acao.getPrecoCompra() + acum ;
-
-	        System.out.println(precoMedio);
+	        Double cotacao = new CotacaoDAO().buscarCotacaoPorAtivo(acao.getAtivo());
+	        int quantidade = acao.getQuantidade();
+	        System.out.println("precoMedio:" + precoMedio +", Cotação "+cotacao + ", Qtde "+ quantidade);
 
 	    } else {
 	        System.out.println("Nenhuma opção encontrada.");

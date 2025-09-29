@@ -4,9 +4,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseManager {
-    // CORREÇÃO: Adicionado 'db/' no caminho para refletir a localização correta do arquivo.
-    private static final String DB_PATH = "jdbc:sqlite:C:/workspace/XequeMateManager/db/XequeMateDBTeste.db";
-    //private static final String DB_PATH = "jdbc:sqlite:C:\\Eclipse_worksapce\\XequeMateManager\\db\\XequeMate.db";
+
+    //private static final String DB_PATH = "jdbc:sqlite:C:/workspace/XequeMateManager/db/XequeMateDBTeste.db";
+    private static final String DB_PATH = "jdbc:sqlite:C:\\Eclipse_worksapce\\XequeMateManager\\db\\XequeMateDBTeste.db";
 
     public static Connection connect() {
         Connection conn = null;
