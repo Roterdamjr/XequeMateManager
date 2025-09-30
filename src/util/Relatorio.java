@@ -58,13 +58,12 @@ public class Relatorio {
 	        for (Opcao opcao : opcoes) {
 	        	System.out.println(opcao.getOpcao() + 
 	            		", Compra: " + ValidatorUtils.formatarParaDuasDecimais(opcao.getPrecoCompra())+ 
-	            		", Compra: " + ValidatorUtils.formatarParaDuasDecimais(opcao.getPrecoVenda()) + 
+	            		", Venda: " + ValidatorUtils.formatarParaDuasDecimais(opcao.getPrecoVenda()) + 
 	            		", Strike: " + ValidatorUtils.formatarParaDuasDecimais(opcao.getStrike() )
 	            );
 	        }
 	    }
 	    
 	    System.out.println("-------------------------------------------------------------------");
-    
 	}
 }

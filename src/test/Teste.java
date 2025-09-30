@@ -15,12 +15,14 @@ import util.ValidatorUtils;
 public class Teste {
 
 	 public static void main(String[] args) {
-
-		List<Acao> acoesNaVendidas = new AcaoDAO().obterAcoesNaoVendidas();
-		for (Acao acao : acoesNaVendidas) {
-			Operacao op = new OperacaoDAO().buscaOperacao(acao.getId());
-			Relatorio.exibirResumoDaOperacao(op);
-		}
+		 Relatorio.exibirResumoOperacoesNaoVendidas();
+/*
+			List<Acao> acoesNaVendidas = new AcaoDAO().obterAcoesNaoVendidas();
+			for (Acao acao : acoesNaVendidas) {
+				Operacao op = new OperacaoDAO().buscaOperacao(acao.getId());
+				System.out.println(acao);
+			}
+			*/
 	}
 	
 

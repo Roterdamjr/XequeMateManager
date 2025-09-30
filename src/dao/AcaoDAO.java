@@ -43,7 +43,7 @@ public class AcaoDAO {
     }
 
     public List<Acao> obterAcoesNaoVendidas() {
-        String sql = "SELECT id, ativo, quantidade, preco_compra, preco_venda "
+        String sql = "SELECT id, ativo, quantidade, preco_compra, preco_venda,data_compra,data_venda "
         		+ "FROM TB_ACAO WHERE data_venda IS NULL ORDER BY ativo";
         
         List<Acao> acoes = new ArrayList<>();
@@ -59,6 +59,8 @@ public class AcaoDAO {
                 acao.setQuantidade(rs.getInt("quantidade"));
                 acao.setPrecoCompra(rs.getDouble("preco_compra"));
                 acao.setPrecoVenda(rs.getDouble("preco_venda"));
+                acao.setDataCompra(rs.getString("data_compra"));
+                acao.setDataVenda(rs.getString("data_venda"));
                 acoes.add(acao);
             }
         } catch (SQLException e) {
