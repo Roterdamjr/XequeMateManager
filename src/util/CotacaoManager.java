@@ -5,6 +5,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import dao.CotacaoDAO;
 
@@ -44,7 +45,7 @@ public class CotacaoManager {
     
     private Map<String, Double> lerCotacoesPorAtivo() {
     	
-        Map<String, Double> cotacoesPorAtivo = new HashMap<>();
+        Map<String, Double> cotacoesPorAtivo = new TreeMap<>();
         
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(new URL(CSV_EXPORT_URL).openStream()))) {
