@@ -117,4 +117,38 @@ public class OpcaoDAO {
         }
     }
     
+
+     /**
+      * Retorna o valor de 'strike' da última opção vendida pertencente a uma Ação específica.
+      * @param idAcao O ID da Ação para filtrar a busca.
+      * @return O valor do strike da última opção vendida para aquela Ação, ou 0.0 se não encontrar.
+      */
+     public static double obterStrikeUltimaOpcaoVendida(int idAcao) {
+         // Ordena por ID em ordem decrescente e filtra pelo id_acao
+         String sql = "SELECT strike FROM TB_OPCAO "
+         		+ "WHERE data_venda IS NOT NULL AND id_acao = ? "
+         		+ "ORDER BY id DESC LIMIT 1";
+         
+         double strike = 0.0;
+
+         try (Connection conn = DatabaseManager.connect();
+              PreparedStatement pstmt = conn.prepareStatement(sql)) { // Usa PreparedStatement
+
+             pstmt.setInt(1, idAcao); // Define o parâmetro idAcao
+             
+             try (ResultSet rs = pstmt.executeQuery()) {
+                 if (rs.next()) {
+                     strike = rs.getDouble("strike");
+                 }
+             }
+         } catch (SQLException e) {
+             System.out.println("Erro ao obter o strike da última opção vendida por idAcao: " + e.getMessage());
+         }
+         return strike;
+     }
+
+ 
+
+ 
+    
 }

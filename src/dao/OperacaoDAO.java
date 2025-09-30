@@ -8,7 +8,7 @@ import model.Operacao;
 
 public class OperacaoDAO {
 	
-	public static Operacao buscaOperacao(int idAcao)  {
+	public  Operacao buscaOperacao(int idAcao)  {
 		
 		Acao acao = new AcaoDAO().obterAcaoPorId(idAcao);
 		
