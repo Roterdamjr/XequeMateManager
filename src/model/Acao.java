@@ -50,15 +50,17 @@ public class Acao {
 	public void setPrecoVenda(double precoVenda) {
 		this.precoVenda = precoVenda;
 	}
-	@Override
-	public String toString() {
+	public String exibir() {
 	    return "ID: " + id +
-	           " | Ativo: " + ativo +
-	           " | Data Compra: " + dataCompra +
-	           " | Quantidade: " + quantidade +
-	           " | Preço Compra: " + precoCompra +
-	           " | Data Venda: " + dataVenda +
-	           " | Preço Venda: " + precoVenda;
+		           " | Ativo: " + ativo +
+		           " | Data Compra: " + dataCompra +
+		           " | Quantidade: " + quantidade +
+		           " | Preço Compra: " + precoCompra +
+		           " | Data Venda: " + dataVenda +
+		           " | Preço Venda: " + precoVenda;
+	}
+	public String toString() {
+		return ativo;
 	}
 
 }

@@ -50,7 +50,7 @@ public class FrmDividendo extends JInternalFrame {
         setClosable(true);
         setTitle("Registrar Dividendo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 378, 250); // Altura ajustada para 3 campos
+        setBounds(100, 100, 378, 250); 
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -118,8 +118,7 @@ public class FrmDividendo extends JInternalFrame {
         
         if (acoes.isEmpty()) {
             JOptionPane.showMessageDialog(this, 
-				"Não há ações para serem vendidas.", 
-				"Aviso", 
+				"Não há ações para serem vendidas.", "Aviso", 
 				JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -145,42 +144,32 @@ public class FrmDividendo extends JInternalFrame {
 
         if (!ValidatorUtils.isNumeric(valorText)) {
             JOptionPane.showMessageDialog(this, 
-                "Por favor, insira um Valor numérico válido (use ponto ou vírgula, conforme o ValidatorUtils aceitar).", 
-                "Erro de Validação", 
+                "Insira um Valor numérico válido ",   "Erro de Validação", 
                 JOptionPane.INFORMATION_MESSAGE);
             txtValor.requestFocusInWindow();
             return;
         }
         
         try {
+        	acaoSelecionada = (Acao) cmbAcao.getSelectedItem();
             double valorDividendo = Double.parseDouble(valorText.replace(",", "."));
- 
-            int idAcaoReal = 99; // <--- Substitua pela busca REAL no banco!
-            System.out.println(acaoSelecionada.getId());
-            // 3. Salvar no Banco
-            // DividendoDAO dao = new DividendoDAO();
-            // Dividendo novoDividendo = new Dividendo(idAcaoReal, valorDividendo);
-            // dao.inserir(novoDividendo); 
-
-            // Para o teste, apenas exibe a mensagem de sucesso:
-            System.out.println("Dividendo registrado para " + acaoSelecionada + " no valor de " + valorDividendo);
+            
+            Dividendo novoDividendo = new Dividendo(acaoSelecionada.getId(), valorDividendo);
+            new DividendoDAO().inserir(novoDividendo); 
 
             limparJanela();
             
             JOptionPane.showMessageDialog(this, 
-                "Dividendo registrado com sucesso!", 
-                "Sucesso", 
+                "Dividendo registrado com sucesso!",  "Sucesso", 
                 JOptionPane.INFORMATION_MESSAGE);
             
         } catch (NumberFormatException ex) {
              JOptionPane.showMessageDialog(this, 
-                "O valor não está no formato numérico correto.", 
-                "Erro de Formato", 
+                "O valor não está no formato numérico correto.",  "Erro de Formato", 
                 JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, 
-                "Erro ao salvar o dividendo: " + ex.getMessage(), 
-                "Erro de Banco de Dados", 
+                "Erro ao salvar o dividendo: " + ex.getMessage(),  "Erro de Banco de Dados", 
                 JOptionPane.ERROR_MESSAGE);
         }
     }
