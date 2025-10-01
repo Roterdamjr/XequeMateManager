@@ -78,6 +78,7 @@ public class FrmVenderAcao extends JInternalFrame {
 		contentPane.add(panel_1);
 		
 		panel_1.add(new JLabel("Ação"));
+		
 		cmbAcao = new JComboBox<>();
         cmbAcao.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_1.add(cmbAcao);
