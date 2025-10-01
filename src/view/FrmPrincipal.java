@@ -25,7 +25,8 @@ public class FrmPrincipal extends JFrame {
     private FrmComprarOpcao frmComprarOpcao;
     private FrmVenderAcao frmVenderAcao;
     private FrmVenderOpcao frmVenderOpcao;
-
+    private FrmDividendo frmDividendo;
+    
     public FrmPrincipal() {
         setTitle("XequeMate Investimentos - Principal");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,25 +50,15 @@ public class FrmPrincipal extends JFrame {
     private void setupMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         
-        JMenu menuAcoes = new JMenu("Ações");
+        JMenu menuOperacoes = new JMenu("Operações");
         JMenuItem itemComprarAcao = new JMenuItem("Comprar Ação");
         JMenuItem itemVenderAcao = new JMenuItem("Vender Ação");
         
         itemComprarAcao.addActionListener(e -> callOnlyOnce(FrmComprarAcao.class.getName()));
         itemVenderAcao.addActionListener(e -> callOnlyOnce(FrmVenderAcao.class.getName()));
         
-        menuAcoes.add(itemComprarAcao);
-        menuAcoes.add(itemVenderAcao);
-        
-        JMenu menuOpcoes = new JMenu("Opções");
-        JMenuItem itemComprarOpcao = new JMenuItem("Comprar Opção");
-        JMenuItem itemVenderOpcao = new JMenuItem("Vender Opção");
-
-        itemComprarOpcao.addActionListener(e -> callOnlyOnce(FrmComprarOpcao.class.getName()));
-        itemVenderOpcao.addActionListener(e -> callOnlyOnce(FrmVenderOpcao.class.getName()));
-
-        menuOpcoes.add(itemComprarOpcao);
-        menuOpcoes.add(itemVenderOpcao);
+        menuOperacoes.add(itemComprarAcao);
+        menuOperacoes.add(itemVenderAcao);
 
         JMenu menuVisualizar = new JMenu("Visualizar");
         JMenuItem itemMostrarTabela = new JMenuItem("Ações Não Vendidas");
@@ -79,8 +70,21 @@ public class FrmPrincipal extends JFrame {
         menuVisualizar.add(itemMostrarTabela);
         menuVisualizar.add(itemAtualizar);
         
-        menuBar.add(menuAcoes);
-        menuBar.add(menuOpcoes);
+        menuBar.add(menuOperacoes);
+        JMenuItem itemComprarOpcao = new JMenuItem("Comprar Opção");
+        menuOperacoes.add(itemComprarOpcao);
+        
+        JMenuItem itemVenderOpcao = new JMenuItem("Vender Opção");
+        menuOperacoes.add(itemVenderOpcao);
+        
+        JMenuItem itemDividendo = new JMenuItem("Dividendos");
+        itemDividendo.addActionListener(e -> callOnlyOnce(FrmDividendo.class.getName()));
+        menuOperacoes.add(itemDividendo);
+        
+        
+        itemVenderOpcao.addActionListener(e -> callOnlyOnce(FrmVenderOpcao.class.getName()));
+        
+        itemComprarOpcao.addActionListener(e -> callOnlyOnce(FrmComprarOpcao.class.getName()));
         menuBar.add(menuVisualizar);
         
         setJMenuBar(menuBar);
@@ -122,8 +126,16 @@ public class FrmPrincipal extends JFrame {
                 frmVenderOpcao = new FrmVenderOpcao();
             }
             frameToOpen = frmVenderOpcao;
-        }
 
+	    } else if (className.equals(FrmDividendo.class.getName())) {
+	        if (frmDividendo == null || frmDividendo.isClosed()) {
+	        	frmDividendo = new FrmDividendo();
+	        }
+	        frameToOpen = frmDividendo;
+	    
+    }
+        
+        
         if (frameToOpen != null && frameToOpen.getParent() == null) {
             desktopPane.add(frameToOpen);
         }
