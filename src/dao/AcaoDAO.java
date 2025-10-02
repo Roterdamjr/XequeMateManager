@@ -42,7 +42,7 @@ public class AcaoDAO {
         }
     }
 
-    public List<Acao> obterAcoesNaoVendidas() {
+    public List<Acao> obterAcoesAbertas() {
         String sql = "SELECT id, ativo, quantidade, preco_compra, preco_venda,data_compra,data_venda "
         		+ "FROM TB_ACAO WHERE data_venda IS NULL ORDER BY ativo";
         
@@ -69,7 +69,32 @@ public class AcaoDAO {
         return acoes;
     }
     
+    public List<Acao> obterAcoesFechadas() {
+        String sql = "SELECT id, ativo, quantidade, preco_compra, preco_venda,data_compra,data_venda "
+        		+ "FROM TB_ACAO WHERE data_venda IS NOT NULL ORDER BY ativo";
+        
+        List<Acao> acoes = new ArrayList<>();
 
+        try (Connection conn = DatabaseManager.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Acao acao = new Acao();
+                acao.setId(rs.getInt("id"));
+                acao.setAtivo(rs.getString("ativo"));
+                acao.setQuantidade(rs.getInt("quantidade"));
+                acao.setPrecoCompra(rs.getDouble("preco_compra"));
+                acao.setPrecoVenda(rs.getDouble("preco_venda"));
+                acao.setDataCompra(rs.getString("data_compra"));
+                acao.setDataVenda(rs.getString("data_venda"));
+                acoes.add(acao);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return acoes;
+    }
     
     public Acao obterAcaoPorId(int idAcao) {
         Acao acao = null;

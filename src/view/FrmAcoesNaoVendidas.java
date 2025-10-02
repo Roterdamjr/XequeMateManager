@@ -50,7 +50,7 @@ public class FrmAcoesNaoVendidas extends JInternalFrame {
     public void loadAcoesData() {
         tableModel.setRowCount(0);
 
-        List<Acao> acoes = acaoDAO.obterAcoesNaoVendidas();
+        List<Acao> acoes = acaoDAO.obterAcoesAbertas();
 
         for (Acao acao : acoes) {
             tableModel.addRow(new Object[]{

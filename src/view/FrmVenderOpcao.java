@@ -176,7 +176,7 @@ public class FrmVenderOpcao extends JInternalFrame {
 	
     private void carregarAcoesNaoVendidas() {
         cmbAcao.removeAllItems();
-        List<Acao> acoes = acaoDAO.obterAcoesNaoVendidas();
+        List<Acao> acoes = acaoDAO.obterAcoesAbertas();
         
         if (acoes.isEmpty()) {
             JOptionPane.showMessageDialog(this, 

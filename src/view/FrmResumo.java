@@ -17,41 +17,50 @@ public class FrmResumo extends JInternalFrame {
         setSize(1000, 700);
         
         setupUI();
-        loadRelatorioData();
+        executarCarregamento(Relatorio::gerarResumoOperacoesAbertas) ;
     }
 
     private void setupUI() {
-        setLayout(new BorderLayout());
+        getContentPane().setLayout(new BorderLayout());
 
-        // Área de texto para exibir o relatório
         textAreaRelatorio = new JTextArea();
         textAreaRelatorio.setEditable(false);
-        // Usa uma fonte monoespaçada para garantir que a formatação do relatório fique alinhada
         textAreaRelatorio.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         
         JScrollPane scrollPane = new JScrollPane(textAreaRelatorio);
-        add(scrollPane, BorderLayout.CENTER);
-        
-        // Botão Atualizar
-        JButton btnAtualizar = new JButton("Atualizar Relatório");
-        btnAtualizar.addActionListener(e -> loadRelatorioData());
+        getContentPane().add(scrollPane, BorderLayout.CENTER);
 
+        // Painel para a parte superior
         JPanel panelNorth = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelNorth.add(btnAtualizar);
-
-        add(panelNorth, BorderLayout.NORTH);
+        getContentPane().add(panelNorth, BorderLayout.NORTH);
+        
+        JRadioButton rbAbertas = new JRadioButton("Operações Abertas");
+        JRadioButton rbFechadas = new JRadioButton("Operações Fechadas");
+        
+        ButtonGroup grupoOperacoes = new ButtonGroup();
+        grupoOperacoes.add(rbAbertas);
+        grupoOperacoes.add(rbFechadas);
+        
+        rbAbertas.setSelected(true);
+        
+        panelNorth.add(rbAbertas);
+        panelNorth.add(rbFechadas);
+        
+        rbAbertas.addActionListener(e -> {
+        	executarCarregamento(Relatorio::gerarResumoOperacoesAbertas) ;
+        });
+        
+        rbFechadas.addActionListener(e -> {
+        	executarCarregamento(Relatorio::gerarResumoOperacoesFechadas) ;
+        });
     }
 
-    public void loadRelatorioData() {
+    private void executarCarregamento(java.util.function.Supplier<List<String>> reportGenerator) {
         textAreaRelatorio.setText("Carregando relatório...");
-        
-        try {
-            // Chama o novo método que retorna a lista de strings
-            List<String> linhas = Relatorio.gerarResumoOperacoesNaoVendidas();
-            
-            // Converte a lista de strings em uma única string com quebras de linha
-            textAreaRelatorio.setText(String.join("\n", linhas));
 
+        try {
+            List<String> linhas = reportGenerator.get();
+            textAreaRelatorio.setText(String.join("\n", linhas));
         } catch (Exception e) {
             textAreaRelatorio.setText("Erro ao carregar o relatório:\n" + e.getMessage());
             e.printStackTrace();

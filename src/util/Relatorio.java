@@ -15,8 +15,8 @@ import model.Operacao;
 
 public class Relatorio {
 	
-	public static List<String> gerarResumoOperacoesNaoVendidas() {
-        List<Acao> acoesNaVendidas = new AcaoDAO().obterAcoesNaoVendidas();
+	public static List<String> gerarResumoOperacoesAbertas() {
+        List<Acao> acoesNaVendidas = new AcaoDAO().obterAcoesAbertas();
         List<String> relatorioLinhas = new ArrayList<>();
         
         relatorioLinhas.add("=========================================================================================");
@@ -24,7 +24,7 @@ public class Relatorio {
         relatorioLinhas.add("=========================================================================================");
 
         if (acoesNaVendidas.isEmpty()) {
-             relatorioLinhas.add("Nenhuma operação não vendida encontrada.");
+             relatorioLinhas.add("Nenhuma operação encontrada.");
              return relatorioLinhas;
         }
 
@@ -37,6 +37,28 @@ public class Relatorio {
         return relatorioLinhas;
     }
 	
+	public static List<String> gerarResumoOperacoesFechadas() {
+        List<Acao> acoesNaVendidas = new AcaoDAO().obterAcoesFechadas();
+        List<String> relatorioLinhas = new ArrayList<>();
+        
+        relatorioLinhas.add("=========================================================================================");
+        relatorioLinhas.add("= RESUMO DE OPERAÇÕES FECHADAS                                                         =");
+        relatorioLinhas.add("=========================================================================================");
+
+        if (acoesNaVendidas.isEmpty()) {
+             relatorioLinhas.add("Nenhuma operação  encontrada.");
+             return relatorioLinhas;
+        }
+
+        for (Acao acao : acoesNaVendidas) {
+            Operacao op = new OperacaoDAO().buscaOperacao(acao.getId());
+            relatorioLinhas.addAll(gerarResumoDaOperacao(op));
+            relatorioLinhas.add("-----------------------------------------------------------------------------------------"); // Separador
+        }
+     
+        return relatorioLinhas;
+    }
+	
 	public static List<String> gerarResumoDaOperacao(Operacao operacao) {
         
         Acao acao = operacao.getAcao();
@@ -45,7 +67,6 @@ public class Relatorio {
         
         List<String> linhas = new ArrayList<>();
         
-        // CÁLCULO DO RESULTADO DA OPÇÃO
         Double resultadoDasOpcoes = 0.0;
         if (opcoes != null && !opcoes.isEmpty()) {
             for (Opcao opcao : opcoes) {
@@ -53,11 +74,20 @@ public class Relatorio {
             }
         }
         
+        Double resultadoDosDividendos = 0.0;
+        if (dividendos != null && !dividendos.isEmpty()) {
+            for (Dividendo dividendo : dividendos) {
+            	resultadoDosDividendos +=  dividendo.getValor();
+            }
+        }
+        
         // CÁLCULOS PRINCIPAIS
+        
         double cotacao = new CotacaoDAO().buscarCotacaoPorAtivo(acao.getAtivo());
+        
         int quantidade = acao.getQuantidade();
         double strike = OpcaoDAO.obterStrikeUltimaOpcaoVendida(acao.getId());
-        double precoMedio = (acao.getPrecoCompra() * quantidade - resultadoDasOpcoes) / quantidade;
+        double precoMedio = acao.getPrecoCompra()  - resultadoDasOpcoes - resultadoDosDividendos;
         
         double precoVendaCalculo = (strike > 0.0) ? strike : cotacao;
         
@@ -65,7 +95,8 @@ public class Relatorio {
         Double patrimonio = quantidade * cotacao;
 
         // LINHA PRINCIPAL DA AÇÃO
-        String linhaAcao = String.format("ATIVO: %s | Qtde: %d | Compra: %s | Strike: %s | PM: %s | Cotação: %s | Resultado: %s | Patrimônio: %s",
+        String linhaAcao = String.format("ATIVO: %s | Qtde: %d | Compra: %s | Strike: %s "
+        		+ "| PM: %s | Cotação: %s | Resultado: %s | Patrimônio: %s",
                 acao.getAtivo(),
                 quantidade,
                 ValidatorUtils.formatarParaDuasDecimais(acao.getPrecoCompra()),
