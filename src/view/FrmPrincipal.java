@@ -26,6 +26,8 @@ public class FrmPrincipal extends JFrame {
     private FrmVenderAcao frmVenderAcao;
     private FrmVenderOpcao frmVenderOpcao;
     private FrmDividendo frmDividendo;
+    private FrmResumo frmResumo;
+    
     
     public FrmPrincipal() {
         setTitle("XequeMate Investimentos - Principal");
@@ -91,6 +93,10 @@ public class FrmPrincipal extends JFrame {
         JMenuItem itemCotacoes = new JMenuItem("Atualizar Cotações");
         itemCotacoes.addActionListener(e -> atualizarCotacoes());
         mnNewMenu.add(itemCotacoes);
+        
+        JMenuItem itemResumo = new JMenuItem("Resumo");
+        itemResumo.addActionListener(e -> callOnlyOnce(FrmResumo.class.getName()));
+        mnNewMenu.add(itemResumo);
     }
     
     private void callOnlyOnce(String className) {
@@ -128,7 +134,13 @@ public class FrmPrincipal extends JFrame {
 	        	frmDividendo = new FrmDividendo();
 	        }
 	        frameToOpen = frmDividendo;
-	    
+	        
+	    } else if (className.equals(FrmResumo.class.getName())) {
+	        if (frmResumo == null || frmResumo.isClosed()) {
+	        	frmResumo = new FrmResumo();
+	        }
+	        frameToOpen = frmResumo;
+	        
     }
         
         

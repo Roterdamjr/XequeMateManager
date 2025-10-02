@@ -17,7 +17,7 @@ import util.ValidatorUtils;
 public class Teste {
 
 	 public static void main(String[] args) {
-		 Relatorio.exibirResumoOperacoesNaoVendidas();
+		 //Relatorio.exibirResumoOperacoesNaoVendidas();
 
 /*
 			List<Acao> acoesNaVendidas = new AcaoDAO().obterAcoesNaoVendidas();
