@@ -64,11 +64,7 @@ public class FrmPrincipal extends JFrame {
         JMenuItem itemMostrarTabela = new JMenuItem("Ações Não Vendidas");
         itemMostrarTabela.addActionListener(e -> callOnlyOnce(FrmAcoesNaoVendidas.class.getName()));
 
-        JMenuItem itemAtualizar = new JMenuItem("Atualizar Tabela");
-        itemAtualizar.addActionListener(e -> updateAcoesTableData());
-
         menuVisualizar.add(itemMostrarTabela);
-        menuVisualizar.add(itemAtualizar);
         
         menuBar.add(menuOperacoes);
         JMenuItem itemComprarOpcao = new JMenuItem("Comprar Opção");
@@ -149,13 +145,7 @@ public class FrmPrincipal extends JFrame {
         }
     }
     
-    private void updateAcoesTableData() {
-        if (frmAcoesNaoVendidas != null && !frmAcoesNaoVendidas.isClosed()) {
-            frmAcoesNaoVendidas.loadAcoesData();
-        } else {
-            JOptionPane.showMessageDialog(this, "A tabela 'Ações Não Vendidas' não está aberta.", "Atenção", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
+
     
     private void atualizarCotacoes() {
     	CotacaoManager.atualizarCotacoesNoDatabase();

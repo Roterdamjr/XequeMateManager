@@ -4,9 +4,11 @@ import java.util.List;
 
 import dao.AcaoDAO;
 import dao.CotacaoDAO;
+import dao.DividendoDAO;
 import dao.OpcaoDAO;
 import dao.OperacaoDAO;
 import model.Acao;
+import model.Dividendo;
 import model.Opcao;
 import model.Operacao;
 
@@ -22,10 +24,13 @@ public class Relatorio {
 	
 	public static void exibirResumoDaOperacao(Operacao operacao) {
 		
-		List<Opcao> opcoes= operacao.getOpcoes();
-		
 		Acao acao = operacao.getAcao();
+		List<Opcao> opcoes= operacao.getOpcoes();
+		List<Dividendo> dividendos = new DividendoDAO().buscarPorAcao(acao.getId());
 		
+		/*************************
+		 * 		RESULTADO
+		 *************************/
 		Double resultadoDasOpcoes = 0.0;
 	    if (opcoes != null && !opcoes.isEmpty()) {
 	        for (Opcao opcao : opcoes) {
@@ -33,17 +38,24 @@ public class Relatorio {
 	        }
 	    }
 	    
-        Double precoMedio =  acao.getPrecoCompra() - resultadoDasOpcoes ;
+	    Double resultadoDosDividendos= 0.0;
+	    if (dividendos != null && !dividendos.isEmpty()) {
+		    for (Dividendo dividendo : dividendos) {
+		    	resultadoDosDividendos += dividendo.getValor();
+		    }
+	    }
+	    
+		/*************************
+		 * 		AÇÃO
+		 *************************/
+        Double precoMedio =  acao.getPrecoCompra() - resultadoDasOpcoes - resultadoDosDividendos;
         Double cotacao = new CotacaoDAO().buscarCotacaoPorAtivo(acao.getAtivo());
         int quantidade = acao.getQuantidade();
         Double strike = OpcaoDAO.obterStrikeUltimaOpcaoVendida(acao.getId());
         Double venda = cotacao > strike ? strike:cotacao;
         Double resultado = quantidade *(venda - precoMedio);
         Double patrimonio = quantidade * cotacao;
-        /*
-         * Ação: BBDC4, Qtde: 500, Compra: 11.78, Strike: 16.25, PM: 13.58, Cotação 17.68 ,
-         * Resultado: 1335.00, Patrimonio 8840.0
-         */
+
         System.out.println( acao.getAtivo()+ 
         		"	 Qtde: " + quantidade + 
         		"	 Compra: " + ValidatorUtils.formatarParaDuasDecimais(acao.getPrecoCompra())+ 
@@ -54,6 +66,9 @@ public class Relatorio {
         		"	 Patrimonio "+ ValidatorUtils.formatarParaDuasDecimais(patrimonio)
         );
        
+		/*************************
+		 * 		OPÇÃO
+		 *************************/
 	    if (opcoes != null && !opcoes.isEmpty()) {
 	        for (Opcao opcao : opcoes) {
 	        	System.out.println(opcao.getOpcao() + 
@@ -62,6 +77,13 @@ public class Relatorio {
 	            		", Strike: " + ValidatorUtils.formatarParaDuasDecimais(opcao.getStrike() )
 	            );
 	        }
+	    }
+	    
+		/*************************
+		 * 		DIVIDENDOS
+		 *************************/
+	    for (Dividendo dividendo : dividendos) {
+	    	System.out.println(dividendo);
 	    }
 	    
 	    System.out.println("-------------------------------------------------------------------");

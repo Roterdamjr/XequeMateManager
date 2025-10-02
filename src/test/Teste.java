@@ -17,8 +17,8 @@ import util.ValidatorUtils;
 public class Teste {
 
 	 public static void main(String[] args) {
-		 //Relatorio.exibirResumoOperacoesNaoVendidas();
-		 testarInsercaoDividendo();
+		 Relatorio.exibirResumoOperacoesNaoVendidas();
+
 /*
 			List<Acao> acoesNaVendidas = new AcaoDAO().obterAcoesNaoVendidas();
 			for (Acao acao : acoesNaVendidas) {
@@ -46,7 +46,7 @@ public class Teste {
 	            System.out.println("SUCESSO: Dividendo inserido com sucesso para a Ação ID: " + idAcaoTeste);
 	            
 	            // Opcional: Verifique a lista (se o método listarPorAcao estiver funcionando)
-	            List<Dividendo> dividendosDaAcao = dao.listarPorAcao(idAcaoTeste);
+	            List<Dividendo> dividendosDaAcao = dao.buscarPorAcao(idAcaoTeste);
 	            System.out.println("Dividendos atuais para a Ação ID " + idAcaoTeste + ": " + dividendosDaAcao.size());
 	            
 	        } catch (Exception e) {

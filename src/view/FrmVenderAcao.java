@@ -183,7 +183,7 @@ public class FrmVenderAcao extends JInternalFrame {
     
     private void atualizarLabels() {
         if (acaoSelecionada != null) {
-        	lblQuantidade.setText(String.format("%.0f", acaoSelecionada.getQuantidade()));
+        	lblQuantidade.setText(String.format("%d", acaoSelecionada.getQuantidade()));
         	lblPrecoCompra.setText(String.format("R$ %.2f", acaoSelecionada.getPrecoCompra()));
         } else {
             lblQuantidade.setText("0.0");

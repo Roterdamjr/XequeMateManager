@@ -22,7 +22,7 @@ public class DividendoDAO {
         }
     }
 
-    public List<Dividendo> listarPorAcao(int idAcao) {
+    public List<Dividendo> buscarPorAcao(int idAcao) {
         List<Dividendo> dividendos = new ArrayList<>();
         String sql = "SELECT * FROM tb_dividendo WHERE id_acao = ?";
         try (Connection conn = DatabaseManager.connect();
@@ -44,7 +44,7 @@ public class DividendoDAO {
     }
 
     // Listar todos
-    public List<Dividendo> listarTodos() {
+    public List<Dividendo> buscarTodos() {
         List<Dividendo> dividendos = new ArrayList<>();
         String sql = "SELECT * FROM tb_dividendo";
         
