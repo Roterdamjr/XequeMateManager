@@ -17,11 +17,7 @@ import util.ValidatorUtils;
 public class Teste {
 
 	 public static void main(String[] args) {
-		 List<String> linhas =Relatorio.gerarResumoOperacoesFechadas();
-		 for(String l:linhas) {
-			 System.out.println(l);
-		 }
-		 
+
 /*
 			List<Acao> acoesNaVendidas = new AcaoDAO().obterAcoesNaoVendidas();
 			for (Acao acao : acoesNaVendidas) {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Acao;
-import model.Opcao;
+
 
 public class AcaoDAO {
 

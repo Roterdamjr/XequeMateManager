@@ -15,55 +15,39 @@ import model.OperacaoDividendo;
 
 public class Relatorio {
 	
-	public static List<String> gerarResumoOperacoesAbertas() {
-        List<Acao> acoesNaVendidas = new AcaoDAO().obterAcoesAbertas();
+	public static List<String> gerarResumoOperacoes(boolean operacaoAberta) {
+		
+		List<Acao> acoes;
+		if (operacaoAberta) {
+			acoes = new AcaoDAO().obterAcoesAbertas();
+		}else {
+			acoes = new AcaoDAO().obterAcoesFechadas();
+		}
+		
         List<String> relatorioLinhas = new ArrayList<>();
         
         relatorioLinhas.add("=========================================================================================");
         relatorioLinhas.add("= RESUMO DE OPERAÇÕES EM ABERTO                                                         =");
         relatorioLinhas.add("=========================================================================================");
 
-        if (acoesNaVendidas.isEmpty()) {
+        if (acoes.isEmpty()) {
              relatorioLinhas.add("Nenhuma operação encontrada.");
              return relatorioLinhas;
         }
 
-        for (Acao acao : acoesNaVendidas) {      
+        for (Acao acao : acoes) {      
     		Acao ac = new AcaoDAO().obterAcaoPorId(acao.getId());
     	    List<Opcao> opcoes =  new OpcaoDAO().obterOpcoesPorIdAcao(acao.getId());
     	    Operacao op = new OperacaoDividendo(ac,opcoes) ;
     	    
-            relatorioLinhas.addAll(gerarResumoDaOperacao(op));
+            relatorioLinhas.addAll(gerarResumoDaOperacao(op, true));
             relatorioLinhas.add("-----------------------------------------------------------------------------------------"); // Separador
         }
         return relatorioLinhas;
     }
 	
-	public static List<String> gerarResumoOperacoesFechadas() {
-        List<Acao> acoesNaVendidas = new AcaoDAO().obterAcoesFechadas();
-        List<String> relatorioLinhas = new ArrayList<>();
-        
-        relatorioLinhas.add("=========================================================================================");
-        relatorioLinhas.add("= RESUMO DE OPERAÇÕES FECHADAS                                                         =");
-        relatorioLinhas.add("=========================================================================================");
-
-        if (acoesNaVendidas.isEmpty()) {
-             relatorioLinhas.add("Nenhuma operação  encontrada.");
-             return relatorioLinhas;
-        }
-
-        for (Acao acao : acoesNaVendidas) {  
-    		Acao ac = new AcaoDAO().obterAcaoPorId(acao.getId());
-    	    List<Opcao> opcoes =  new OpcaoDAO().obterOpcoesPorIdAcao(acao.getId());
-    	    Operacao op = new OperacaoDividendo(ac,opcoes) ;
-            
-            relatorioLinhas.addAll(gerarResumoDaOperacao(op));
-            relatorioLinhas.add("-----------------------------------------------------------------------------------------"); // Separador
-        }
-        return relatorioLinhas;
-    }
 	
-	public static List<String> gerarResumoDaOperacao(Operacao operacao) {
+	public static List<String> gerarResumoDaOperacao(Operacao operacao ,boolean operacaoAberta) {
         
         Acao acao = operacao.getAcao();
         List<Opcao> opcoes = operacao.getOpcoes();
@@ -86,12 +70,15 @@ public class Relatorio {
         }
         
         // CÁLCULOS PRINCIPAIS
-        
         double cotacao = new CotacaoDAO().buscarCotacaoPorAtivo(acao.getAtivo());
         
         int quantidade = acao.getQuantidade();
         double strike = OpcaoDAO.obterStrikeUltimaOpcaoVendida(acao.getId());
-        double precoMedio = acao.getPrecoCompra()  - resultadoDasOpcoes - resultadoDosDividendos;
+        
+        double precoMedio = 0.0;
+        if (operacaoAberta){
+        	precoMedio = acao.getPrecoCompra()  - resultadoDasOpcoes - resultadoDosDividendos;
+        }
         
         double precoVendaCalculo = (strike > 0.0) ? strike : cotacao;
         
@@ -136,71 +123,6 @@ public class Relatorio {
     }
 
 
-	public static void exibirResumoDaOperacao(Operacao operacao) {
-		
-		Acao acao = operacao.getAcao();
-		List<Opcao> opcoes= operacao.getOpcoes();
-		List<Dividendo> dividendos = new DividendoDAO().buscarPorAcao(acao.getId());
-		
-		/*************************
-		 * 		RESULTADO
-		 *************************/
-		Double resultadoDasOpcoes = 0.0;
-	    if (opcoes != null && !opcoes.isEmpty()) {
-	        for (Opcao opcao : opcoes) {
-	        	resultadoDasOpcoes +=  opcao.getPrecoVenda() - opcao.getPrecoCompra() ;
-	        }
-	    }
-	    
-	    Double resultadoDosDividendos= 0.0;
-	    if (dividendos != null && !dividendos.isEmpty()) {
-		    for (Dividendo dividendo : dividendos) {
-		    	resultadoDosDividendos += dividendo.getValor();
-		    }
-	    }
-	    
-		/*************************
-		 * 		AÇÃO
-		 *************************/
-        Double precoMedio =  acao.getPrecoCompra() - resultadoDasOpcoes - resultadoDosDividendos;
-        Double cotacao = new CotacaoDAO().buscarCotacaoPorAtivo(acao.getAtivo());
-        int quantidade = acao.getQuantidade();
-        Double strike = OpcaoDAO.obterStrikeUltimaOpcaoVendida(acao.getId());
-        Double venda = cotacao > strike ? strike:cotacao;
-        Double resultado = quantidade *(venda - precoMedio);
-        Double patrimonio = quantidade * cotacao;
-
-        System.out.println( acao.getAtivo()+ 
-        		"	 Qtde: " + quantidade + 
-        		"	 Compra: " + ValidatorUtils.formatarParaDuasDecimais(acao.getPrecoCompra())+ 
-        		"	 Strike: " + ValidatorUtils.formatarParaDuasDecimais(strike) +
-        		"	 PM: " + ValidatorUtils.formatarParaDuasDecimais(precoMedio) +
-        		"	 Cotação "+cotacao + 
-        		"	 Resultado: "+ ValidatorUtils.formatarParaDuasDecimais(resultado) +
-        		"	 Patrimonio "+ ValidatorUtils.formatarParaDuasDecimais(patrimonio)
-        );
-       
-		/*************************
-		 * 		OPÇÃO
-		 *************************/
-	    if (opcoes != null && !opcoes.isEmpty()) {
-	        for (Opcao opcao : opcoes) {
-	        	System.out.println(opcao.getOpcao() + 
-	            		", Compra: " + ValidatorUtils.formatarParaDuasDecimais(opcao.getPrecoCompra())+ 
-	            		", Venda: " + ValidatorUtils.formatarParaDuasDecimais(opcao.getPrecoVenda()) + 
-	            		", Strike: " + ValidatorUtils.formatarParaDuasDecimais(opcao.getStrike() )
-	            );
-	        }
-	    }
-	    
-		/*************************
-		 * 		DIVIDENDOS
-		 *************************/
-	    for (Dividendo dividendo : dividendos) {
-	    	System.out.println(dividendo);
-	    }
-	    
-	    System.out.println("-------------------------------------------------------------------");
-	}
+	
 
 }

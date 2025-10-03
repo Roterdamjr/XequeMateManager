@@ -17,7 +17,10 @@ public class FrmResumo extends JInternalFrame {
         setSize(1000, 700);
         
         setupUI();
-        executarCarregamento(Relatorio::gerarResumoOperacoesAbertas) ;
+        executarCarregamento(() -> {
+            // Chamamos gerarResumoOperacoes passando 'true' como argumento
+            return Relatorio.gerarResumoOperacoes(true);
+        });
     }
 
     private void setupUI() {
@@ -47,11 +50,21 @@ public class FrmResumo extends JInternalFrame {
         panelNorth.add(rbFechadas);
         
         rbAbertas.addActionListener(e -> {
-        	executarCarregamento(Relatorio::gerarResumoOperacoesAbertas) ;
+            // A lambda (e -> { ... }) chama o executarCarregamento, que espera
+            // uma outra lambda (ou interface funcional) sem argumentos.
+        	executarCarregamento(() -> {
+                // Chamamos gerarResumoOperacoes passando 'true' como argumento
+                return Relatorio.gerarResumoOperacoes(true);
+            });
         });
         
         rbFechadas.addActionListener(e -> {
-        	executarCarregamento(Relatorio::gerarResumoOperacoesFechadas) ;
+            // A lambda (e -> { ... }) chama o executarCarregamento, que espera
+            // uma outra lambda (ou interface funcional) sem argumentos.
+        	executarCarregamento(() -> {
+                // Chamamos gerarResumoOperacoes passando 'true' como argumento
+                return Relatorio.gerarResumoOperacoes(false);
+            });
         });
     }
 
