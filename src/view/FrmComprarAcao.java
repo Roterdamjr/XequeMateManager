@@ -22,6 +22,8 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 // Importa a nova classe de utilidade
 import util.ValidatorUtils;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class FrmComprarAcao extends JInternalFrame  {
 
@@ -30,6 +32,7 @@ public class FrmComprarAcao extends JInternalFrame  {
 	private JTextField txtAcao; 
 	private JTextField txtQuantidade; 
 	private JTextField txtPrecoCompra;
+	private JComboBox cmbTipoOperação; 
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -66,6 +69,13 @@ public class FrmComprarAcao extends JInternalFrame  {
 		txtData = new JTextField();
 		txtData.setColumns(10);
 		panel.add(txtData);
+		
+		JLabel lblNewLabel_3 = new JLabel("Tipo Estratégia");
+		panel.add(lblNewLabel_3);
+		
+		cmbTipoOperação = new JComboBox();
+		cmbTipoOperação.setModel(new DefaultComboBoxModel(new String[] {"DIV", "GNH", "D3X"}));
+		panel.add(cmbTipoOperação);
 		
 		JPanel panel_1 = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) panel_1.getLayout();
@@ -158,16 +168,22 @@ public class FrmComprarAcao extends JInternalFrame  {
 		String quantidadeText = txtQuantidade.getText().trim();
 		String precoCompraText = txtPrecoCompra.getText().trim();
 
+
 		// Usa o método isNumeric da classe ValidatorUtils
-		if (acaoText.isEmpty() || !ValidatorUtils.isNumeric(quantidadeText) || !ValidatorUtils.isNumeric(precoCompraText)) {
+		if (acaoText.isEmpty() || !ValidatorUtils.isNumeric(quantidadeText) || 
+				!ValidatorUtils.isNumeric(precoCompraText)) {
 			JOptionPane.showMessageDialog(this, 
-				"Preencha todos os campos corretamente (Ação não pode ser vazia; Quantidade e Preço devem ser numéricos).", 
+				"Preencha todos os campos corretamente .", 
 				"Erro de Validação", 
 				JOptionPane.INFORMATION_MESSAGE);
 			return; 
 		}
 
-		new AcaoDAO().comprarAcao(acaoText, dataText, quantidadeText, precoCompraText);
+		new AcaoDAO().comprarAcao(acaoText, 
+									dataText, 
+									quantidadeText, 
+									precoCompraText, 
+									(String) cmbTipoOperação.getSelectedItem());
 		limparJanela();
 		
 		JOptionPane.showMessageDialog(this, 

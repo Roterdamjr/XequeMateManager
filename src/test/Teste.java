@@ -6,7 +6,7 @@ import dao.AcaoDAO;
 import dao.CotacaoDAO;
 import dao.DividendoDAO;
 import dao.OpcaoDAO;
-import dao.OperacaoDAO;
+
 import model.Acao;
 import model.Dividendo;
 import model.Opcao;

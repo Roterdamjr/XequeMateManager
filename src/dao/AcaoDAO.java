@@ -9,8 +9,9 @@ import model.Opcao;
 
 public class AcaoDAO {
 
-    public void comprarAcao(String ativo, String dataCompra, String quantidade, String preco) {
-        String sql = "INSERT INTO TB_ACAO (ativo, data_compra, quantidade, preco_compra) VALUES (?, ?, ?, ?)";
+    public void comprarAcao(String ativo, String dataCompra, String quantidade, String preco, String tipoOperacao) {
+        String sql = "INSERT INTO TB_ACAO (ativo, data_compra, quantidade, preco_compra,tipo_operacao)"
+        		+ " VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseManager.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -19,6 +20,7 @@ public class AcaoDAO {
             pstmt.setString(2, dataCompra);
             pstmt.setDouble(3, Double.parseDouble(quantidade.replace(",", ".")));
             pstmt.setDouble(4, Double.parseDouble(preco.replace(",", ".")));
+            pstmt.setString(5, tipoOperacao);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {

@@ -1,9 +1,10 @@
 package model;
 import java.util.List;
 
-public class Operacao {
+public abstract  class Operacao {
     private Acao acao;
     private List<Opcao> opcoes;
+    private String tipoOperacao;
 
     public Operacao(Acao acao, List<Opcao> opcoes) {
         this.acao = acao;
@@ -26,6 +27,13 @@ public class Operacao {
         this.opcoes = opcoes;
     }
 
+	public String getTipoOperacao() {
+		return tipoOperacao;
+	}
 
+	public void setTipoOperacao(String tipoOperacao) {
+		this.tipoOperacao = tipoOperacao;
+	}
 
+   
 }

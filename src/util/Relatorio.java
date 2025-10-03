@@ -7,11 +7,11 @@ import dao.AcaoDAO;
 import dao.CotacaoDAO;
 import dao.DividendoDAO;
 import dao.OpcaoDAO;
-import dao.OperacaoDAO;
 import model.Acao;
 import model.Dividendo;
 import model.Opcao;
 import model.Operacao;
+import model.OperacaoDividendo;
 
 public class Relatorio {
 	
@@ -28,12 +28,14 @@ public class Relatorio {
              return relatorioLinhas;
         }
 
-        for (Acao acao : acoesNaVendidas) {
-            Operacao op = new OperacaoDAO().buscaOperacao(acao.getId());
+        for (Acao acao : acoesNaVendidas) {      
+    		Acao ac = new AcaoDAO().obterAcaoPorId(acao.getId());
+    	    List<Opcao> opcoes =  new OpcaoDAO().obterOpcoesPorIdAcao(acao.getId());
+    	    Operacao op = new OperacaoDividendo(ac,opcoes) ;
+    	    
             relatorioLinhas.addAll(gerarResumoDaOperacao(op));
             relatorioLinhas.add("-----------------------------------------------------------------------------------------"); // Separador
         }
-        
         return relatorioLinhas;
     }
 	
@@ -50,12 +52,14 @@ public class Relatorio {
              return relatorioLinhas;
         }
 
-        for (Acao acao : acoesNaVendidas) {
-            Operacao op = new OperacaoDAO().buscaOperacao(acao.getId());
+        for (Acao acao : acoesNaVendidas) {  
+    		Acao ac = new AcaoDAO().obterAcaoPorId(acao.getId());
+    	    List<Opcao> opcoes =  new OpcaoDAO().obterOpcoesPorIdAcao(acao.getId());
+    	    Operacao op = new OperacaoDividendo(ac,opcoes) ;
+            
             relatorioLinhas.addAll(gerarResumoDaOperacao(op));
             relatorioLinhas.add("-----------------------------------------------------------------------------------------"); // Separador
         }
-     
         return relatorioLinhas;
     }
 	
