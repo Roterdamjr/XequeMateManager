@@ -40,14 +40,14 @@ public class Relatorio {
     	    List<Opcao> opcoes =  new OpcaoDAO().obterOpcoesPorIdAcao(acao.getId());
     	    Operacao op = new OperacaoDividendo(ac,opcoes) ;
     	    
-            relatorioLinhas.addAll(gerarResumoDaOperacao(op, true));
+            relatorioLinhas.addAll(gerarResumoDaOperacao(op, operacaoAberta));
             relatorioLinhas.add("-----------------------------------------------------------------------------------------"); // Separador
         }
         return relatorioLinhas;
     }
 	
 	
-	public static List<String> gerarResumoDaOperacao(Operacao operacao ,boolean operacaoAberta) {
+	public static List<String> gerarResumoDaOperacao(Operacao operacao, boolean operacaoAberta) {
         
         Acao acao = operacao.getAcao();
         List<Opcao> opcoes = operacao.getOpcoes();
@@ -75,12 +75,20 @@ public class Relatorio {
         int quantidade = acao.getQuantidade();
         double strike = OpcaoDAO.obterStrikeUltimaOpcaoVendida(acao.getId());
         
-        double precoMedio = 0.0;
+        double precoMedio = acao.getPrecoCompra()  - resultadoDasOpcoes - resultadoDosDividendos;
+        
+        double precoVendaCalculo = 0.0;
+      
         if (operacaoAberta){
-        	precoMedio = acao.getPrecoCompra()  - resultadoDasOpcoes - resultadoDosDividendos;
+        	precoVendaCalculo = (strike < cotacao) ? strike : cotacao;
+        }else {
+        	precoVendaCalculo = strike;
         }
         
-        double precoVendaCalculo = (strike > 0.0) ? strike : cotacao;
+        if(acao.getId()==8 || acao.getId()==10) {
+        	int a=0;
+        }
+      
         
         Double resultado = quantidade * (precoVendaCalculo - precoMedio);
         Double patrimonio = quantidade * cotacao;
