@@ -1,10 +1,11 @@
 package model;
 import java.util.List;
 
-public abstract  class Operacao {
+public   class Operacao {
     private Acao acao;
     private List<Opcao> opcoes;
     private String tipoOperacao;
+
 
     public Operacao(Acao acao, List<Opcao> opcoes) {
         this.acao = acao;

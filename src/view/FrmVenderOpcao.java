@@ -26,7 +26,7 @@ import model.Acao;
 import model.Opcao;
 import dao.AcaoDAO;
 import dao.OpcaoDAO;
-import util.ValidatorUtils;
+import util.Utils;
 
 public class FrmVenderOpcao extends JInternalFrame {
 
@@ -234,7 +234,7 @@ public class FrmVenderOpcao extends JInternalFrame {
 		String strikeText = txtStrike.getText().trim();
 		String precoVendaText = txtPrecoVenda.getText().trim();
 		
-		if (precoVendaText.isEmpty() || !ValidatorUtils.isNumeric(precoVendaText)) {
+		if (precoVendaText.isEmpty() || !Utils.isNumeric(precoVendaText)) {
 			JOptionPane.showMessageDialog(this, 
 				"O campo Preço Venda deve ser preenchido corretamente com um valor numérico.", 
 				"Erro de Validação", 

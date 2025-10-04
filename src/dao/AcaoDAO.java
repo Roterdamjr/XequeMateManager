@@ -115,6 +115,8 @@ public class AcaoDAO {
                     acao.setQuantidade(rs.getInt("quantidade"));
                     acao.setPrecoCompra(rs.getDouble("preco_compra"));
                     acao.setPrecoVenda(rs.getDouble("preco_venda"));
+                    acao.setDataCompra(rs.getString("data_compra"));
+                    acao.setDataVenda(rs.getString("data_venda"));
                 }
             }
 

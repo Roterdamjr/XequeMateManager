@@ -49,7 +49,7 @@ public class Relatorio {
 	
 	public static List<String> gerarResumoDaOperacao(Operacao operacao, boolean operacaoAberta) {
         
-		ResultadoOperacao resultadoOperacao= OperaçãoAnalytics.sumarizaReeultado(operacao,  operacaoAberta);
+		ResultadoOperacao resultadoOperacao= OperacaoAnalytics.sumarizaReeultado(operacao,  operacaoAberta);
 		Acao acao = operacao.getAcao();
 		
 		
@@ -58,12 +58,12 @@ public class Relatorio {
         		+ "| PM: %s | Cotação: %s | Resultado: %s | Patrimônio: %s",
         		acao.getAtivo(),
         		acao.getQuantidade(),
-                ValidatorUtils.formatarParaDuasDecimais(resultadoOperacao.getPrecoCompraAcao()),
-                ValidatorUtils.formatarParaDuasDecimais(resultadoOperacao.getStrike()),
-                ValidatorUtils.formatarParaDuasDecimais(resultadoOperacao.getPrecoMedioApurado()),
-                ValidatorUtils.formatarParaDuasDecimais(resultadoOperacao.getCotacaoAtual()),
-                ValidatorUtils.formatarParaDuasDecimais(resultadoOperacao.getResultado()),
-                ValidatorUtils.formatarParaDuasDecimais(resultadoOperacao.getPatrimonioAtual())
+                Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoCompraAcao()),
+                Utils.formatarParaDuasDecimais(resultadoOperacao.getStrike()),
+                Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoMedioApurado()),
+                Utils.formatarParaDuasDecimais(resultadoOperacao.getCotacaoAtual()),
+                Utils.formatarParaDuasDecimais(resultadoOperacao.getResultado()),
+                Utils.formatarParaDuasDecimais(resultadoOperacao.getPatrimonioAtual())
         );
         
         List<String> linhas = new ArrayList<>();
@@ -77,9 +77,9 @@ public class Relatorio {
             for (Opcao opcao : opcoes) {
                 String linhaOpcao = String.format("       [%s] Compra: %s | Venda: %s | Strike: %s",
                         opcao.getOpcao(),
-                        ValidatorUtils.formatarParaDuasDecimais(opcao.getPrecoCompra()),
-                        ValidatorUtils.formatarParaDuasDecimais(opcao.getPrecoVenda()),
-                        ValidatorUtils.formatarParaDuasDecimais(opcao.getStrike())
+                        Utils.formatarParaDuasDecimais(opcao.getPrecoCompra()),
+                        Utils.formatarParaDuasDecimais(opcao.getPrecoVenda()),
+                        Utils.formatarParaDuasDecimais(opcao.getStrike())
                 );
                 linhas.add(linhaOpcao);
             }
@@ -89,7 +89,7 @@ public class Relatorio {
         List<Dividendo> dividendos = new DividendoDAO().buscarPorAcao(acao.getId());
         if (dividendos != null && !dividendos.isEmpty()) {
             double totalDividendo = dividendos.stream().mapToDouble(Dividendo::getValor).sum();
-            linhas.add("    -> DIVIDENDOS RECEBIDOS: " + ValidatorUtils.formatarParaDuasDecimais(totalDividendo));
+            linhas.add("    -> DIVIDENDOS RECEBIDOS: " + Utils.formatarParaDuasDecimais(totalDividendo));
         }
 
         return linhas;

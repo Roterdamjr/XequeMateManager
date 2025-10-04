@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 // Importa a nova classe de utilidade
-import util.ValidatorUtils;
+import util.Utils;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
@@ -170,8 +170,8 @@ public class FrmComprarAcao extends JInternalFrame  {
 
 
 		// Usa o método isNumeric da classe ValidatorUtils
-		if (acaoText.isEmpty() || !ValidatorUtils.isNumeric(quantidadeText) || 
-				!ValidatorUtils.isNumeric(precoCompraText)) {
+		if (acaoText.isEmpty() || !Utils.isNumeric(quantidadeText) || 
+				!Utils.isNumeric(precoCompraText)) {
 			JOptionPane.showMessageDialog(this, 
 				"Preencha todos os campos corretamente .", 
 				"Erro de Validação", 

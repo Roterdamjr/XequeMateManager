@@ -23,7 +23,7 @@ import dao.AcaoDAO;
 import dao.DividendoDAO; // Presumindo que você terá um DAO para Dividendo
 import model.Acao;
 import model.Dividendo; // Presumindo que você terá um modelo Dividendo
-import util.ValidatorUtils; // Importa a classe de utilidade
+import util.Utils; // Importa a classe de utilidade
 
 public class FrmDividendo extends JInternalFrame {
 
@@ -142,7 +142,7 @@ public class FrmDividendo extends JInternalFrame {
 
         String valorText = txtValor.getText().trim();
 
-        if (!ValidatorUtils.isNumeric(valorText)) {
+        if (!Utils.isNumeric(valorText)) {
             JOptionPane.showMessageDialog(this, 
                 "Insira um Valor numérico válido ",   "Erro de Validação", 
                 JOptionPane.INFORMATION_MESSAGE);
