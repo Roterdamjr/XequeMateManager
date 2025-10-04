@@ -8,6 +8,15 @@ public class Acao {
     private double precoCompra;
     private String dataVenda;
     private double precoVenda;
+    
+    public Acao() {
+    	
+    }
+    
+	public Acao(int id) {
+		super();
+		this.id = id;
+	}
 	public int getId() {
 		return id;
 	}

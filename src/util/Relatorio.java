@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.AcaoDAO;
-import dao.CotacaoDAO;
 import dao.DividendoDAO;
 import dao.OpcaoDAO;
 import model.Acao;
@@ -12,6 +11,7 @@ import model.Dividendo;
 import model.Opcao;
 import model.Operacao;
 import model.OperacaoDividendo;
+import model.ResultadoOperacao;
 
 public class Relatorio {
 	
@@ -49,65 +49,29 @@ public class Relatorio {
 	
 	public static List<String> gerarResumoDaOperacao(Operacao operacao, boolean operacaoAberta) {
         
-        Acao acao = operacao.getAcao();
-        List<Opcao> opcoes = operacao.getOpcoes();
-        List<Dividendo> dividendos = new DividendoDAO().buscarPorAcao(acao.getId());
-        
-        List<String> linhas = new ArrayList<>();
-        
-        Double resultadoDasOpcoes = 0.0;
-        if (opcoes != null && !opcoes.isEmpty()) {
-            for (Opcao opcao : opcoes) {
-                resultadoDasOpcoes +=  opcao.getPrecoVenda() - opcao.getPrecoCompra();
-            }
-        }
-        
-        Double resultadoDosDividendos = 0.0;
-        if (dividendos != null && !dividendos.isEmpty()) {
-            for (Dividendo dividendo : dividendos) {
-            	resultadoDosDividendos +=  dividendo.getValor();
-            }
-        }
-        
-        // CÁLCULOS PRINCIPAIS
-        double cotacao = new CotacaoDAO().buscarCotacaoPorAtivo(acao.getAtivo());
-        
-        int quantidade = acao.getQuantidade();
-        double strike = OpcaoDAO.obterStrikeUltimaOpcaoVendida(acao.getId());
-        
-        double precoMedio = acao.getPrecoCompra()  - resultadoDasOpcoes - resultadoDosDividendos;
-        
-        double precoVendaCalculo = 0.0;
-      
-        if (operacaoAberta){
-        	precoVendaCalculo = (strike < cotacao) ? strike : cotacao;
-        }else {
-        	precoVendaCalculo = strike;
-        }
-        
-        if(acao.getId()==8 || acao.getId()==10) {
-        	int a=0;
-        }
-      
-        
-        Double resultado = quantidade * (precoVendaCalculo - precoMedio);
-        Double patrimonio = quantidade * cotacao;
-
+		ResultadoOperacao resultadoOperacao= OperaçãoAnalytics.sumarizaReeultado(operacao,  operacaoAberta);
+		Acao acao = operacao.getAcao();
+		
+		
         // LINHA PRINCIPAL DA AÇÃO
         String linhaAcao = String.format("ATIVO: %s | Qtde: %d | Compra: %s | Strike: %s "
         		+ "| PM: %s | Cotação: %s | Resultado: %s | Patrimônio: %s",
-                acao.getAtivo(),
-                quantidade,
-                ValidatorUtils.formatarParaDuasDecimais(acao.getPrecoCompra()),
-                ValidatorUtils.formatarParaDuasDecimais(strike),
-                ValidatorUtils.formatarParaDuasDecimais(precoMedio),
-                ValidatorUtils.formatarParaDuasDecimais(cotacao),
-                ValidatorUtils.formatarParaDuasDecimais(resultado),
-                ValidatorUtils.formatarParaDuasDecimais(patrimonio)
+        		acao.getAtivo(),
+        		acao.getQuantidade(),
+                ValidatorUtils.formatarParaDuasDecimais(resultadoOperacao.getPrecoCompraAcao()),
+                ValidatorUtils.formatarParaDuasDecimais(resultadoOperacao.getStrike()),
+                ValidatorUtils.formatarParaDuasDecimais(resultadoOperacao.getPrecoMedioApurado()),
+                ValidatorUtils.formatarParaDuasDecimais(resultadoOperacao.getCotacaoAtual()),
+                ValidatorUtils.formatarParaDuasDecimais(resultadoOperacao.getResultado()),
+                ValidatorUtils.formatarParaDuasDecimais(resultadoOperacao.getPatrimonioAtual())
         );
+        
+        List<String> linhas = new ArrayList<>();
+        
         linhas.add(linhaAcao);
         
         // INFORMAÇÕES ADICIONAIS DE OPÇÕES
+        List<Opcao> opcoes = operacao.getOpcoes();
         if (opcoes != null && !opcoes.isEmpty()) {
             linhas.add("    -> OPÇÕES VENDIDAS/COMPRADAS:");
             for (Opcao opcao : opcoes) {
@@ -122,6 +86,7 @@ public class Relatorio {
         }
         
         // INFORMAÇÕES ADICIONAIS DE DIVIDENDOS (Apenas total)
+        List<Dividendo> dividendos = new DividendoDAO().buscarPorAcao(acao.getId());
         if (dividendos != null && !dividendos.isEmpty()) {
             double totalDividendo = dividendos.stream().mapToDouble(Dividendo::getValor).sum();
             linhas.add("    -> DIVIDENDOS RECEBIDOS: " + ValidatorUtils.formatarParaDuasDecimais(totalDividendo));
@@ -129,8 +94,6 @@ public class Relatorio {
 
         return linhas;
     }
-
-
 	
 
 }
