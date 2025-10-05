@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -85,4 +86,19 @@ public class Utils {
 	    
 	    return diasPorMes;
 	}
+
+		public static int calcularTotalDias(String dtCompraString, String dtVendaString) {
+		    
+		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		    
+		    LocalDate dataInicio = LocalDate.parse(dtCompraString, formatter);
+		    LocalDate dataFim = LocalDate.parse(dtVendaString, formatter);
+		
+		    // Calcula a diferença em dias.
+		    // Adicionamos +1 para incluir a data de venda no cálculo,
+		    // que é a contagem usual para períodos de posse ou investimento.
+		    long totalDias = ChronoUnit.DAYS.between(dataInicio, dataFim) + 1;
+		    
+		    return (int)totalDias;
+		}
 }

@@ -46,28 +46,27 @@ public class Relatorio {
         return relatorioLinhas;
     }
 	
-	
-	public static List<String> gerarResumoDaOperacao(Operacao operacao, boolean operacaoAberta) {
+    public static List<String> gerarResumoDaOperacao(Operacao operacao, boolean operacaoAberta) {
         
 		ResultadoOperacao resultadoOperacao= OperacaoAnalytics.sumarizaReeultado(operacao,  operacaoAberta);
 		Acao acao = operacao.getAcao();
 		
-		
-        // LINHA PRINCIPAL DA AÇÃO
-        String linhaAcao = String.format("ATIVO: %s | Qtde: %d | Compra: %s | Strike: %s "
-        		+ "| PM: %s | Cotação: %s | Resultado: %s | Patrimônio: %s",
-        		acao.getAtivo(),
-        		acao.getQuantidade(),
-                Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoCompraAcao()),
-                Utils.formatarParaDuasDecimais(resultadoOperacao.getStrike()),
-                Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoMedioApurado()),
-                Utils.formatarParaDuasDecimais(resultadoOperacao.getCotacaoAtual()),
-                Utils.formatarParaDuasDecimais(resultadoOperacao.getResultado()),
-                Utils.formatarParaDuasDecimais(resultadoOperacao.getPatrimonioAtual())
-        );
-        
         List<String> linhas = new ArrayList<>();
-        
+        // LINHA PRINCIPAL DA AÇÃO
+        String linhaAcao = String.format("ATIVO: %s | Qtde: %d | Compra: %s | Strike: %s | PM: %s | Cotação: %s",
+        	    acao.getAtivo(),
+        	    acao.getQuantidade(),
+        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoCompraAcao()),
+        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getStrike()),
+        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoMedioApurado()),
+        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getCotacaoAtual())
+        	);
+        linhas.add(linhaAcao);
+
+    	linhaAcao = String.format("    Resultado: %s | Investimento: %s",
+    	    Utils.formatarParaDuasDecimais(resultadoOperacao.getResultado()),
+    	    Utils.formatarParaDuasDecimais(resultadoOperacao.getvalorInvestido())
+    	);        
         linhas.add(linhaAcao);
         
         // INFORMAÇÕES ADICIONAIS DE OPÇÕES
