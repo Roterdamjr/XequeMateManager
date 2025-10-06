@@ -12,13 +12,12 @@ public class ResultadoOperacao {
     private double precoMedioApurado;
     private double cotacaoAtual;
     private double resultado;
-    private double valorInvestido;
     private double totalOpcoes;
     private double totalDividendos;
 
     public ResultadoOperacao(String ativo, int quantidade, double precoCompraAcao, double strike,
                              double precoMedioApurado, double cotacaoAtual, double resultado,
-                             double valorInvestido, double totalOpcoes, double totalDividendos) {
+                             double totalOpcoes, double totalDividendos) {
         this.ativo = ativo;
         this.quantidade = quantidade;
         this.precoCompraAcao = precoCompraAcao;
@@ -26,7 +25,6 @@ public class ResultadoOperacao {
         this.precoMedioApurado = precoMedioApurado;
         this.cotacaoAtual = cotacaoAtual;
         this.resultado = resultado;
-        this.valorInvestido = valorInvestido;
         this.totalOpcoes = totalOpcoes;
         this.totalDividendos = totalDividendos;
     }
@@ -39,7 +37,6 @@ public class ResultadoOperacao {
     public double getPrecoMedioApurado() { return precoMedioApurado; }
     public double getCotacaoAtual() { return cotacaoAtual; }
     public double getResultado() { return resultado; }
-    public double getvalorInvestido() { return valorInvestido; }
     public double getTotalOpcoes() { return totalOpcoes; }
     public double getTotalDividendos() { return totalDividendos; }
     

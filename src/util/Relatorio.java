@@ -50,29 +50,53 @@ public class Relatorio {
         
 		ResultadoOperacao resultadoOperacao= OperacaoAnalytics.sumarizaReeultado(operacao,  operacaoAberta);
 		Acao acao = operacao.getAcao();
-		
-        List<String> linhas = new ArrayList<>();
-        // LINHA PRINCIPAL DA AÇÃO
-        String linhaAcao = String.format("ATIVO: %s | Qtde: %d | Compra: %s | Strike: %s | PM: %s | Cotação: %s",
-        	    acao.getAtivo(),
-        	    acao.getQuantidade(),
-        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoCompraAcao()),
-        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getStrike()),
-        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoMedioApurado()),
-        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getCotacaoAtual())
-        	);
-        linhas.add(linhaAcao);
 
-    	linhaAcao = String.format("    Resultado: %s | Investimento: %s",
-    	    Utils.formatarParaDuasDecimais(resultadoOperacao.getResultado()),
-    	    Utils.formatarParaDuasDecimais(resultadoOperacao.getvalorInvestido())
-    	);        
-        linhas.add(linhaAcao);
+        Double valorInvestido =  acao.getQuantidade() * acao.getPrecoCompra();
+        Double retornoPercentualTotal = 
+        		100 *(resultadoOperacao.getResultado() /( acao.getQuantidade() * acao.getPrecoCompra()));
+        
+        List<String> linhas = new ArrayList<>();
+        String linhaAcao;
+        // LINHA PRINCIPAL DA AÇÃO
+        if(operacaoAberta) {
+	    	linhaAcao = String.format("%s | Investimento: %s |RESULTADO : %s | %s%%",
+	    		acao.getAtivo(),
+	    	    Utils.formatarParaDuasDecimais(valorInvestido),
+	    	    Utils.formatarParaDuasDecimais(resultadoOperacao.getResultado()),
+	    	    Utils.formatarParaDuasDecimais(retornoPercentualTotal)
+	    	);  
+	    	linhas.add(linhaAcao);
+	        linhaAcao = String.format("      | Qtde: %d | Compra: %s | Strike: %s | PM: %s | Cotação: %s",
+	        	    acao.getQuantidade(),
+	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoCompraAcao()),
+	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getStrike()),
+	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoMedioApurado()),
+	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getCotacaoAtual())
+	        	);
+	        
+	        linhas.add(linhaAcao);
+        }else {
+	    	linhaAcao = String.format(" %s | Investimento: %s |RESULTADO : %s | %s%%",
+	    		acao.getAtivo(),
+	    	    Utils.formatarParaDuasDecimais(valorInvestido),
+	    	    Utils.formatarParaDuasDecimais(resultadoOperacao.getResultado()),
+	    	    Utils.formatarParaDuasDecimais(retornoPercentualTotal)
+	    	);        
+	        linhas.add(linhaAcao);  
+	        
+	        linhaAcao = String.format("       | Qtde: %d | Compra: %s | Strike: %s | PM: %s",
+	        		acao.getQuantidade(),
+	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoCompraAcao()),
+	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getStrike()),
+	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoMedioApurado())
+	        	);
+	        linhas.add(linhaAcao);
+        }
         
         // INFORMAÇÕES ADICIONAIS DE OPÇÕES
         List<Opcao> opcoes = operacao.getOpcoes();
         if (opcoes != null && !opcoes.isEmpty()) {
-            linhas.add("    -> OPÇÕES VENDIDAS/COMPRADAS:");
+            linhas.add("    -> Opções:");
             for (Opcao opcao : opcoes) {
                 String linhaOpcao = String.format("       [%s] Compra: %s | Venda: %s | Strike: %s",
                         opcao.getOpcao(),

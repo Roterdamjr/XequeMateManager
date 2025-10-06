@@ -59,7 +59,6 @@ public class OperacaoAnalytics {
 				precoMedio,
 				cotacao,
 				resultado,
-				patrimonio,
 				resultadoDasOpcoes,
 				resultadoDosDividendos
 		);
