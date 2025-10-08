@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -87,18 +88,38 @@ public class Utils {
 	    return diasPorMes;
 	}
 
-		public static int calcularTotalDias(String dtCompraString, String dtVendaString) {
-		    
-		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		    
-		    LocalDate dataInicio = LocalDate.parse(dtCompraString, formatter);
-		    LocalDate dataFim = LocalDate.parse(dtVendaString, formatter);
-		
-		    // Calcula a diferença em dias.
-		    // Adicionamos +1 para incluir a data de venda no cálculo,
-		    // que é a contagem usual para períodos de posse ou investimento.
-		    long totalDias = ChronoUnit.DAYS.between(dataInicio, dataFim) + 1;
-		    
-		    return (int)totalDias;
-		}
+	public static int calcularTotalDias(String dtCompraString, String dtVendaString) {
+	    
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	    
+	    LocalDate dataInicio = LocalDate.parse(dtCompraString, formatter);
+	    LocalDate dataFim = LocalDate.parse(dtVendaString, formatter);
+	
+	    // Calcula a diferença em dias.
+	    // Adicionamos +1 para incluir a data de venda no cálculo,
+	    // que é a contagem usual para períodos de posse ou investimento.
+	    long totalDias = ChronoUnit.DAYS.between(dataInicio, dataFim) + 1;
+	    
+	    return (int)totalDias;
+	}
+	
+	public static final Comparator<String> MES_ANO_COMPARATOR = new Comparator<String>() {
+        @Override
+        public int compare(String mesAno1, String mesAno2) {
+            // mesAno1 e mesAno2 estão no formato "MM/YYYY"
+            
+            // 1. Compara o ano (YYYY)
+            String ano1 = mesAno1.substring(3);
+            String ano2 = mesAno2.substring(3);
+            int compareAno = ano1.compareTo(ano2);
+            if (compareAno != 0) {
+                return compareAno;
+            }
+            
+            // 2. Se o ano for igual, compara o mês (MM)
+	            String mes1 = mesAno1.substring(0, 2);
+	            String mes2 = mesAno2.substring(0, 2);
+	            return mes1.compareTo(mes2);
+	        }
+	    };
 }

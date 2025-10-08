@@ -1,26 +1,33 @@
 package view;
 
 
+import util.Desempenho;
 import util.Relatorio;
+import util.Utils;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.List;
 
-public class FrmResumo extends JInternalFrame {
+import dao.AcaoDAO;
+import model.Acao;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+public class FrmDesempenho extends JInternalFrame {
 
     private JTextArea textAreaRelatorio;
 
-    public FrmResumo() {
-        super("Relatório de Resumo das Operações Abertas", true, true, true, true);
+    public FrmDesempenho() {
+        super("Desempenho", true, true, true, true);
         
         setSize(1000, 700);
         
         setupUI();
-        executarCarregamento(() -> {
-            // Chamamos gerarResumoOperacoes passando 'true' como argumento
-            return Relatorio.gerarRelatorioDividendos3X(true);
-        });
+        
+        executarCarregamento() ;
     }
 
     private void setupUI() {
@@ -37,42 +44,38 @@ public class FrmResumo extends JInternalFrame {
         JPanel panelNorth = new JPanel(new FlowLayout(FlowLayout.LEFT));
         getContentPane().add(panelNorth, BorderLayout.NORTH);
         
-        JRadioButton rbAbertas = new JRadioButton("Operações Abertas");
-        JRadioButton rbFechadas = new JRadioButton("Operações Fechadas");
-        
-        ButtonGroup grupoOperacoes = new ButtonGroup();
-        grupoOperacoes.add(rbAbertas);
-        grupoOperacoes.add(rbFechadas);
-        
-        rbAbertas.setSelected(true);
-        
-        panelNorth.add(rbAbertas);
-        panelNorth.add(rbFechadas);
-        
-        rbAbertas.addActionListener(e -> {
-            // A lambda (e -> { ... }) chama o executarCarregamento, que espera
-            // uma outra lambda (ou interface funcional) sem argumentos.
-        	executarCarregamento(() -> {
-                // Chamamos gerarResumoOperacoes passando 'true' como argumento
-                return Relatorio.gerarRelatorioDividendos3X(true);
-            });
-        });
-        
-        rbFechadas.addActionListener(e -> {
-            // A lambda (e -> { ... }) chama o executarCarregamento, que espera
-            // uma outra lambda (ou interface funcional) sem argumentos.
-        	executarCarregamento(() -> {
-                // Chamamos gerarResumoOperacoes passando 'true' como argumento
-                return Relatorio.gerarRelatorioDividendos3X(false);
-            });
-        });
+
     }
 
-    private void executarCarregamento(java.util.function.Supplier<List<String>> reportGenerator) {
-        textAreaRelatorio.setText("Carregando relatório...");
+    private void executarCarregamento() {
 
+		List<Acao> acoes = new AcaoDAO().obterAcoesFechadas();
+		
+		List<Acao> acoesProcessadas = new ArrayList<>();
+		for (Acao acao : acoes) { 
+		    if (acao != null) {
+		        acoesProcessadas.add(acao);
+		    }
+		}
+		
+		Map<String, Double> totaisPorMes = Desempenho.calcularlDesempenhoMensal(acoesProcessadas);
+		
+        // 1. Transfere os dados para um TreeMap usando o Comparator da classe Utils
+        // O TreeMap garantirá que as chaves sejam ordenadas cronologicamente.
+        Map<String, Double> totaisOrdenados = new TreeMap<>(Utils.MES_ANO_COMPARATOR);
+        totaisOrdenados.putAll(totaisPorMes);
+        
+		List<String> linhas = new ArrayList<String>();
+        for (Map.Entry<String, Double> entry : totaisOrdenados.entrySet()) {
+            String mes = entry.getKey();
+            Double valorTotal = entry.getValue();
+            linhas.add( mes + ": " +  
+            			Utils.formatarParaDuasDecimais(valorTotal * 100)
+            			+"%"
+            );
+        }
+        
         try {
-            List<String> linhas = reportGenerator.get();
             textAreaRelatorio.setText(String.join("\n", linhas));
         } catch (Exception e) {
             textAreaRelatorio.setText("Erro ao carregar o relatório:\n" + e.getMessage());
@@ -97,7 +100,7 @@ public class FrmResumo extends JInternalFrame {
             frame.setContentPane(desktopPane);
             
             // 3. Cria e adiciona o InternalFrame que queremos testar
-            FrmResumo internalFrame = new FrmResumo();
+            FrmDesempenho internalFrame = new FrmDesempenho();
             desktopPane.add(internalFrame);
             
             // 4. Exibe e centraliza o InternalFrame

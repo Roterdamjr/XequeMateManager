@@ -2,6 +2,7 @@ package util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import dao.AcaoDAO;
 import dao.DividendoDAO;
@@ -15,7 +16,7 @@ import model.ResultadoOperacao;
 
 public class Relatorio {
 	
-	public static List<String> gerarResumoOperacoes(boolean operacaoAberta) {
+	public static List<String> gerarRelatorioDividendos3X(boolean operacaoAberta) {
 		
 		List<Acao> acoes;
 		if (operacaoAberta) {
@@ -40,13 +41,13 @@ public class Relatorio {
     	    List<Opcao> opcoes =  new OpcaoDAO().obterOpcoesPorIdAcao(acao.getId());
     	    Operacao op = new OperacaoDividendo(ac,opcoes) ;
     	    
-            relatorioLinhas.addAll(gerarResumoDaOperacao(op, operacaoAberta));
+            relatorioLinhas.addAll(obterResumoDaOperacao(op, operacaoAberta));
             relatorioLinhas.add("-----------------------------------------------------------------------------------------"); // Separador
         }
         return relatorioLinhas;
     }
 	
-    public static List<String> gerarResumoDaOperacao(Operacao operacao, boolean operacaoAberta) {
+    private static List<String> obterResumoDaOperacao(Operacao operacao, boolean operacaoAberta) {
         
 		ResultadoOperacao resultadoOperacao= OperacaoAnalytics.sumarizaReeultado(operacao,  operacaoAberta);
 		Acao acao = operacao.getAcao();
