@@ -14,7 +14,7 @@ public class FrmRelatorio extends JInternalFrame {
     public FrmRelatorio() {
         super("Relatório de Resumo das Operações Abertas", true, true, true, true);
         
-        setSize(1000, 700);
+        setSize(700, 500);
         
         setupUI();
         executarCarregamento(() -> {

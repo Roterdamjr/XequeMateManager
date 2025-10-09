@@ -27,7 +27,7 @@ public class FrmPrincipal extends JFrame {
     private FrmVenderOpcao frmVenderOpcao;
     private FrmDividendo frmDividendo;
     private FrmRelatorio frmRelatorio;
-    
+    private FrmDesempenho frmDesempenho;
     
     public FrmPrincipal() {
         setTitle("XequeMate Investimentos - Principal");
@@ -39,8 +39,6 @@ public class FrmPrincipal extends JFrame {
         setupMenuBar();
         setupDesktop();
         
-        // Abre a tabela de ações não vendidas por padrão
-        callOnlyOnce(FrmAcoesNaoVendidas.class.getName());
     }
     
     private void setupDesktop() {
@@ -97,6 +95,10 @@ public class FrmPrincipal extends JFrame {
         JMenuItem itemRelatorio = new JMenuItem("Relatorio");
         itemRelatorio.addActionListener(e -> callOnlyOnce(FrmRelatorio.class.getName()));
         mnNewMenu.add(itemRelatorio);
+        
+        JMenuItem itemDesempenhoMensal = new JMenuItem("Desempenho Mensal");
+        itemDesempenhoMensal.addActionListener(e -> callOnlyOnce(FrmDesempenho.class.getName()));
+        mnNewMenu.add(itemDesempenhoMensal);
     }
     
     private void callOnlyOnce(String className) {
@@ -140,8 +142,12 @@ public class FrmPrincipal extends JFrame {
 	        	frmRelatorio = new FrmRelatorio();
 	        }
 	        frameToOpen = frmRelatorio;
-	        
-    }
+	    } else if (className.equals(FrmDesempenho.class.getName())) {
+	        if (frmDesempenho == null || frmDesempenho.isClosed()) {
+	        	frmDesempenho = new FrmDesempenho();
+	        }
+	        frameToOpen = frmDesempenho;        
+	    }
         
         
         if (frameToOpen != null && frameToOpen.getParent() == null) {
@@ -156,8 +162,6 @@ public class FrmPrincipal extends JFrame {
             } catch (java.beans.PropertyVetoException ignored) {}
         }
     }
-    
-
     
     private void atualizarCotacoes() {
     	CotacaoManager.atualizarCotacoesNoDatabase();

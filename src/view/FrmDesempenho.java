@@ -23,7 +23,7 @@ public class FrmDesempenho extends JInternalFrame {
     public FrmDesempenho() {
         super("Desempenho", true, true, true, true);
         
-        setSize(1000, 700);
+        setSize(500, 300);
         
         setupUI();
         
@@ -59,6 +59,7 @@ public class FrmDesempenho extends JInternalFrame {
 		}
 		
 		Map<String, Double> totaisPorMes = Desempenho.calcularlDesempenhoMensal(acoesProcessadas);
+		
         Map<String, Double> totaisOrdenados = new TreeMap<>(Utils.MES_ANO_COMPARATOR);
         totaisOrdenados.putAll(totaisPorMes);
         

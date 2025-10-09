@@ -98,6 +98,37 @@ public class AcaoDAO {
         return acoes;
     }
     
+    public List<Acao> obterAcoesFechadasPorData() {
+        String sql = "SELECT  * FROM  tb_acao WHERE data_venda IS NOT NULL "
+        		+ " ORDER BY  "
+        		+ "    SUBSTR(data_Venda, 7, 4) || '-' || "
+        		+ "    SUBSTR(data_Venda, 4, 2) || '-' || "
+        		+ "    SUBSTR(data_Venda, 1, 2), "
+        		+ "    ativo";
+
+        List<Acao> acoes = new ArrayList<>();
+
+        try (Connection conn = DatabaseManager.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Acao acao = new Acao();
+                acao.setId(rs.getInt("id"));
+                acao.setAtivo(rs.getString("ativo"));
+                acao.setQuantidade(rs.getInt("quantidade"));
+                acao.setPrecoCompra(rs.getDouble("preco_compra"));
+                acao.setPrecoVenda(rs.getDouble("preco_venda"));
+                acao.setDataCompra(rs.getString("data_compra"));
+                acao.setDataVenda(rs.getString("data_venda"));
+                acoes.add(acao);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return acoes;
+    }
+    
     public Acao obterAcaoPorId(int idAcao) {
         Acao acao = null;
 

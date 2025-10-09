@@ -18,21 +18,25 @@ public class Relatorio {
 	
 	static double  somaParaMediaPercentualTotal = 0;
 	static int  contadorParaMediaPercentualTotal = 0;
+	static String CABECALHO_1 = 	" %s | Investimento: %s |RESULTADO : %s | %s%%";
+	static String CABECALHO_2 = 	"       | Qtde: %d | Compra: %s | Strike: %s | PM: %s | Cotação: %s";
+	static String CABECALHO_3 = 	"       | Qtde: %d | Compra: %s | Strike: %s | PM: %s ";
+	static String CABECALHO_OPCAO = "        [%s] Compra: %s | Venda: %s | Strike: %s";
 	
-	public static List<String> gerarRelatorioDividendos3X(boolean operacaoAberta) {
+	public static List<String> gerarRelatorioDividendos3X(boolean isOperacaoAberta) {
 		
 		List<Acao> acoes;
-		if (operacaoAberta) {
+		if (isOperacaoAberta) {
 			acoes = new AcaoDAO().obterAcoesAbertas();
 		}else {
-			acoes = new AcaoDAO().obterAcoesFechadas();
+			acoes = new AcaoDAO().obterAcoesFechadasPorData();
 		}
 		
         List<String> relatorioLinhas = new ArrayList<>();
         
-        relatorioLinhas.add("=========================================================================================");
-        relatorioLinhas.add("= RESUMO DE OPERAÇÕES EM ABERTO                                                         =");
-        relatorioLinhas.add("=========================================================================================");
+        relatorioLinhas.add(" =========================================================================================");
+        relatorioLinhas.add(" = RESUMO DE OPERAÇÕES EM ABERTO                                                         =");
+        relatorioLinhas.add(" =========================================================================================");
 
         if (acoes.isEmpty()) {
              relatorioLinhas.add("Nenhuma operação encontrada.");
@@ -44,24 +48,28 @@ public class Relatorio {
     	    List<Opcao> opcoes =  new OpcaoDAO().obterOpcoesPorIdAcao(acao.getId());
     	    Operacao op = new OperacaoDividendo(ac,opcoes) ;
     	    
-            relatorioLinhas.addAll(obterResumoDaOperacao(op, operacaoAberta));
-            relatorioLinhas.add("-----------------------------------------------------------------------------------------"); 
+            relatorioLinhas.addAll(obterResumoDaOperacao(op, isOperacaoAberta));
+            relatorioLinhas.add(" -----------------------------------------------------------------------------------------"); 
         }
-
-        relatorioLinhas.add("=========================================================================================");
-        relatorioLinhas.add("QTDE DE OPERAÇÕES: "  + 
-        		Utils.formatarParaDuasDecimais(contadorParaMediaPercentualTotal));
         
-        relatorioLinhas.add("MÉDIA DE REULTADO: "  + 
-        		Utils.formatarParaDuasDecimais(somaParaMediaPercentualTotal/contadorParaMediaPercentualTotal)+ "%");
-        
+        /*
+         * se estiver exibindo operações fechadas imprime Média
+         */
+        if (!isOperacaoAberta) {
+	        relatorioLinhas.add(" =========================================================================================");
+	        relatorioLinhas.add("   QTDE DE OPERAÇÕES: "  + 
+	        		Utils.formatarParaDuasDecimais(contadorParaMediaPercentualTotal)+
+	        		"   MÉDIA DE RESULTADO: "  + 
+	        		Utils.formatarParaDuasDecimais(somaParaMediaPercentualTotal/contadorParaMediaPercentualTotal)+ "%");
+	        relatorioLinhas.add(" =========================================================================================");
+        }
         return relatorioLinhas;
         
     }
 	
-    private static List<String> obterResumoDaOperacao(Operacao operacao, boolean operacaoAberta) {
+    private static List<String> obterResumoDaOperacao(Operacao operacao, boolean isOperacaoAberta) {
         
-		ResultadoOperacao resultadoOperacao= OperacaoAnalytics.sumarizaReeultado(operacao,  operacaoAberta);
+		ResultadoOperacao resultadoOperacao= OperacaoAnalytics.sumarizaReeultado(operacao,  isOperacaoAberta);
 		Acao acao = operacao.getAcao();
 
         Double valorInvestido =  acao.getQuantidade() * acao.getPrecoCompra();
@@ -71,15 +79,15 @@ public class Relatorio {
         List<String> linhas = new ArrayList<>();
         String linhaAcao;
         
-        if(operacaoAberta) {
-	    	linhaAcao = String.format("%s | Investimento: %s |RESULTADO : %s | %s%%",
+        if(isOperacaoAberta) {
+	    	linhaAcao = String.format(CABECALHO_1,
 	    		acao.getAtivo(),
 	    	    Utils.formatarParaDuasDecimais(valorInvestido),
 	    	    Utils.formatarParaDuasDecimais(resultadoOperacao.getResultado()),
 	    	    Utils.formatarParaDuasDecimais(retornoPercentualTotal)
 	    	);  
 	    	linhas.add(linhaAcao);
-	        linhaAcao = String.format("      | Qtde: %d | Compra: %s | Strike: %s | PM: %s | Cotação: %s",
+	        linhaAcao = String.format(CABECALHO_2,
 	        	    acao.getQuantidade(),
 	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoCompraAcao()),
 	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getStrike()),
@@ -89,7 +97,7 @@ public class Relatorio {
 	        
 	        linhas.add(linhaAcao);
         }else {
-	    	linhaAcao = String.format(" %s | Investimento: %s |RESULTADO : %s | %s%%",
+	    	linhaAcao = String.format(CABECALHO_1,
 	    		acao.getAtivo(),
 	    	    Utils.formatarParaDuasDecimais(valorInvestido),
 	    	    Utils.formatarParaDuasDecimais(resultadoOperacao.getResultado()),
@@ -97,7 +105,7 @@ public class Relatorio {
 	    	);        
 	        linhas.add(linhaAcao);  
 	        
-	        linhaAcao = String.format("       | Qtde: %d | Compra: %s | Strike: %s | PM: %s",
+	        linhaAcao = String.format(CABECALHO_3,
 	        		acao.getQuantidade(),
 	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoCompraAcao()),
 	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getStrike()),
@@ -106,7 +114,6 @@ public class Relatorio {
 	        linhas.add(linhaAcao);
 	        somaParaMediaPercentualTotal += retornoPercentualTotal;
 	        contadorParaMediaPercentualTotal++;
-	        System.out.println(somaParaMediaPercentualTotal);
         }
         
         // INFORMAÇÕES ADICIONAIS DE OPÇÕES
@@ -114,7 +121,7 @@ public class Relatorio {
         if (opcoes != null && !opcoes.isEmpty()) {
             linhas.add("    -> Opções:");
             for (Opcao opcao : opcoes) {
-                String linhaOpcao = String.format("       [%s] Compra: %s | Venda: %s | Strike: %s",
+                String linhaOpcao = String.format(CABECALHO_OPCAO,
                         opcao.getOpcao(),
                         Utils.formatarParaDuasDecimais(opcao.getPrecoCompra()),
                         Utils.formatarParaDuasDecimais(opcao.getPrecoVenda()),
