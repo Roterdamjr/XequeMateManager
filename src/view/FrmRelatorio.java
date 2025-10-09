@@ -7,11 +7,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class FrmResumo extends JInternalFrame {
+public class FrmRelatorio extends JInternalFrame {
 
     private JTextArea textAreaRelatorio;
 
-    public FrmResumo() {
+    public FrmRelatorio() {
         super("Relatório de Resumo das Operações Abertas", true, true, true, true);
         
         setSize(1000, 700);
@@ -97,7 +97,7 @@ public class FrmResumo extends JInternalFrame {
             frame.setContentPane(desktopPane);
             
             // 3. Cria e adiciona o InternalFrame que queremos testar
-            FrmResumo internalFrame = new FrmResumo();
+            FrmRelatorio internalFrame = new FrmRelatorio();
             desktopPane.add(internalFrame);
             
             // 4. Exibe e centraliza o InternalFrame

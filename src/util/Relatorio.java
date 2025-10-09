@@ -16,6 +16,9 @@ import model.ResultadoOperacao;
 
 public class Relatorio {
 	
+	static double  somaParaMediaPercentualTotal = 0;
+	static int  contadorParaMediaPercentualTotal = 0;
+	
 	public static List<String> gerarRelatorioDividendos3X(boolean operacaoAberta) {
 		
 		List<Acao> acoes;
@@ -42,9 +45,18 @@ public class Relatorio {
     	    Operacao op = new OperacaoDividendo(ac,opcoes) ;
     	    
             relatorioLinhas.addAll(obterResumoDaOperacao(op, operacaoAberta));
-            relatorioLinhas.add("-----------------------------------------------------------------------------------------"); // Separador
+            relatorioLinhas.add("-----------------------------------------------------------------------------------------"); 
         }
+
+        relatorioLinhas.add("=========================================================================================");
+        relatorioLinhas.add("QTDE DE OPERAÇÕES: "  + 
+        		Utils.formatarParaDuasDecimais(contadorParaMediaPercentualTotal));
+        
+        relatorioLinhas.add("MÉDIA DE REULTADO: "  + 
+        		Utils.formatarParaDuasDecimais(somaParaMediaPercentualTotal/contadorParaMediaPercentualTotal)+ "%");
+        
         return relatorioLinhas;
+        
     }
 	
     private static List<String> obterResumoDaOperacao(Operacao operacao, boolean operacaoAberta) {
@@ -58,7 +70,7 @@ public class Relatorio {
         
         List<String> linhas = new ArrayList<>();
         String linhaAcao;
-        // LINHA PRINCIPAL DA AÇÃO
+        
         if(operacaoAberta) {
 	    	linhaAcao = String.format("%s | Investimento: %s |RESULTADO : %s | %s%%",
 	    		acao.getAtivo(),
@@ -92,6 +104,9 @@ public class Relatorio {
 	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoMedioApurado())
 	        	);
 	        linhas.add(linhaAcao);
+	        somaParaMediaPercentualTotal += retornoPercentualTotal;
+	        contadorParaMediaPercentualTotal++;
+	        System.out.println(somaParaMediaPercentualTotal);
         }
         
         // INFORMAÇÕES ADICIONAIS DE OPÇÕES

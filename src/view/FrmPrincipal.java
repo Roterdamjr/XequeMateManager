@@ -26,7 +26,7 @@ public class FrmPrincipal extends JFrame {
     private FrmVenderAcao frmVenderAcao;
     private FrmVenderOpcao frmVenderOpcao;
     private FrmDividendo frmDividendo;
-    private FrmResumo frmResumo;
+    private FrmRelatorio frmRelatorio;
     
     
     public FrmPrincipal() {
@@ -94,9 +94,9 @@ public class FrmPrincipal extends JFrame {
         itemCotacoes.addActionListener(e -> atualizarCotacoes());
         mnNewMenu.add(itemCotacoes);
         
-        JMenuItem itemResumo = new JMenuItem("Resumo");
-        itemResumo.addActionListener(e -> callOnlyOnce(FrmResumo.class.getName()));
-        mnNewMenu.add(itemResumo);
+        JMenuItem itemRelatorio = new JMenuItem("Relatorio");
+        itemRelatorio.addActionListener(e -> callOnlyOnce(FrmRelatorio.class.getName()));
+        mnNewMenu.add(itemRelatorio);
     }
     
     private void callOnlyOnce(String className) {
@@ -135,11 +135,11 @@ public class FrmPrincipal extends JFrame {
 	        }
 	        frameToOpen = frmDividendo;
 	        
-	    } else if (className.equals(FrmResumo.class.getName())) {
-	        if (frmResumo == null || frmResumo.isClosed()) {
-	        	frmResumo = new FrmResumo();
+	    } else if (className.equals(FrmRelatorio.class.getName())) {
+	        if (frmRelatorio == null || frmRelatorio.isClosed()) {
+	        	frmRelatorio = new FrmRelatorio();
 	        }
-	        frameToOpen = frmResumo;
+	        frameToOpen = frmRelatorio;
 	        
     }
         

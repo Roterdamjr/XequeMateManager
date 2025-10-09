@@ -59,13 +59,11 @@ public class FrmDesempenho extends JInternalFrame {
 		}
 		
 		Map<String, Double> totaisPorMes = Desempenho.calcularlDesempenhoMensal(acoesProcessadas);
-		
-        // 1. Transfere os dados para um TreeMap usando o Comparator da classe Utils
-        // O TreeMap garantirá que as chaves sejam ordenadas cronologicamente.
         Map<String, Double> totaisOrdenados = new TreeMap<>(Utils.MES_ANO_COMPARATOR);
         totaisOrdenados.putAll(totaisPorMes);
         
 		List<String> linhas = new ArrayList<String>();
+		double soma=0;
         for (Map.Entry<String, Double> entry : totaisOrdenados.entrySet()) {
             String mes = entry.getKey();
             Double valorTotal = entry.getValue();
@@ -73,8 +71,15 @@ public class FrmDesempenho extends JInternalFrame {
             			Utils.formatarParaDuasDecimais(valorTotal * 100)
             			+"%"
             );
+            soma+=valorTotal;
         }
         
+        linhas.add("-------------------------"); 
+        linhas.add( "Média : " +  
+                    Utils.formatarParaDuasDecimais(soma / totaisOrdenados.size() * 100)
+                    +"%"
+        );
+
         try {
             textAreaRelatorio.setText(String.join("\n", linhas));
         } catch (Exception e) {
