@@ -20,7 +20,7 @@ public class Relatorio {
 	static int  contadorParaMediaPercentualTotal = 0;
 	static String CABECALHO_1 = 	" %s | Investimento: %s |RESULTADO : %s | %s%%";
 	static String CABECALHO_2 = 	"       | Qtde: %d | Compra: %s | Strike: %s | PM: %s | Cotação: %s";
-	static String CABECALHO_3 = 	"       | Qtde: %d | Compra: %s | Strike: %s | PM: %s ";
+	static String CABECALHO_3 = 	"       | Qtde: %d | Compra: %s | Venda: %s | PM: %s ";
 	static String CABECALHO_OPCAO = "        [%s] Compra: %s | Venda: %s | Strike: %s";
 	
 	public static List<String> gerarRelatorioDividendos3X(boolean isOperacaoAberta) {
@@ -69,7 +69,7 @@ public class Relatorio {
 	
     private static List<String> obterResumoDaOperacao(Operacao operacao, boolean isOperacaoAberta) {
         
-		ResultadoOperacao resultadoOperacao= OperacaoAnalytics.sumarizaReeultado(operacao,  isOperacaoAberta);
+		ResultadoOperacao resultadoOperacao= new OperacaoAnalyticsDividendos3X().sumarizaResultado(operacao,  isOperacaoAberta);
 		Acao acao = operacao.getAcao();
 
         Double valorInvestido =  acao.getQuantidade() * acao.getPrecoCompra();
@@ -90,7 +90,7 @@ public class Relatorio {
 	        linhaAcao = String.format(CABECALHO_2,
 	        	    acao.getQuantidade(),
 	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoCompraAcao()),
-	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getStrike()),
+	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoVendaAcao()),
 	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoMedioApurado()),
 	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getCotacaoAtual())
 	        	);
@@ -108,7 +108,7 @@ public class Relatorio {
 	        linhaAcao = String.format(CABECALHO_3,
 	        		acao.getQuantidade(),
 	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoCompraAcao()),
-	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getStrike()),
+	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoVendaAcao()),
 	        	    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoMedioApurado())
 	        	);
 	        linhas.add(linhaAcao);

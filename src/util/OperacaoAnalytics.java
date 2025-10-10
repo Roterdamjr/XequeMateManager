@@ -11,9 +11,14 @@ import model.Opcao;
 import model.Operacao;
 import model.ResultadoOperacao;
 
-public class OperacaoAnalytics {
-
-	public static ResultadoOperacao sumarizaReeultado(Operacao operacao, boolean operacaoAberta) {
+public abstract class OperacaoAnalytics {
+	
+	protected abstract double calcularPrecoVenda(double strike, 
+												double cotacao, 
+												double precoVenda,
+												boolean isOperacaoAberta);
+	
+	public ResultadoOperacao sumarizaResultado(Operacao operacao, boolean isOperacaoAberta) {
 		Acao acao = operacao.getAcao();
 		
 		List<Opcao> opcoes = operacao.getOpcoes();
@@ -33,35 +38,36 @@ public class OperacaoAnalytics {
 	        }
 	    }
 	    
-	   double cotacao = new CotacaoDAO().buscarCotacaoPorAtivo(acao.getAtivo());
+	    double cotacao = new CotacaoDAO().buscarCotacaoPorAtivo(acao.getAtivo());
 	    
-	    int quantidade = acao.getQuantidade();
-	    double strike = OpcaoDAO.obterStrikeUltimaOpcaoVendida(acao.getId());
-	    
-	    double precoMedio = acao.getPrecoCompra()  - resultadoDasOpcoes - resultadoDosDividendos;
-	    
-	    double precoVendaCalculo = 0.0;
-	
-	    if (operacaoAberta){
-	    	precoVendaCalculo = (strike < cotacao) ? strike : cotacao;
-	    }else {
-	    	precoVendaCalculo = strike;
-	    }
-	
-	    Double resultado = quantidade * (precoVendaCalculo - precoMedio);
-	    Double patrimonio = quantidade * cotacao;
-	    
+		int quantidade = acao.getQuantidade();
+		double strike = OpcaoDAO.obterStrikeUltimaOpcaoVendida(acao.getId());
+		
+		double precoMedio = acao.getPrecoCompra()  - resultadoDasOpcoes - resultadoDosDividendos;
+		
+		  // O método abstrato é chamado aqui
+		if (acao.getId() ==13) {
+			int a =1;
+		}
+        double precoVendaCalculo = calcularPrecoVenda(strike, 
+					        		cotacao, 
+					        		acao.getPrecoVenda(), 
+					        		isOperacaoAberta);
+
+		
+		Double resultado = quantidade * (precoVendaCalculo - precoMedio);
+		
 		return new ResultadoOperacao(
 				acao.getAtivo(),
 				quantidade,
 				acao.getPrecoCompra(),
-				strike,
+				acao.getPrecoVenda(),
 				precoMedio,
+				strike,
 				cotacao,
 				resultado,
 				resultadoDasOpcoes,
 				resultadoDosDividendos
 		);
 	}
-
 }

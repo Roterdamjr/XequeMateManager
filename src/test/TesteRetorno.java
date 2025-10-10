@@ -45,7 +45,7 @@ import dao.OpcaoDAO;
 import model.Acao;
 import model.Opcao;
 import model.Operacao;
-import util.OperacaoAnalytics;
+import util.OperacaoAnalyticsDividendos3X;
 import util.Utils;
 
 public class TesteRetorno {
@@ -93,7 +93,7 @@ public class TesteRetorno {
         List<Opcao> opcoes = new OpcaoDAO().obterOpcoesPorIdAcao(acao.getId());
         Operacao op = new Operacao(acao, opcoes); 
         
-        Double resultadoEmValor = OperacaoAnalytics.sumarizaReeultado(op, false).getResultado();
+        Double resultadoEmValor = new OperacaoAnalyticsDividendos3X().sumarizaResultado(op, false).getResultado();
         String dtCompra = acao.getDataCompra();
         String dtVenda = acao.getDataVenda();
 

@@ -37,7 +37,7 @@ public class Desempenho {
         List<Opcao> opcoes = new OpcaoDAO().obterOpcoesPorIdAcao(acao.getId());
         Operacao op = new Operacao(acao, opcoes); 
         
-        Double resultadoEmValor = OperacaoAnalytics.sumarizaReeultado(op, false).getResultado();
+        Double resultadoEmValor = new OperacaoAnalyticsDividendos3X().sumarizaResultado(op, false).getResultado();
         String dtCompra = acao.getDataCompra();
         String dtVenda = acao.getDataVenda();
 

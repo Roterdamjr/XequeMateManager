@@ -18,7 +18,6 @@ public class FrmRelatorio extends JInternalFrame {
         
         setupUI();
         executarCarregamento(() -> {
-            // Chamamos gerarResumoOperacoes passando 'true' como argumento
             return Relatorio.gerarRelatorioDividendos3X(true);
         });
     }
@@ -50,19 +49,14 @@ public class FrmRelatorio extends JInternalFrame {
         panelNorth.add(rbFechadas);
         
         rbAbertas.addActionListener(e -> {
-            // A lambda (e -> { ... }) chama o executarCarregamento, que espera
-            // uma outra lambda (ou interface funcional) sem argumentos.
         	executarCarregamento(() -> {
-                // Chamamos gerarResumoOperacoes passando 'true' como argumento
                 return Relatorio.gerarRelatorioDividendos3X(true);
             });
         });
         
         rbFechadas.addActionListener(e -> {
-            // A lambda (e -> { ... }) chama o executarCarregamento, que espera
-            // uma outra lambda (ou interface funcional) sem argumentos.
         	executarCarregamento(() -> {
-                // Chamamos gerarResumoOperacoes passando 'true' como argumento
+  
                 return Relatorio.gerarRelatorioDividendos3X(false);
             });
         });

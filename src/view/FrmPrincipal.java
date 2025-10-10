@@ -61,10 +61,10 @@ public class FrmPrincipal extends JFrame {
         menuOperacoes.add(itemVenderAcao);
 
         JMenu menuVisualizar = new JMenu("Visualizar");
-        JMenuItem itemMostrarTabela = new JMenuItem("Ações Não Vendidas");
-        itemMostrarTabela.addActionListener(e -> callOnlyOnce(FrmAcoesNaoVendidas.class.getName()));
-
-        menuVisualizar.add(itemMostrarTabela);
+        
+        JMenuItem itemRelatorio = new JMenuItem("Relatorio");
+        menuVisualizar.add(itemRelatorio);
+        itemRelatorio.addActionListener(e -> callOnlyOnce(FrmRelatorio.class.getName()));
         
         menuBar.add(menuOperacoes);
         JMenuItem itemComprarOpcao = new JMenuItem("Comprar Opção");
@@ -83,6 +83,10 @@ public class FrmPrincipal extends JFrame {
         itemComprarOpcao.addActionListener(e -> callOnlyOnce(FrmComprarOpcao.class.getName()));
         menuBar.add(menuVisualizar);
         
+        JMenuItem itemDesempenhoMensal = new JMenuItem("Desempenho Mensal");
+        menuVisualizar.add(itemDesempenhoMensal);
+        itemDesempenhoMensal.addActionListener(e -> callOnlyOnce(FrmDesempenho.class.getName()));
+        
         setJMenuBar(menuBar);
         
         JMenu mnNewMenu = new JMenu("Ferramentas");
@@ -91,14 +95,6 @@ public class FrmPrincipal extends JFrame {
         JMenuItem itemCotacoes = new JMenuItem("Atualizar Cotações");
         itemCotacoes.addActionListener(e -> atualizarCotacoes());
         mnNewMenu.add(itemCotacoes);
-        
-        JMenuItem itemRelatorio = new JMenuItem("Relatorio");
-        itemRelatorio.addActionListener(e -> callOnlyOnce(FrmRelatorio.class.getName()));
-        mnNewMenu.add(itemRelatorio);
-        
-        JMenuItem itemDesempenhoMensal = new JMenuItem("Desempenho Mensal");
-        itemDesempenhoMensal.addActionListener(e -> callOnlyOnce(FrmDesempenho.class.getName()));
-        mnNewMenu.add(itemDesempenhoMensal);
     }
     
     private void callOnlyOnce(String className) {

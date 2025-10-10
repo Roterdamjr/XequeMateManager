@@ -8,21 +8,23 @@ public class ResultadoOperacao {
     private String ativo;
     private int quantidade;
     private double precoCompraAcao;
-    private double strike;
+    private double precoVendaAcao;
     private double precoMedioApurado;
+    private double strike;
     private double cotacaoAtual;
     private double resultado;
     private double totalOpcoes;
     private double totalDividendos;
 
-    public ResultadoOperacao(String ativo, int quantidade, double precoCompraAcao, double strike,
-                             double precoMedioApurado, double cotacaoAtual, double resultado,
+    public ResultadoOperacao(String ativo, int quantidade, double precoCompraAcao, double precoVendaAcao,
+                             double precoMedioApurado,double strike, double cotacaoAtual, double resultado,
                              double totalOpcoes, double totalDividendos) {
         this.ativo = ativo;
         this.quantidade = quantidade;
         this.precoCompraAcao = precoCompraAcao;
-        this.strike = strike;
+        this.precoVendaAcao = precoVendaAcao;
         this.precoMedioApurado = precoMedioApurado;
+        this.strike = strike;
         this.cotacaoAtual = cotacaoAtual;
         this.resultado = resultado;
         this.totalOpcoes = totalOpcoes;
@@ -33,12 +35,16 @@ public class ResultadoOperacao {
     public String getAtivo() { return ativo; }
     public int getQuantidade() { return quantidade; }
     public double getPrecoCompraAcao() { return precoCompraAcao; }
-    public double getStrike() { return strike; }
+    public double getPrecoVendaAcao() { return precoVendaAcao; }
     public double getPrecoMedioApurado() { return precoMedioApurado; }
     public double getCotacaoAtual() { return cotacaoAtual; }
     public double getResultado() { return resultado; }
     public double getTotalOpcoes() { return totalOpcoes; }
     public double getTotalDividendos() { return totalDividendos; }
+
+	public double getStrike() {
+		return strike;
+	}
     
     // --- SETTERS --- (Se forem necessários, adicione-os aqui)
 }
