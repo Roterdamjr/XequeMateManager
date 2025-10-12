@@ -7,9 +7,12 @@ import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import view.paneles.PainelComprarOpcao;
+import view.paneles.PainelDividendo;
 import view.paneles.PainelVenderOpcao;
 
-public class FrmOperacoesConsolidadas extends JInternalFrame {
+public class FrmOperacoesConsolidadas extends JInternalFrame implements OperacoesListener{
+
+	private static final long serialVersionUID = 1L;
 
 	private String tipoOperacao="DIV";
 	
@@ -18,6 +21,7 @@ public class FrmOperacoesConsolidadas extends JInternalFrame {
 	private PainelComprarOpcao painelComprarOpcao;
     private PainelVenderOpcao painelVenderOpcao;	
     private JTabbedPane tabbedPane;
+    private PainelDividendo painelDividendo;
 
 
     public FrmOperacoesConsolidadas() {
@@ -32,39 +36,23 @@ public class FrmOperacoesConsolidadas extends JInternalFrame {
         tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         getContentPane().add(tabbedPane);
 
-        // Adiciona as 4 telas como abas
         tabbedPane.addTab("Comprar Ação", criarPainelComprarAcao());
         tabbedPane.addTab("Vender Ação", criarPainelVenderAcao());
         tabbedPane.addTab("Comprar Opção", criarPainelComprarOpcao());
         tabbedPane.addTab("Vender Opção", criarPainelVenderOpcao());
+        tabbedPane.addTab("Dividendo", criarPainelDividendo());
         
-        // Inicializa as janelas
-        limparPainelComprarAcao();
-        limparPainelVenderAcao();
-        limparPainelComprarOpcao();
-        limparPainelVenderOpcao();
+        limparTodasAsAbas();
     }
     
     private JPanel criarPainelComprarAcao() {
-        painelComprarAcao = new PainelComprarAcao();
+        painelComprarAcao = new PainelComprarAcao(this);
         return painelComprarAcao;
     }
     
     private JPanel criarPainelVenderAcao() {
         painelVenderAcao = new PainelVenderAcao();
         return painelVenderAcao;
-    }
-
-    private void limparPainelComprarAcao() {
-        if (painelComprarAcao != null) {
-            painelComprarAcao.limparPainel();
-        }
-    }
-    
-    private void limparPainelVenderAcao() {
-        if (painelVenderAcao != null) {
-            painelVenderAcao.limparPainel();
-        }
     }
 
     private JPanel criarPainelVenderOpcao() {
@@ -76,17 +64,36 @@ public class FrmOperacoesConsolidadas extends JInternalFrame {
         painelComprarOpcao = new PainelComprarOpcao();
         return painelComprarOpcao;
     }
-
-    private void limparPainelComprarOpcao() {
+    
+    private JPanel criarPainelDividendo() {
+        painelDividendo = new PainelDividendo();
+        return painelDividendo;
+    }
+    
+    public void limparTodasAsAbas() {
+        if (painelComprarAcao != null) {
+            painelComprarAcao.limparPainel();
+        }
+        if (painelVenderAcao != null) {
+            painelVenderAcao.limparPainel();
+            painelVenderAcao.carregarAcoesVenda();
+        }
         if (painelComprarOpcao != null) {
             painelComprarOpcao.limparPainel();
+            painelComprarOpcao.carregarOpcoesCompra();
         }
-    }
-    private void limparPainelVenderOpcao() {
         if (painelVenderOpcao != null) {
             painelVenderOpcao.limparPainel();
         }
+        if (painelDividendo != null) {
+            painelDividendo.limparPainel();
+            painelDividendo.carregarAcoes();
+        }
     }
 
+    @Override
+    public void onOperacaoSalvaSucesso() {
+        limparTodasAsAbas();
+    }
    
 }

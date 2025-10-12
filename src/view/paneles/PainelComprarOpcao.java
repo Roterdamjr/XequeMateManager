@@ -21,6 +21,7 @@ import javax.swing.border.EmptyBorder;
 import dao.OpcaoDAO;
 import model.Opcao;
 import util.Utils;
+import view.OperacoesListener;
 
 public class PainelComprarOpcao extends JPanel {
 
@@ -30,7 +31,9 @@ public class PainelComprarOpcao extends JPanel {
     private Opcao opcaoSelecionadaCompra = null;
     private JTextField txtPrecoCompraOpcao;
     private JLabel lblQuantidadeCompraOpcao;
-    private JLabel lblPrecoVendaCompraOpcao; // No FrmComprarOpcao original é lblPrecoVenda
+    private JLabel lblPrecoVendaCompraOpcao; 
+    private OperacoesListener listener;
+    private String tipoOperacao = "DIV"; 
 
     public PainelComprarOpcao() {
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -81,7 +84,6 @@ public class PainelComprarOpcao extends JPanel {
         panelBotoes.add(btnSalvar);
         this.add(panelBotoes);
 
-        // Listener para o ComboBox (Migrado de FrmComprarOpcao.java)
         cmbOpcaoCompra.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -94,13 +96,8 @@ public class PainelComprarOpcao extends JPanel {
         
         limparPainel();
     }
-    
-    // =====================================================================
-    // Lógica de Limpeza e Persistência
-    // =====================================================================
 
     public void limparPainel() {
-        // Migrado de FrmComprarOpcao.java -> limparJanela()
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         txtDataCompraOpcao.setText(dateFormat.format(new Date()));
         txtPrecoCompraOpcao.setText("");
@@ -108,29 +105,33 @@ public class PainelComprarOpcao extends JPanel {
         atualizarLabels();
     }
 
-    private void carregarOpcoesCompra() {
-        // Migrado de FrmComprarOpcao.java -> carregarOpcoes()
+    public void carregarOpcoesCompra() {
         try {
-            List<Opcao> opcoes = opcaoDAO.listarOpcoesDisponiveis(); // Método de exemplo
+            List<Opcao> opcoes = opcaoDAO.obterOpcoesNaoCompradas(); 
+            
             cmbOpcaoCompra.removeAllItems();
+            
             for (Opcao opcao : opcoes) {
                 cmbOpcaoCompra.addItem(opcao);
             }
+            
             if (!opcoes.isEmpty()) {
                 opcaoSelecionadaCompra = opcoes.get(0);
             } else {
                 opcaoSelecionadaCompra = null;
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar a lista de opções: " + e.getMessage(), "Erro de BD", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+					            		"Erro ao carregar a lista de opções: " + e.getMessage(), 
+					            		"Erro de BD", 
+					            		JOptionPane.ERROR_MESSAGE);
         }
     }
     
     private void atualizarLabels() {
-        // Migrado de FrmComprarOpcao.java -> atualizarLabels()
         if (opcaoSelecionadaCompra != null) {
             lblQuantidadeCompraOpcao.setText(String.valueOf(opcaoSelecionadaCompra.getQuantidade()));
-            lblPrecoVendaCompraOpcao.setText(String.format("R$ %.2f", opcaoSelecionadaCompra.getStrike())); // Preço Venda é o Strike
+            lblPrecoVendaCompraOpcao.setText(String.format("R$ %.2f", opcaoSelecionadaCompra.getStrike())); 
         } else {
             lblQuantidadeCompraOpcao.setText("N/D");
             lblPrecoVendaCompraOpcao.setText("N/D");
@@ -172,21 +173,32 @@ public class PainelComprarOpcao extends JPanel {
 
         if (precoCompraText.isEmpty() || !Utils.isNumeric(precoCompraText)) {
             JOptionPane.showMessageDialog(this, 
-                "O campo Preço Compra deve ser preenchido corretamente com um valor numérico.", 
-                "Erro de Validação", 
-                JOptionPane.INFORMATION_MESSAGE);
+						                "O campo Preço Compra deve ser preenchido corretamente com um valor numérico.", 
+						                "Erro de Validação", 
+						                JOptionPane.INFORMATION_MESSAGE);
+            
             txtPrecoCompraOpcao.requestFocusInWindow();
             return; 
         }
 
         try {
             double precoCompraDouble = Double.parseDouble(precoCompraText.replace(",", "."));
+  
+            opcaoDAO.comprarOpcao(opcaoSelecionadaCompra.getId(), 
+            					txtDataCompraOpcao.getText().trim(), 
+            					precoCompraDouble);
             
-            // Supondo um método salvar no OpcaoDAO que receba os dados
-            opcaoDAO.comprarOpcao(opcaoSelecionadaCompra, txtDataCompraOpcao.getText().trim(), precoCompraDouble);
-            
-            JOptionPane.showMessageDialog(this, "Opção inserida com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+					            		"Opção inserida com sucesso!", 
+					            		"Sucesso", 
+					            		JOptionPane.INFORMATION_MESSAGE);
             limparPainel();
+            
+            carregarOpcoesCompra();
+            
+            if (listener != null) {
+                listener.onOperacaoSalvaSucesso();
+            }
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, 

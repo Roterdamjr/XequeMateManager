@@ -22,6 +22,7 @@ import dao.AcaoDAO;
 import dao.OpcaoDAO;
 import model.Acao;
 import util.Utils;
+import view.OperacoesListener;
 
 public class PainelVenderOpcao extends JPanel {
 
@@ -33,8 +34,10 @@ public class PainelVenderOpcao extends JPanel {
     private Acao acaoSelecionadaOpcaoVenda = null;
     private JTextField txtPrecoVendaOpcao;
     private JTextField txtStrikeVendaOpcao;
-    private JTextField txtOpcaoVenda; // Código da Opção a ser lançada
-    private JLabel lblQuantidadeOpcaoVenda;
+    private JTextField txtOpcaoVenda; 
+    private JTextField txtQuantidade;
+    private OperacoesListener listener;
+    private String tipoOperacao = "DIV";
 
     public PainelVenderOpcao() {
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -65,8 +68,8 @@ public class PainelVenderOpcao extends JPanel {
         // 4. Quantidade (Label da Ação)
         JPanel panelQuantidade = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelQuantidade.add(new JLabel("Quantidade da Ação (Base):"));
-        lblQuantidadeOpcaoVenda = new JLabel("0.0");
-        panelQuantidade.add(lblQuantidadeOpcaoVenda);
+        txtQuantidade = new JTextField(100);
+        panelQuantidade.add(txtQuantidade);
         this.add(panelQuantidade);
 
         // 5. Strike
@@ -108,11 +111,7 @@ public class PainelVenderOpcao extends JPanel {
         
         limparPainel();
     }
-    
-    // =====================================================================
-    // Lógica de Limpeza e Persistência
-    // =====================================================================
-
+ 
     public void limparPainel() {
         // Migrado de FrmVenderOpcao.java -> limparJanela()
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -126,9 +125,9 @@ public class PainelVenderOpcao extends JPanel {
     }
 
     private void carregarAcoesVenda() {
-        // Migrado de FrmVenderOpcao.java -> carregarAcoesNaoVendidas()
+
         try {
-            List<Acao> acoes = acaoDAO.obterAcoesAbertas(); // Ações que ainda estão em carteira
+            List<Acao> acoes = acaoDAO.obterAcoesAbertas(); 
             cmbAcaoOpcaoVenda.removeAllItems();
             
             for (Acao acao : acoes) {
@@ -142,16 +141,19 @@ public class PainelVenderOpcao extends JPanel {
                 acaoSelecionadaOpcaoVenda = null;
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar a lista de ações.", "Erro de BD", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+					            		"Erro ao carregar a lista de ações.", 
+					            		"Erro de BD", 
+					            		JOptionPane.ERROR_MESSAGE);
         }
     }
     
     private void atualizarLabels() {
         // Migrado de FrmVenderOpcao.java -> atualizarLabels()
         if (acaoSelecionadaOpcaoVenda != null) {
-            lblQuantidadeOpcaoVenda.setText(String.valueOf(acaoSelecionadaOpcaoVenda.getQuantidade()));
+            txtQuantidade.setText(String.valueOf(acaoSelecionadaOpcaoVenda.getQuantidade()));
         } else {
-            lblQuantidadeOpcaoVenda.setText("0.0");
+        	txtQuantidade.setText("0.0");
         }
     }
     
@@ -174,7 +176,6 @@ public class PainelVenderOpcao extends JPanel {
     }
 
     private void cmdSalvar_Click() {
-        // Lógica de Salvar Vender Opção (Lançamento), migrada de FrmVenderOpcao.java
         
         if (acaoSelecionadaOpcaoVenda == null) {
             JOptionPane.showMessageDialog(this, 
@@ -199,15 +200,26 @@ public class PainelVenderOpcao extends JPanel {
         }
         
         try {
-            double strikeDouble = Double.parseDouble(strikeText.replace(",", "."));
             double precoVendaDouble = Double.parseDouble(precoVendaText.replace(",", "."));
             int idAcaoBase = acaoSelecionadaOpcaoVenda.getId();
+
+            opcaoDAO.venderOpcao(idAcaoBase, 
+			            		txtDataVendaOpcao.getText().trim(),
+			            		txtOpcaoVenda.getText(),
+			            		txtQuantidade.getText(),     		
+			            		strikeText, 
+			            		precoVendaDouble
+			            		);
             
-            // Supondo um método no OpcaoDAO para registrar a Venda/Lançamento
-            opcaoDAO.lancarOpcao(idAcaoBase, opcaoText, strikeDouble, precoVendaDouble, txtDataVendaOpcao.getText().trim());
-            
-            JOptionPane.showMessageDialog(this, "Opção lançada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+				            		"Opção lançada com sucesso!", 
+				            		"Sucesso", 
+				            		JOptionPane.INFORMATION_MESSAGE);
             limparPainel();
+            
+            if (listener != null) {
+                listener.onOperacaoSalvaSucesso();
+            }
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, 

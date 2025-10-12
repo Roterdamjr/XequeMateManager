@@ -244,8 +244,12 @@ public class FrmVenderOpcao extends JInternalFrame {
 		
         double precoVendaDouble = Double.parseDouble(precoVendaText.replace(",", "."));
 
-		opcaoDAO.venderOpcao(acaoSelecionada.getId(), dataText,opcaoText, quantidadeText, 
-				strikeText,precoVendaDouble);
+		opcaoDAO.venderOpcao(acaoSelecionada.getId(), 
+							dataText,
+							opcaoText, 
+							quantidadeText, 
+							strikeText,
+							precoVendaDouble);
 
 		limparJanela();
 		

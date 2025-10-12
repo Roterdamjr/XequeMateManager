@@ -20,6 +20,7 @@ import javax.swing.border.EmptyBorder;
 import dao.AcaoDAO;
 import model.Acao;
 import util.Utils;
+import view.OperacoesListener;
 
 public class PainelVenderAcao extends JPanel {
 
@@ -30,7 +31,9 @@ public class PainelVenderAcao extends JPanel {
     private JTextField txtPrecoVendaAcao;
     private JLabel lblQuantidadeVenda;
     private JLabel lblPrecoCompraVenda;
-
+    private OperacoesListener listener;
+    private String tipoOperacao = "DIV"; 
+    
     public PainelVenderAcao() {
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.setLayout(new GridLayout(5, 1, 0, 0)); 
@@ -98,16 +101,11 @@ public class PainelVenderAcao extends JPanel {
             }
         });
         
-        // Configuração inicial
         limparPainel();
     }
-    
-    // =====================================================================
-    // Lógica de Limpeza e Persistência
-    // =====================================================================
+
 
     public void limparPainel() {
-        // Migrado de FrmVenderAcao.java -> limparJanela()
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         txtDataVendaAcao.setText(dateFormat.format(new Date()));
         txtPrecoVendaAcao.setText("");
@@ -115,10 +113,9 @@ public class PainelVenderAcao extends JPanel {
         atualizarLabels();
     }
     
-    private void carregarAcoesVenda() {
-        // Migrado de FrmVenderAcao.java -> carregarAcoesNaoVendidas()
+    public void carregarAcoesVenda() {
         try {
-            List<Acao> acoes = acaoDAO.obterAcoesAbertas(); // Método de exemplo
+            List<Acao> acoes = acaoDAO.obterAcoesAbertas(); 
             cmbAcaoVenda.removeAllItems();
             
             for (Acao acao : acoes) {
@@ -132,15 +129,17 @@ public class PainelVenderAcao extends JPanel {
                 acaoSelecionadaVenda = null;
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar a lista de ações: " + e.getMessage(), "Erro de BD", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+            		"Erro ao carregar a lista de ações: " +
+			        e.getMessage(), "Erro de BD", 
+			        JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void atualizarLabels() {
-        // Migrado de FrmVenderAcao.java -> atualizarLabels()
         if (acaoSelecionadaVenda != null) {
             lblQuantidadeVenda.setText(String.valueOf(acaoSelecionadaVenda.getQuantidade()));
-            lblPrecoCompraVenda.setText(String.format("R$ %.2f", acaoSelecionadaVenda.getPrecoMedio()));
+            lblPrecoCompraVenda.setText(String.format("R$ %.2f", acaoSelecionadaVenda.getPrecoCompra()));
         } else {
             lblQuantidadeVenda.setText("0.0");
             lblPrecoCompraVenda.setText("R$ 0.00");
@@ -166,7 +165,6 @@ public class PainelVenderAcao extends JPanel {
     }
     
     private void cmdSalvar_Click() {
-        // Lógica de Salvar Vender Ação, copiada de FrmVenderAcao.java
         
         if (acaoSelecionadaVenda == null) {
             JOptionPane.showMessageDialog(this, 
@@ -188,17 +186,31 @@ public class PainelVenderAcao extends JPanel {
             txtPrecoVendaAcao.requestFocusInWindow();
             return; 
         }
+        
+        salvar(acaoSelecionadaVenda);
 
+    }
+    
+	private void salvar(Acao acao) {
+		String dataVenda = txtDataVendaAcao.getText().trim();
+		
+		String precoVendaText = txtPrecoVendaAcao.getText().trim();
         double precoVendaDouble = Double.parseDouble(precoVendaText.replace(",", "."));
         
-        // Adapte o método 'venderAcao' do seu DAO para receber os parâmetros corretos
-        // acaoDAO.venderAcao(acaoSelecionadaVenda, txtDataVendaAcao.getText().trim(), precoVendaDouble); 
-        
-        JOptionPane.showMessageDialog(this, "Ação vendida com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        limparPainel();
-        
-        // NOTA: Para limpar outras telas (como FrmComprarAcao), você precisará de um callback
-        // ou um método público no FrmOperacoesConsolidadas que chame o método limparPainel()
-        // das outras instâncias de Painel.
-    }
+		acaoDAO.venderAcao(acao.getId(), precoVendaDouble, dataVenda);
+
+		limparPainel();
+		
+		carregarAcoesVenda(); 
+		
+		JOptionPane.showMessageDialog(this, 
+			"Ação vendida com sucesso!", 
+			"Sucesso", 
+			JOptionPane.INFORMATION_MESSAGE);
+		
+        if (listener != null) {
+            listener.onOperacaoSalvaSucesso();
+        }
+	}
+	
 }

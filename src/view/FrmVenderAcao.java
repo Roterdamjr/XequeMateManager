@@ -243,6 +243,7 @@ public class FrmVenderAcao extends JInternalFrame {
 		acaoDAO.venderAcao(acao.getId(), precoVendaDouble, dataVenda);
 
 		limparJanela();
+		
         carregarAcoesNaoVendidas(); 
 		
 		JOptionPane.showMessageDialog(this, 

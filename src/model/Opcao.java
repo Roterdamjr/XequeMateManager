@@ -34,7 +34,15 @@ public class Opcao {
     public double getPrecoCompra() { return precoCompra; }
     public void setPrecoCompra(double precoCompra) { this.precoCompra = precoCompra; }
     @Override
+    
     public String toString() {
+        // Retorna APENAS o código da opção, que é o que você quer ver na ComboBox
+        return this.opcao; 
+    }
+    
+    
+    
+    public String toStringCompleto() {
         return "ID: " + id +
                " | Opção: " + opcao +
                " | Data Compra: " + dataCompra +
