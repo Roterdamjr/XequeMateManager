@@ -1,0 +1,219 @@
+package view.paneles;
+
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+import dao.AcaoDAO;
+import dao.OpcaoDAO;
+import model.Acao;
+import util.Utils;
+
+public class PainelVenderOpcao extends JPanel {
+
+    private final AcaoDAO acaoDAO = new AcaoDAO();
+    private final OpcaoDAO opcaoDAO = new OpcaoDAO();
+    
+    private JTextField txtDataVendaOpcao;
+    private JComboBox<Acao> cmbAcaoOpcaoVenda; 
+    private Acao acaoSelecionadaOpcaoVenda = null;
+    private JTextField txtPrecoVendaOpcao;
+    private JTextField txtStrikeVendaOpcao;
+    private JTextField txtOpcaoVenda; // Código da Opção a ser lançada
+    private JLabel lblQuantidadeOpcaoVenda;
+
+    public PainelVenderOpcao() {
+        this.setBorder(new EmptyBorder(5, 5, 5, 5));
+        this.setLayout(new GridLayout(7, 1, 0, 0));
+        
+        // 1. Data
+        JPanel panelData = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelData.add(new JLabel("Data Venda"));
+        txtDataVendaOpcao = new JTextField(10);
+        panelData.add(txtDataVendaOpcao);
+        this.add(panelData);
+        
+        // 2. Ação (Para seleção da Ação base da Opção)
+        JPanel panelAcao = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelAcao.add(new JLabel("Ação (Base da Opção)"));
+        cmbAcaoOpcaoVenda = new JComboBox<>();
+        cmbAcaoOpcaoVenda.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        panelAcao.add(cmbAcaoOpcaoVenda);
+        this.add(panelAcao);
+        
+        // 3. Opção (Código)
+        JPanel panelOpcao = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelOpcao.add(new JLabel("Opção (Código)"));
+        txtOpcaoVenda = new JTextField(10);
+        panelOpcao.add(txtOpcaoVenda);
+        this.add(panelOpcao);
+        
+        // 4. Quantidade (Label da Ação)
+        JPanel panelQuantidade = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelQuantidade.add(new JLabel("Quantidade da Ação (Base):"));
+        lblQuantidadeOpcaoVenda = new JLabel("0.0");
+        panelQuantidade.add(lblQuantidadeOpcaoVenda);
+        this.add(panelQuantidade);
+
+        // 5. Strike
+        JPanel panelStrike = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelStrike.add(new JLabel("Strike"));
+        txtStrikeVendaOpcao = new JTextField(10);
+        panelStrike.add(txtStrikeVendaOpcao);
+        this.add(panelStrike);
+        
+        // 6. Preço Venda
+        JPanel panelPrecoVenda = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelPrecoVenda.add(new JLabel("Preço Venda (Prêmio Recebido)"));
+        txtPrecoVendaOpcao = new JTextField(10);
+        panelPrecoVenda.add(txtPrecoVendaOpcao);
+        this.add(panelPrecoVenda);
+        
+        // 7. Botões
+        JPanel panelBotoes = new JPanel();
+        JButton btnSair = new JButton("Sair");
+        btnSair.setFont(new Font("Tahoma", Font.BOLD, 14));
+        panelBotoes.add(btnSair);
+        
+        JButton btnSalvar = new JButton("Salvar");
+        btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnSalvar.addActionListener(e -> cmdSalvar_Click());
+        panelBotoes.add(btnSalvar);
+        this.add(panelBotoes);
+        
+        // Listener para o ComboBox (Ação)
+        cmbAcaoOpcaoVenda.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    acaoSelecionadaOpcaoVenda = (Acao) cmbAcaoOpcaoVenda.getSelectedItem();
+                    atualizarLabels();
+                }
+            }
+        });
+        
+        limparPainel();
+    }
+    
+    // =====================================================================
+    // Lógica de Limpeza e Persistência
+    // =====================================================================
+
+    public void limparPainel() {
+        // Migrado de FrmVenderOpcao.java -> limparJanela()
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        txtDataVendaOpcao.setText(dateFormat.format(new Date()));
+        txtOpcaoVenda.setText("");
+        txtStrikeVendaOpcao.setText("");
+        txtPrecoVendaOpcao.setText("");
+        
+        carregarAcoesVenda(); 
+        atualizarLabels();
+    }
+
+    private void carregarAcoesVenda() {
+        // Migrado de FrmVenderOpcao.java -> carregarAcoesNaoVendidas()
+        try {
+            List<Acao> acoes = acaoDAO.obterAcoesAbertas(); // Ações que ainda estão em carteira
+            cmbAcaoOpcaoVenda.removeAllItems();
+            
+            for (Acao acao : acoes) {
+                cmbAcaoOpcaoVenda.addItem(acao);
+            }
+            
+            if (!acoes.isEmpty()) {
+                acaoSelecionadaOpcaoVenda = acoes.get(0);
+                cmbAcaoOpcaoVenda.setSelectedIndex(0);
+            } else {
+                acaoSelecionadaOpcaoVenda = null;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar a lista de ações.", "Erro de BD", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void atualizarLabels() {
+        // Migrado de FrmVenderOpcao.java -> atualizarLabels()
+        if (acaoSelecionadaOpcaoVenda != null) {
+            lblQuantidadeOpcaoVenda.setText(String.valueOf(acaoSelecionadaOpcaoVenda.getQuantidade()));
+        } else {
+            lblQuantidadeOpcaoVenda.setText("0.0");
+        }
+    }
+    
+    private boolean validarData() {
+        String dataText = txtDataVendaOpcao.getText().trim();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        dateFormat.setLenient(false); 
+        
+        try {
+            dateFormat.parse(dataText);
+            return true;
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(this, 
+                "Por favor, insira uma data válida no formato dd/mm/yyyy.", 
+                "Erro de Validação", 
+                JOptionPane.INFORMATION_MESSAGE);
+            txtDataVendaOpcao.requestFocusInWindow();
+            return false; 
+        }
+    }
+
+    private void cmdSalvar_Click() {
+        // Lógica de Salvar Vender Opção (Lançamento), migrada de FrmVenderOpcao.java
+        
+        if (acaoSelecionadaOpcaoVenda == null) {
+            JOptionPane.showMessageDialog(this, 
+                "Nenhuma Ação selecionada para lançamento da Opção.", 
+                "Erro de Seleção", 
+                JOptionPane.INFORMATION_MESSAGE);
+            return; 
+        }
+        
+        if (!validarData()) return;
+
+        String opcaoText = txtOpcaoVenda.getText().trim();
+        String strikeText = txtStrikeVendaOpcao.getText().trim();
+        String precoVendaText = txtPrecoVendaOpcao.getText().trim();
+        
+        if (opcaoText.isEmpty() || !Utils.isNumeric(strikeText) || !Utils.isNumeric(precoVendaText)) {
+            JOptionPane.showMessageDialog(this, 
+                "Preencha o Código da Opção, Strike e Preço Venda corretamente com valores numéricos.", 
+                "Erro de Validação", 
+                JOptionPane.INFORMATION_MESSAGE);
+            return; 
+        }
+        
+        try {
+            double strikeDouble = Double.parseDouble(strikeText.replace(",", "."));
+            double precoVendaDouble = Double.parseDouble(precoVendaText.replace(",", "."));
+            int idAcaoBase = acaoSelecionadaOpcaoVenda.getId();
+            
+            // Supondo um método no OpcaoDAO para registrar a Venda/Lançamento
+            opcaoDAO.lancarOpcao(idAcaoBase, opcaoText, strikeDouble, precoVendaDouble, txtDataVendaOpcao.getText().trim());
+            
+            JOptionPane.showMessageDialog(this, "Opção lançada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            limparPainel();
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, 
+                "Erro ao converter valores. Use formato numérico.", 
+                "Erro de Formato", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}

@@ -51,7 +51,7 @@ public class Relatorio {
             relatorioLinhas.addAll(obterResumoDaOperacao(op, isOperacaoAberta));
             relatorioLinhas.add(" -----------------------------------------------------------------------------------------"); 
         }
-        
+      
         /*
          * se estiver exibindo operações fechadas imprime Média
          */
