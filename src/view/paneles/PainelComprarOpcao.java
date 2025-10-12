@@ -107,6 +107,8 @@ public class PainelComprarOpcao extends JPanel {
 
     public void carregarOpcoesCompra() {
         try {
+        	
+        	System.out.println("carrgeagando combo......");
             List<Opcao> opcoes = opcaoDAO.obterOpcoesNaoCompradas(); 
             
             cmbOpcaoCompra.removeAllItems();
@@ -139,6 +141,7 @@ public class PainelComprarOpcao extends JPanel {
     }
     
     private boolean validarData() {
+    	
 		String dataText = txtDataCompraOpcao.getText().trim();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		dateFormat.setLenient(false); 
@@ -157,7 +160,6 @@ public class PainelComprarOpcao extends JPanel {
     }
 
     private void cmdSalvar_Click() {
-        // Lógica de Salvar Compra Opção, migrada de FrmComprarOpcao.java
 
         if (opcaoSelecionadaCompra == null) {
             JOptionPane.showMessageDialog(this, 

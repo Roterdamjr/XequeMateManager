@@ -37,9 +37,9 @@ public class FrmOperacoesConsolidadas extends JInternalFrame implements Operacoe
         getContentPane().add(tabbedPane);
 
         tabbedPane.addTab("Comprar Ação", criarPainelComprarAcao());
+        tabbedPane.addTab("Vender Opção", criarPainelVenderOpcao());
         tabbedPane.addTab("Vender Ação", criarPainelVenderAcao());
         tabbedPane.addTab("Comprar Opção", criarPainelComprarOpcao());
-        tabbedPane.addTab("Vender Opção", criarPainelVenderOpcao());
         tabbedPane.addTab("Dividendo", criarPainelDividendo());
         
         limparTodasAsAbas();
@@ -56,7 +56,7 @@ public class FrmOperacoesConsolidadas extends JInternalFrame implements Operacoe
     }
 
     private JPanel criarPainelVenderOpcao() {
-        painelVenderOpcao = new PainelVenderOpcao();
+        painelVenderOpcao = new PainelVenderOpcao(this);
         return painelVenderOpcao;
     }
 
@@ -73,6 +73,11 @@ public class FrmOperacoesConsolidadas extends JInternalFrame implements Operacoe
     public void limparTodasAsAbas() {
         if (painelComprarAcao != null) {
             painelComprarAcao.limparPainel();
+            painelVenderOpcao.carregarAcoesVenda();
+        }
+        if (painelVenderOpcao != null) {
+            painelVenderOpcao.limparPainel();
+            painelComprarOpcao.carregarOpcoesCompra();
         }
         if (painelVenderAcao != null) {
             painelVenderAcao.limparPainel();
@@ -80,10 +85,6 @@ public class FrmOperacoesConsolidadas extends JInternalFrame implements Operacoe
         }
         if (painelComprarOpcao != null) {
             painelComprarOpcao.limparPainel();
-            painelComprarOpcao.carregarOpcoesCompra();
-        }
-        if (painelVenderOpcao != null) {
-            painelVenderOpcao.limparPainel();
         }
         if (painelDividendo != null) {
             painelDividendo.limparPainel();

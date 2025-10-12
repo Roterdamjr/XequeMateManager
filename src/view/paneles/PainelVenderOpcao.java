@@ -39,7 +39,9 @@ public class PainelVenderOpcao extends JPanel {
     private OperacoesListener listener;
     private String tipoOperacao = "DIV";
 
-    public PainelVenderOpcao() {
+    public PainelVenderOpcao(OperacoesListener listener) {
+    	this.listener = listener;
+    	
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.setLayout(new GridLayout(7, 1, 0, 0));
         
@@ -124,7 +126,7 @@ public class PainelVenderOpcao extends JPanel {
         atualizarLabels();
     }
 
-    private void carregarAcoesVenda() {
+    public void carregarAcoesVenda() {
 
         try {
             List<Acao> acoes = acaoDAO.obterAcoesAbertas(); 
