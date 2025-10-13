@@ -35,7 +35,7 @@ public class Relatorio {
         List<String> relatorioLinhas = new ArrayList<>();
         
         relatorioLinhas.add(" =========================================================================================");
-        relatorioLinhas.add(" = RESUMO DE OPERAÇÕES EM ABERTO                                                         =");
+        relatorioLinhas.add(" = RESUMO DE OPERAÇÕES      		                                                      =");
         relatorioLinhas.add(" =========================================================================================");
 
         if (acoes.isEmpty()) {
@@ -68,8 +68,15 @@ public class Relatorio {
     }
 	
     private static List<String> obterResumoDaOperacao(Operacao operacao, boolean isOperacaoAberta) {
-        
-		ResultadoOperacao resultadoOperacao= new OperacaoAnalyticsDividendos3X().sumarizaResultado(operacao,  isOperacaoAberta);
+    	ResultadoOperacao resultadoOperacao = null;
+    	
+        try {
+		resultadoOperacao = 
+				new OperacaoAnalyticsDividendos3X().sumarizaResultado(operacao,  isOperacaoAberta);
+        }catch (Exception e) {
+			System.out.println("Erro em obterResumoDaOperacao. Ativo: " + operacao.getAcao().getAtivo());
+		}
+		
 		Acao acao = operacao.getAcao();
 
         Double valorInvestido =  acao.getQuantidade() * acao.getPrecoCompra();

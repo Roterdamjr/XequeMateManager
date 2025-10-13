@@ -12,10 +12,12 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import dao.AcaoDAO;
@@ -48,13 +50,13 @@ public class PainelVenderOpcao extends JPanel {
         // 1. Data
         JPanel panelData = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelData.add(new JLabel("Data Venda"));
-        txtDataVendaOpcao = new JTextField(10);
+        txtDataVendaOpcao = new JTextField(7);
         panelData.add(txtDataVendaOpcao);
         this.add(panelData);
         
         // 2. Ação (Para seleção da Ação base da Opção)
         JPanel panelAcao = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelAcao.add(new JLabel("Ação (Base da Opção)"));
+        panelAcao.add(new JLabel("Ação)"));
         cmbAcaoOpcaoVenda = new JComboBox<>();
         cmbAcaoOpcaoVenda.setFont(new Font("Tahoma", Font.PLAIN, 12));
         panelAcao.add(cmbAcaoOpcaoVenda);
@@ -62,29 +64,29 @@ public class PainelVenderOpcao extends JPanel {
         
         // 3. Opção (Código)
         JPanel panelOpcao = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelOpcao.add(new JLabel("Opção (Código)"));
+        panelOpcao.add(new JLabel("Opção         "));
         txtOpcaoVenda = new JTextField(10);
         panelOpcao.add(txtOpcaoVenda);
         this.add(panelOpcao);
         
         // 4. Quantidade (Label da Ação)
         JPanel panelQuantidade = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelQuantidade.add(new JLabel("Quantidade da Ação (Base):"));
-        txtQuantidade = new JTextField(100);
+        panelQuantidade.add(new JLabel("Quantidade "));
+        txtQuantidade = new JTextField(4);
         panelQuantidade.add(txtQuantidade);
         this.add(panelQuantidade);
 
         // 5. Strike
         JPanel panelStrike = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelStrike.add(new JLabel("Strike"));
-        txtStrikeVendaOpcao = new JTextField(10);
+        panelStrike.add(new JLabel("Strike           "));
+        txtStrikeVendaOpcao = new JTextField(5);
         panelStrike.add(txtStrikeVendaOpcao);
         this.add(panelStrike);
         
         // 6. Preço Venda
         JPanel panelPrecoVenda = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelPrecoVenda.add(new JLabel("Preço Venda (Prêmio Recebido)"));
-        txtPrecoVendaOpcao = new JTextField(10);
+        panelPrecoVenda.add(new JLabel("Preço Venda "));
+        txtPrecoVendaOpcao = new JTextField(5);
         panelPrecoVenda.add(txtPrecoVendaOpcao);
         this.add(panelPrecoVenda);
         
@@ -229,5 +231,27 @@ public class PainelVenderOpcao extends JPanel {
                 "Erro de Formato", 
                 JOptionPane.ERROR_MESSAGE);
         }
+    }
+    public static void main(String[] args) {
+        // Usa a Event-Dispatch Thread (EDT) para garantir a segurança no Swing
+        SwingUtilities.invokeLater(() -> {
+            // 1. Cria a janela principal
+            JFrame frame = new JFrame("Teste Visual PainelVenderOpcao");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            OperacoesListener mockListener = () -> {
+                // System.out.println("Listener mock chamado com sucesso.");
+            };
+  
+            PainelVenderOpcao painel = new PainelVenderOpcao(mockListener);
+
+            // 4. Adiciona o painel ao frame
+            frame.getContentPane().add(painel);
+            
+            // 5. Ajusta o tamanho e torna visível
+            frame.pack();
+            frame.setLocationRelativeTo(null); // Centraliza
+            frame.setVisible(true);
+        });
     }
 }

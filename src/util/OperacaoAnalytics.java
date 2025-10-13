@@ -19,6 +19,7 @@ public abstract class OperacaoAnalytics {
 												boolean isOperacaoAberta);
 	
 	public ResultadoOperacao sumarizaResultado(Operacao operacao, boolean isOperacaoAberta) {
+		 
 		Acao acao = operacao.getAcao();
 		
 		List<Opcao> opcoes = operacao.getOpcoes();
@@ -45,16 +46,12 @@ public abstract class OperacaoAnalytics {
 		
 		double precoMedio = acao.getPrecoCompra()  - resultadoDasOpcoes - resultadoDosDividendos;
 		
-		  // O método abstrato é chamado aqui
-		if (acao.getId() ==13) {
-			int a =1;
-		}
+
         double precoVendaCalculo = calcularPrecoVenda(strike, 
 					        		cotacao, 
 					        		acao.getPrecoVenda(), 
 					        		isOperacaoAberta);
 
-		
 		Double resultado = quantidade * (precoVendaCalculo - precoMedio);
 		
 		return new ResultadoOperacao(

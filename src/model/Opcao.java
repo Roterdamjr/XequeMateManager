@@ -4,23 +4,20 @@ public class Opcao {
     private int id;
     private String dataVenda;
     private String opcao;
-    private double quantidade;
+    private int quantidade;
     private double precoVenda;
     private double strike;
     private int idAcao;
     private String dataCompra;
     private double precoCompra;
 
-
-
-
     // Seus getters e setters existentes
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public String getOpcao() { return opcao; }
     public void setOpcao(String opcao) { this.opcao = opcao; }
-    public double getQuantidade() { return quantidade; }
-    public void setQuantidade(double quantidade) { this.quantidade = quantidade; }
+    public int getQuantidade() { return quantidade; }
+    public void setQuantidade(int quantidade) { this.quantidade = quantidade; }
     public double getPrecoVenda() { return precoVenda; }
     public void setPrecoVenda(double precoVenda) { this.precoVenda = precoVenda; }
     public String getDataVenda() { return dataVenda; }

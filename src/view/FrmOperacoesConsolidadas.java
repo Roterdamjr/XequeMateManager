@@ -31,8 +31,10 @@ public class FrmOperacoesConsolidadas extends JInternalFrame implements Operacoe
         setIconifiable(true);
         setResizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 500, 400);
-
+        
+        setBounds(100, 100, 600, 400);
+        
+        
         tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         getContentPane().add(tabbedPane);
 

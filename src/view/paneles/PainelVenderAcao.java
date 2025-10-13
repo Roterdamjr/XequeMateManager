@@ -21,6 +21,7 @@ import dao.AcaoDAO;
 import model.Acao;
 import util.Utils;
 import view.OperacoesListener;
+import javax.swing.border.BevelBorder;
 
 public class PainelVenderAcao extends JPanel {
 
@@ -35,19 +36,19 @@ public class PainelVenderAcao extends JPanel {
     private String tipoOperacao = "DIV"; 
     
     public PainelVenderAcao() {
-        this.setBorder(new EmptyBorder(5, 5, 5, 5));
+        this.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
         this.setLayout(new GridLayout(5, 1, 0, 0)); 
         
         // 1. Data
         JPanel panelData = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelData.add(new JLabel("Data"));
+        panelData.add(new JLabel("Data         "));
         txtDataVendaAcao = new JTextField(10);
         panelData.add(txtDataVendaAcao);
         this.add(panelData);
         
         // 2. Ação
         JPanel panelAcao = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelAcao.add(new JLabel("Ação"));
+        panelAcao.add(new JLabel("Ação          "));
         cmbAcaoVenda = new JComboBox<>();
         cmbAcaoVenda.setFont(new Font("Tahoma", Font.PLAIN, 12));
         panelAcao.add(cmbAcaoVenda);
@@ -71,7 +72,7 @@ public class PainelVenderAcao extends JPanel {
 
         // 4. Preço Venda
         JPanel panelPrecoVenda = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelPrecoVenda.add(new JLabel("Preço Venda"));
+        panelPrecoVenda.add(new JLabel("Preço           "));
         txtPrecoVendaAcao = new JTextField(10);
         panelPrecoVenda.add(txtPrecoVendaAcao);
         this.add(panelPrecoVenda);

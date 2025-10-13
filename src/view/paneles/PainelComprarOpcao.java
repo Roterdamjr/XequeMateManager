@@ -12,10 +12,12 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import dao.OpcaoDAO;
@@ -28,16 +30,16 @@ public class PainelComprarOpcao extends JPanel {
     private final OpcaoDAO opcaoDAO = new OpcaoDAO();
     private JTextField txtDataCompraOpcao;
     private JComboBox<Opcao> cmbOpcaoCompra; 
+    JLabel lblPrecoVenda ;
     private Opcao opcaoSelecionadaCompra = null;
     private JTextField txtPrecoCompraOpcao;
     private JLabel lblQuantidadeCompraOpcao;
-    private JLabel lblPrecoVendaCompraOpcao; 
     private OperacoesListener listener;
     private String tipoOperacao = "DIV"; 
 
     public PainelComprarOpcao() {
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
-        this.setLayout(new GridLayout(5, 1, 0, 0));
+        this.setLayout(new GridLayout(6, 1, 0, 0));
         
         // 1. Data
         JPanel panelData = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -48,7 +50,7 @@ public class PainelComprarOpcao extends JPanel {
         
         // 2. Opção
         JPanel panelOpcao = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelOpcao.add(new JLabel("Opção"));
+        panelOpcao.add(new JLabel("Opção                 "));
         cmbOpcaoCompra = new JComboBox<>();
         cmbOpcaoCompra.setFont(new Font("Tahoma", Font.PLAIN, 12));
         panelOpcao.add(cmbOpcaoCompra);
@@ -56,36 +58,42 @@ public class PainelComprarOpcao extends JPanel {
         
         // 3. Detalhes (Quantidade e Preço Venda da Opção - LABELS)
         JPanel panelDetalhes = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelDetalhes.add(new JLabel("Quantidade:"));
+        panelDetalhes.add(new JLabel("Quantidade:         "));
         lblQuantidadeCompraOpcao = new JLabel("N/D");
         panelDetalhes.add(lblQuantidadeCompraOpcao);
-        
-        panelDetalhes.add(new JLabel(" Preço Venda (Strike):"));
-        lblPrecoVendaCompraOpcao = new JLabel("N/D");
-        panelDetalhes.add(lblPrecoVendaCompraOpcao);
         this.add(panelDetalhes);
 
         // 4. Preço Compra
         JPanel panelPrecoCompra = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelPrecoCompra.add(new JLabel("Preço Compra"));
+        panelPrecoCompra.add(new JLabel("Preço Compra       "));
         txtPrecoCompraOpcao = new JTextField(10);
         panelPrecoCompra.add(txtPrecoCompraOpcao);
         this.add(panelPrecoCompra);
         
         // 5. Botões
+        JPanel paneld = new JPanel();
+        FlowLayout flowLayout = (FlowLayout) paneld.getLayout();
+        flowLayout.setAlignment(FlowLayout.LEFT);
+        add(paneld);
+        
+        JLabel lbl = new JLabel(" Preço Venda:        ");
+        paneld.add(lbl);
+        
+        lblPrecoVenda = new JLabel("N/D");
+        paneld.add(lblPrecoVenda);
+        
         JPanel panelBotoes = new JPanel();
+        add(panelBotoes);
+        
         JButton btnSair = new JButton("Sair");
         btnSair.setFont(new Font("Tahoma", Font.BOLD, 14));
         panelBotoes.add(btnSair);
         
-        JButton btnSalvar = new JButton("Salvar"); 
+        JButton btnSalvar = new JButton("Salvar");
         btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 14));
-        btnSalvar.addActionListener(e -> cmdSalvar_Click());
         panelBotoes.add(btnSalvar);
-        this.add(panelBotoes);
 
         cmbOpcaoCompra.addItemListener(new ItemListener() {
-            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     opcaoSelecionadaCompra = (Opcao) cmbOpcaoCompra.getSelectedItem();
@@ -93,6 +101,8 @@ public class PainelComprarOpcao extends JPanel {
                 }
             }
         });
+        
+        btnSalvar.addActionListener(e -> cmdSalvar_Click());
         
         limparPainel();
     }
@@ -107,8 +117,6 @@ public class PainelComprarOpcao extends JPanel {
 
     public void carregarOpcoesCompra() {
         try {
-        	
-        	System.out.println("carrgeagando combo......");
             List<Opcao> opcoes = opcaoDAO.obterOpcoesNaoCompradas(); 
             
             cmbOpcaoCompra.removeAllItems();
@@ -133,10 +141,10 @@ public class PainelComprarOpcao extends JPanel {
     private void atualizarLabels() {
         if (opcaoSelecionadaCompra != null) {
             lblQuantidadeCompraOpcao.setText(String.valueOf(opcaoSelecionadaCompra.getQuantidade()));
-            lblPrecoVendaCompraOpcao.setText(String.format("R$ %.2f", opcaoSelecionadaCompra.getStrike())); 
+            lblPrecoVenda.setText(String.format("R$ %.2f", opcaoSelecionadaCompra.getPrecoVenda())); 
         } else {
             lblQuantidadeCompraOpcao.setText("N/D");
-            lblPrecoVendaCompraOpcao.setText("N/D");
+            lblPrecoVenda.setText("N/D");
         }
     }
     
@@ -194,6 +202,7 @@ public class PainelComprarOpcao extends JPanel {
 					            		"Opção inserida com sucesso!", 
 					            		"Sucesso", 
 					            		JOptionPane.INFORMATION_MESSAGE);
+            
             limparPainel();
             
             carregarOpcoesCompra();
@@ -208,5 +217,27 @@ public class PainelComprarOpcao extends JPanel {
                 "Erro de Formato", 
                 JOptionPane.ERROR_MESSAGE);
         }
+    }
+    public static void main(String[] args) {
+        // Usa a Event-Dispatch Thread (EDT) para garantir a segurança no Swing
+        SwingUtilities.invokeLater(() -> {
+            // 1. Cria a janela principal
+            JFrame frame = new JFrame("Teste Visual PainelVenderOpcao");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            OperacoesListener mockListener = () -> {
+                // System.out.println("Listener mock chamado com sucesso.");
+            };
+  
+            PainelComprarOpcao painel = new PainelComprarOpcao();
+
+            // 4. Adiciona o painel ao frame
+            frame.getContentPane().add(painel);
+            
+            // 5. Ajusta o tamanho e torna visível
+            frame.pack();
+            frame.setLocationRelativeTo(null); // Centraliza
+            frame.setVisible(true);
+        });
     }
 }

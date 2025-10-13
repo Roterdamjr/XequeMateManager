@@ -16,7 +16,8 @@ public class OpcaoDAO {
      */
     public List<Opcao> obterOpcoesNaoCompradas() {
         // Exemplo de SQL: Seleciona opções criadas (data_venda NOT NULL) e não compradas (data_compra IS NULL)
-        String sql = "SELECT id, opcao, quantidade, preco_venda, strike FROM TB_OPCAO WHERE data_compra IS NULL ORDER BY opcao";
+        String sql = "SELECT id, opcao, quantidade, preco_venda, strike "
+        		+ " FROM TB_OPCAO WHERE data_compra IS NULL ORDER BY opcao";
         List<Opcao> opcoes = new ArrayList<>();
 
         try (Connection conn = DatabaseManager.connect();
@@ -27,7 +28,7 @@ public class OpcaoDAO {
                 Opcao opcao = new Opcao();
                 opcao.setId(rs.getInt("id"));
                 opcao.setOpcao(rs.getString("opcao"));
-                opcao.setQuantidade(rs.getDouble("quantidade"));
+                opcao.setQuantidade(rs.getInt("quantidade"));
                 opcao.setPrecoVenda(rs.getDouble("preco_venda"));
                 opcao.setStrike(rs.getDouble("strike"));
                 opcoes.add(opcao);
@@ -57,7 +58,7 @@ public class OpcaoDAO {
                     opcao.setOpcao(rs.getString("opcao"));
                     opcao.setDataCompra(rs.getString("data_compra"));
                     opcao.setDataVenda(rs.getString("data_venda"));
-                    opcao.setQuantidade(rs.getDouble("quantidade"));
+                    opcao.setQuantidade(rs.getInt("quantidade"));
                     opcao.setPrecoCompra(rs.getDouble("preco_compra"));
                     opcao.setPrecoVenda(rs.getDouble("preco_venda"));
                     opcao.setStrike(rs.getDouble("strike"));

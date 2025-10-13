@@ -30,28 +30,28 @@ public class PainelComprarAcao extends JPanel {
         
         // 1. Data e Tipo Estratégia
         JPanel panelDataTipo = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelDataTipo.add(new JLabel("Data"));
+        panelDataTipo.add(new JLabel("Data               "));
         txtDataCompraAcao = new JTextField(10);
         panelDataTipo.add(txtDataCompraAcao);
         this.add(panelDataTipo);
         
         // 2. Ação
         JPanel panelAcao = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelAcao.add(new JLabel("Ação"));
+        panelAcao.add(new JLabel("Ação              "));
         txtAcaoCompra = new JTextField(10);
         panelAcao.add(txtAcaoCompra);
         this.add(panelAcao);
         
         // 3. Quantidade
         JPanel panelQuantidade = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelQuantidade.add(new JLabel("Quantidade"));
+        panelQuantidade.add(new JLabel("Quantidade   "));
         txtQuantidadeCompraAcao = new JTextField(10);
         panelQuantidade.add(txtQuantidadeCompraAcao);
         this.add(panelQuantidade);
         
         // 4. Preço Compra
         JPanel panelPreco = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelPreco.add(new JLabel("Preço Compra"));
+        panelPreco.add(new JLabel("Preço             "));
         txtPrecoCompraAcao = new JTextField(10);
         panelPreco.add(txtPrecoCompraAcao);
         this.add(panelPreco);
@@ -131,5 +131,28 @@ public class PainelComprarAcao extends JPanel {
             listener.onOperacaoSalvaSucesso();
         }
 
+    }
+
+    public static void main(String[] args) {
+        // Usa a Event-Dispatch Thread (EDT) para garantir a segurança no Swing
+        SwingUtilities.invokeLater(() -> {
+            // 1. Cria a janela principal
+            JFrame frame = new JFrame("Teste Visual PainelVenderOpcao");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            OperacoesListener mockListener = () -> {
+                // System.out.println("Listener mock chamado com sucesso.");
+            };
+  
+            PainelComprarAcao painel = new PainelComprarAcao(mockListener);
+
+            // 4. Adiciona o painel ao frame
+            frame.getContentPane().add(painel);
+            
+            // 5. Ajusta o tamanho e torna visível
+            frame.pack();
+            frame.setLocationRelativeTo(null); // Centraliza
+            frame.setVisible(true);
+        });
     }
 }

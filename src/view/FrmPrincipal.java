@@ -20,11 +20,7 @@ public class FrmPrincipal extends JFrame {
 
     private JDesktopPane desktopPane;
     
-    private FrmAcoesNaoVendidas frmAcoesNaoVendidas;
-    private FrmComprarAcao frmComprarAcao;
-    private FrmComprarOpcao frmComprarOpcao;
-    private FrmVenderAcao frmVenderAcao;
-    private FrmVenderOpcao frmVenderOpcao;
+    private FrmOperacoesConsolidadas frmOperacoesConsolidadas;
     private FrmDividendo frmDividendo;
     private FrmRelatorio frmRelatorio;
     private FrmDesempenho frmDesempenho;
@@ -51,14 +47,9 @@ public class FrmPrincipal extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         
         JMenu menuOperacoes = new JMenu("Operações");
-        JMenuItem itemComprarAcao = new JMenuItem("Comprar Ação");
-        JMenuItem itemVenderAcao = new JMenuItem("Vender Ação");
-        
-        itemComprarAcao.addActionListener(e -> callOnlyOnce(FrmComprarAcao.class.getName()));
-        itemVenderAcao.addActionListener(e -> callOnlyOnce(FrmVenderAcao.class.getName()));
-        
-        menuOperacoes.add(itemComprarAcao);
-        menuOperacoes.add(itemVenderAcao);
+        JMenuItem itemREgMovimento = new JMenuItem("Registrar Movimento");
+        menuOperacoes.add(itemREgMovimento);
+        itemREgMovimento.addActionListener(e -> callOnlyOnce(FrmOperacoesConsolidadas.class.getName()));
 
         JMenu menuVisualizar = new JMenu("Visualizar");
         
@@ -67,20 +58,9 @@ public class FrmPrincipal extends JFrame {
         itemRelatorio.addActionListener(e -> callOnlyOnce(FrmRelatorio.class.getName()));
         
         menuBar.add(menuOperacoes);
-        JMenuItem itemComprarOpcao = new JMenuItem("Comprar Opção");
-        menuOperacoes.add(itemComprarOpcao);
-        
-        JMenuItem itemVenderOpcao = new JMenuItem("Vender Opção");
-        menuOperacoes.add(itemVenderOpcao);
-        
-        JMenuItem itemDividendo = new JMenuItem("Dividendos");
-        itemDividendo.addActionListener(e -> callOnlyOnce(FrmDividendo.class.getName()));
-        menuOperacoes.add(itemDividendo);
         
         
-        itemVenderOpcao.addActionListener(e -> callOnlyOnce(FrmVenderOpcao.class.getName()));
-        
-        itemComprarOpcao.addActionListener(e -> callOnlyOnce(FrmComprarOpcao.class.getName()));
+
         menuBar.add(menuVisualizar);
         
         JMenuItem itemDesempenhoMensal = new JMenuItem("Desempenho Mensal");
@@ -100,32 +80,15 @@ public class FrmPrincipal extends JFrame {
     private void callOnlyOnce(String className) {
         JInternalFrame frameToOpen = null;
         
-        if (className.equals(FrmAcoesNaoVendidas.class.getName())) {
-            if (frmAcoesNaoVendidas == null || frmAcoesNaoVendidas.isClosed()) {
-                frmAcoesNaoVendidas = new FrmAcoesNaoVendidas();
-                frmAcoesNaoVendidas.setLocation(50, 50);
+        if (className.equals(FrmOperacoesConsolidadas.class.getName())) {
+            if (frmOperacoesConsolidadas == null || frmOperacoesConsolidadas.isClosed()) {
+            	frmOperacoesConsolidadas = new FrmOperacoesConsolidadas();
+            	frmOperacoesConsolidadas.setLocation(50, 50);
             }
-            frameToOpen = frmAcoesNaoVendidas;
-        } else if (className.equals(FrmComprarAcao.class.getName())) {
-            if (frmComprarAcao == null || frmComprarAcao.isClosed()) {
-                frmComprarAcao = new FrmComprarAcao();
-            }
-            frameToOpen = frmComprarAcao;
-        } else if (className.equals(FrmVenderAcao.class.getName())) {
-            if (frmVenderAcao == null || frmVenderAcao.isClosed()) {
-                frmVenderAcao = new FrmVenderAcao();
-            }
-            frameToOpen = frmVenderAcao;
-        } else if (className.equals(FrmComprarOpcao.class.getName())) {
-            if (frmComprarOpcao == null || frmComprarOpcao.isClosed()) {
-                frmComprarOpcao = new FrmComprarOpcao();
-            }
-            frameToOpen = frmComprarOpcao;
-        } else if (className.equals(FrmVenderOpcao.class.getName())) {
-            if (frmVenderOpcao == null || frmVenderOpcao.isClosed()) {
-                frmVenderOpcao = new FrmVenderOpcao();
-            }
-            frameToOpen = frmVenderOpcao;
+            frameToOpen = frmOperacoesConsolidadas;
+
+
+
 
 	    } else if (className.equals(FrmDividendo.class.getName())) {
 	        if (frmDividendo == null || frmDividendo.isClosed()) {
