@@ -33,7 +33,7 @@ public class PainelVenderAcao extends JPanel {
     private JLabel lblQuantidadeVenda;
     private JLabel lblPrecoCompraVenda;
     private OperacoesListener listener;
-    private String tipoOperacao = "DIV"; 
+
     
     public PainelVenderAcao() {
         this.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -88,6 +88,7 @@ public class PainelVenderAcao extends JPanel {
         JButton btnSalvar = new JButton("Salvar"); 
         btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 14));
         btnSalvar.addActionListener(e -> cmdSalvar_Click());
+
         panelBotoes.add(btnSalvar);
         this.add(panelBotoes);
 

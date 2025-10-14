@@ -39,7 +39,6 @@ public class PainelVenderOpcao extends JPanel {
     private JTextField txtOpcaoVenda; 
     private JTextField txtQuantidade;
     private OperacoesListener listener;
-    private String tipoOperacao = "DIV";
 
     public PainelVenderOpcao(OperacoesListener listener) {
     	this.listener = listener;

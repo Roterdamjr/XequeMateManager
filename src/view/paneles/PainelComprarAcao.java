@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import dao.AcaoDAO;
 import model.Acao; // Importe seus modelos e DAOs
 import util.Utils;
+import view.FrmOperacoesConsolidadas;
 import view.OperacoesListener;
 
 public class PainelComprarAcao extends JPanel {
@@ -19,12 +20,12 @@ public class PainelComprarAcao extends JPanel {
     private JTextField txtQuantidadeCompraAcao;
     private JTextField txtPrecoCompraAcao;
     private OperacoesListener listener;
-    private String tipoOperacao = "DIV"; // Tipo de operação padrão
+    private FrmOperacoesConsolidadas frmOperacoes;
 
     public PainelComprarAcao(OperacoesListener listener) {
     	this.listener = listener;
-    	
-    	
+    	this.frmOperacoes = (FrmOperacoesConsolidadas) listener; 
+    	   	
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.setLayout(new GridLayout(6, 1, 0, 0)); // Aumentei para 6 para incluir o Tipo Estratégia
         
@@ -66,13 +67,17 @@ public class PainelComprarAcao extends JPanel {
         
         JButton btnSalvar = new JButton("Salvar"); 
         btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 14));
+       
         btnSalvar.addActionListener(e -> cmdSalvar_Click());
+
         panelBotoes.add(btnSalvar);
         this.add(panelBotoes);
 
         limparPainel();
+        
     }
 
+    
     public void limparPainel() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         txtDataCompraAcao.setText(dateFormat.format(new Date()));
@@ -117,7 +122,7 @@ public class PainelComprarAcao extends JPanel {
         acaoDAO.comprarAcao(acaoText, 
         					txtDataCompraAcao.getText().trim(), 
                             quantidadeText, precoCompraText, 
-                            tipoOperacao); 
+                            frmOperacoes.getTipoOperacao()); 
         
         limparPainel();
         
@@ -125,8 +130,7 @@ public class PainelComprarAcao extends JPanel {
         		"Ação inserida com sucesso!", 
         		"Sucesso", 
         		JOptionPane.INFORMATION_MESSAGE);
-        
-        // Chama o callback para que o FrmOperacoesConsolidadas limpe as outras abas
+
         if (listener != null) {
             listener.onOperacaoSalvaSucesso();
         }

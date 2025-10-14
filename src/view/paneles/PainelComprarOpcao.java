@@ -35,7 +35,6 @@ public class PainelComprarOpcao extends JPanel {
     private JTextField txtPrecoCompraOpcao;
     private JLabel lblQuantidadeCompraOpcao;
     private OperacoesListener listener;
-    private String tipoOperacao = "DIV"; 
 
     public PainelComprarOpcao() {
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -225,10 +224,6 @@ public class PainelComprarOpcao extends JPanel {
             JFrame frame = new JFrame("Teste Visual PainelVenderOpcao");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            OperacoesListener mockListener = () -> {
-                // System.out.println("Listener mock chamado com sucesso.");
-            };
-  
             PainelComprarOpcao painel = new PainelComprarOpcao();
 
             // 4. Adiciona o painel ao frame
