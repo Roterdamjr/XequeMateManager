@@ -4,13 +4,17 @@ package view;
 import util.Relatorio;
 
 import javax.swing.*;
+
+import model.TipoOperacaoEnum;
+
 import java.awt.*;
 import java.util.List;
 
 public class FrmRelatorio extends JInternalFrame {
 
     private JTextArea textAreaRelatorio;
-
+    TipoOperacaoEnum tipoOperacao = TipoOperacaoEnum.GANHA_GANHA;
+    
     public FrmRelatorio() {
         super("Relatório de Resumo das Operações Abertas", true, true, true, true);
         
@@ -18,7 +22,7 @@ public class FrmRelatorio extends JInternalFrame {
         
         setupUI();
         executarCarregamento(() -> {
-            return Relatorio.gerarRelatorioDividendos3X(true);
+            return Relatorio.gerarRelatorio(tipoOperacao, true);
         });
     }
 
@@ -50,14 +54,14 @@ public class FrmRelatorio extends JInternalFrame {
         
         rbAbertas.addActionListener(e -> {
         	executarCarregamento(() -> {
-                return Relatorio.gerarRelatorioDividendos3X(true);
+                return Relatorio.gerarRelatorio(tipoOperacao,true);
             });
         });
         
         rbFechadas.addActionListener(e -> {
         	executarCarregamento(() -> {
   
-                return Relatorio.gerarRelatorioDividendos3X(false);
+                return Relatorio.gerarRelatorio(tipoOperacao,false);
             });
         });
     }
@@ -80,30 +84,24 @@ public class FrmRelatorio extends JInternalFrame {
     public static void main(String[] args) {
         // Garante que a GUI seja construída no Event Dispatch Thread (EDT)
         SwingUtilities.invokeLater(() -> {
-            // 1. Cria o Frame principal (o wrapper)
             JFrame frame = new JFrame("Teste FrmResumoOperacoes");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(1024, 768);
-            
-            // 2. Adiciona um JDesktopPane para simular o ambiente FrmPrincipal
+
             JDesktopPane desktopPane = new JDesktopPane();
             desktopPane.setBackground(Color.LIGHT_GRAY);
             frame.setContentPane(desktopPane);
-            
-            // 3. Cria e adiciona o InternalFrame que queremos testar
+
             FrmRelatorio internalFrame = new FrmRelatorio();
             desktopPane.add(internalFrame);
-            
-            // 4. Exibe e centraliza o InternalFrame
+
             internalFrame.setVisible(true);
             try {
-                // Tenta maximizar o InternalFrame para melhor visualização
                 internalFrame.setMaximum(true); 
             } catch (java.beans.PropertyVetoException ignored) {
-                // Caso não consiga maximizar, apenas ignora
+ 
             }
-            
-            // 5. Exibe o Frame principal
+
             frame.setVisible(true);
         });
     }

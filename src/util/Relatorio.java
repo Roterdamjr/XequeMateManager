@@ -13,6 +13,7 @@ import model.Opcao;
 import model.Operacao;
 import model.OperacaoDividendo;
 import model.ResultadoOperacao;
+import model.TipoOperacaoEnum;
 
 public class Relatorio {
 	
@@ -23,13 +24,14 @@ public class Relatorio {
 	static String CABECALHO_3 = 	"       | Qtde: %d | Compra: %s | Venda: %s | PM: %s ";
 	static String CABECALHO_OPCAO = "        [%s] Compra: %s | Venda: %s | Strike: %s";
 	
-	public static List<String> gerarRelatorioDividendos3X(boolean isOperacaoAberta) {
+	public static List<String> gerarRelatorio(TipoOperacaoEnum tipoOperacao, boolean isOperacaoAberta) {
 		
+		;
 		List<Acao> acoes;
 		if (isOperacaoAberta) {
-			acoes = new AcaoDAO().obterAcoesAbertas();
+			acoes = new AcaoDAO().obterAcoesAbertas(tipoOperacao.getDbValue());
 		}else {
-			acoes = new AcaoDAO().obterAcoesFechadasPorData();
+			acoes = new AcaoDAO().obterAcoesFechadasOrdenadasPorData(tipoOperacao.getDbValue());
 		}
 		
         List<String> relatorioLinhas = new ArrayList<>();

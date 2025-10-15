@@ -44,15 +44,20 @@ public class AcaoDAO {
         }
     }
 
-    public List<Acao> obterAcoesAbertas() {
+    public List<Acao> obterAcoesAbertas(String tipoOperacao) {
+    	
         String sql = "SELECT id, ativo, quantidade, preco_compra, preco_venda,data_compra,data_venda "
-        		+ "FROM TB_ACAO WHERE data_venda IS NULL ORDER BY ativo";
+        		+ "FROM TB_ACAO WHERE data_venda IS NULL "
+        		+ " AND TIPO_OPERACAO=? "
+        		+ " ORDER BY ativo";
         
         List<Acao> acoes = new ArrayList<>();
 
         try (Connection conn = DatabaseManager.connect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        	PreparedStatement stmt = conn.prepareStatement(sql)){
+        
+        	stmt.setString(1, tipoOperacao);
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Acao acao = new Acao();
@@ -71,15 +76,19 @@ public class AcaoDAO {
         return acoes;
     }
     
-    public List<Acao> obterAcoesFechadas() {
+    public List<Acao> obterAcoesFechadas(String tipoOperacao) {
         String sql = "SELECT id, ativo, quantidade, preco_compra, preco_venda,data_compra,data_venda "
-        		+ "FROM TB_ACAO WHERE data_venda IS NOT NULL ORDER BY ativo";
+        		+ "FROM TB_ACAO WHERE "
+        		+ " TIPO_OPERACAO=? "
+        		+ " and data_venda IS NOT NULL ORDER BY ativo";
         
         List<Acao> acoes = new ArrayList<>();
 
         try (Connection conn = DatabaseManager.connect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+            	PreparedStatement stmt = conn.prepareStatement(sql)){
+            
+            	stmt.setString(1, tipoOperacao);
+                ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Acao acao = new Acao();
@@ -98,8 +107,10 @@ public class AcaoDAO {
         return acoes;
     }
     
-    public List<Acao> obterAcoesFechadasPorData() {
-        String sql = "SELECT  * FROM  tb_acao WHERE data_venda IS NOT NULL "
+    public List<Acao> obterAcoesFechadasOrdenadasPorData(String tipoOperacao) {
+        String sql = "SELECT  * FROM  tb_acao WHERE "
+        		+ " TIPO_OPERACAO=? "
+        		+ " and data_venda IS NOT NULL "
         		+ " ORDER BY  "
         		+ "    SUBSTR(data_Venda, 7, 4) || '-' || "
         		+ "    SUBSTR(data_Venda, 4, 2) || '-' || "
@@ -109,8 +120,10 @@ public class AcaoDAO {
         List<Acao> acoes = new ArrayList<>();
 
         try (Connection conn = DatabaseManager.connect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+            	PreparedStatement stmt = conn.prepareStatement(sql)){
+            
+            	stmt.setString(1, tipoOperacao);
+                ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Acao acao = new Acao();
