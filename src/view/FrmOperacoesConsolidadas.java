@@ -5,6 +5,8 @@ import view.paneles.PainelVenderAcao;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+
+import model.TipoOperacaoEnum;
 import view.paneles.PainelComprarOpcao;
 import view.paneles.PainelDividendo;
 import view.paneles.PainelVenderOpcao;
@@ -66,8 +68,9 @@ public class FrmOperacoesConsolidadas extends JInternalFrame implements Operacoe
         tabbedPane.addTab("Comprar Opção", criarPainelComprarOpcao());
         tabbedPane.addTab("Dividendo", criarPainelDividendo());
         
-        limparTodasAsAbas();
-        setTipoOperacao("DIV");
+        setTipoOperacao(TipoOperacaoEnum.DIVIDENDO3X.getDbValue());
+        recarregarTodasAsAbas();
+        
     }
     
     private void criarRadioButtons() {
@@ -107,7 +110,7 @@ public class FrmOperacoesConsolidadas extends JInternalFrame implements Operacoe
     }
     
     private JPanel criarPainelVenderAcao() {
-        painelVenderAcao = new PainelVenderAcao();
+        painelVenderAcao = new PainelVenderAcao(this);
         return painelVenderAcao;
     }
 
@@ -122,26 +125,36 @@ public class FrmOperacoesConsolidadas extends JInternalFrame implements Operacoe
     }
     
     private JPanel criarPainelDividendo() {
-        painelDividendo = new PainelDividendo();
+        painelDividendo = new PainelDividendo(this);
         return painelDividendo;
     }
     
-    public void limparTodasAsAbas() {
+    public void recarregarTodasAsAbas() {
+        // 1. Painel Comprar Ação
         if (painelComprarAcao != null) {
             painelComprarAcao.limparPainel();
-            painelVenderOpcao.carregarAcoesVenda();
+            // Nenhuma chamada de carregamento, pois esta é a aba de compra
         }
+        
+        // 2. Painel Vender Opção (Corrigido: Lógica de recarga contida aqui)
         if (painelVenderOpcao != null) {
             painelVenderOpcao.limparPainel();
-            painelComprarOpcao.carregarOpcoesCompra();
+            painelVenderOpcao.carregarAcoesVenda(); 
         }
+        
+        // 3. Painel Vender Ação
         if (painelVenderAcao != null) {
             painelVenderAcao.limparPainel();
             painelVenderAcao.carregarAcoesVenda();
         }
+        
+        // 4. Painel Comprar Opção
         if (painelComprarOpcao != null) {
             painelComprarOpcao.limparPainel();
+            painelComprarOpcao.carregarOpcoesCompra();
         }
+        
+        // 5. Painel Dividendo
         if (painelDividendo != null) {
             painelDividendo.limparPainel();
             painelDividendo.carregarAcoes();
@@ -150,7 +163,7 @@ public class FrmOperacoesConsolidadas extends JInternalFrame implements Operacoe
 
     @Override
     public void onOperacaoSalvaSucesso() {
-        limparTodasAsAbas();
+        recarregarTodasAsAbas();
     }
 
 	@Override
@@ -159,18 +172,19 @@ public class FrmOperacoesConsolidadas extends JInternalFrame implements Operacoe
 
         if (e.getSource() == rbDividendo3X) {
             corSelecionada = Color.LIGHT_GRAY; // Lavanda Claro (Exemplo) 
-            setTipoOperacao("DIV");
+            setTipoOperacao(TipoOperacaoEnum.DIVIDENDO3X.getDbValue());
         } else if (e.getSource() == rbGanhaGanha) {
             corSelecionada = Color.decode("#CCFFCC"); // Verde Menta (Exemplo)
-            setTipoOperacao("GAN");
+            setTipoOperacao(TipoOperacaoEnum.GANHA_GANHA.getDbValue() );
         } else if (e.getSource() == rb3x1) {
             corSelecionada = Color.decode("#FFCCCC"); // Rosa Claro (Exemplo)
-            setTipoOperacao("3X");
+            setTipoOperacao(TipoOperacaoEnum.TRES_POR_UM.getDbValue());
         } else if (e.getSource() == rbEstrategica) {
             corSelecionada = Color.decode("#FFFFCC"); // Amarelo Pastel (Exemplo)
-            setTipoOperacao("EST");
+            setTipoOperacao(TipoOperacaoEnum.ESTRATEGICA.getDbValue());
         }
-
+        
+        recarregarTodasAsAbas();
         mudarCorPainel(corSelecionada);	
 	}
 	

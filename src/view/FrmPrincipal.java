@@ -13,15 +13,13 @@ import javax.swing.SwingUtilities;
 
 import util.CotacaoManager;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
 public class FrmPrincipal extends JFrame {
 
-    private JDesktopPane desktopPane;
+	private static final long serialVersionUID = 1L;
+
+	private JDesktopPane desktopPane;
     
     private FrmOperacoesConsolidadas frmOperacoesConsolidadas;
-    private FrmDividendo frmDividendo;
     private FrmRelatorio frmRelatorio;
     private FrmDesempenho frmDesempenho;
     
@@ -87,15 +85,6 @@ public class FrmPrincipal extends JFrame {
             }
             frameToOpen = frmOperacoesConsolidadas;
 
-
-
-
-	    } else if (className.equals(FrmDividendo.class.getName())) {
-	        if (frmDividendo == null || frmDividendo.isClosed()) {
-	        	frmDividendo = new FrmDividendo();
-	        }
-	        frameToOpen = frmDividendo;
-	        
 	    } else if (className.equals(FrmRelatorio.class.getName())) {
 	        if (frmRelatorio == null || frmRelatorio.isClosed()) {
 	        	frmRelatorio = new FrmRelatorio();

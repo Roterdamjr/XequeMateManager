@@ -12,7 +12,9 @@ import java.util.List;
 
 public class FrmRelatorio extends JInternalFrame {
 
-    private JTextArea textAreaRelatorio;
+
+	private static final long serialVersionUID = 1L;
+	private JTextArea textAreaRelatorio;
     TipoOperacaoEnum tipoOperacao = TipoOperacaoEnum.GANHA_GANHA;
     
     public FrmRelatorio() {

@@ -15,17 +15,19 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
+
 
 import dao.AcaoDAO;
 import model.Acao;
 import util.Utils;
+import view.FrmOperacoesConsolidadas;
 import view.OperacoesListener;
 import javax.swing.border.BevelBorder;
 
 public class PainelVenderAcao extends JPanel {
 
-    private final AcaoDAO acaoDAO = new AcaoDAO();
+	private static final long serialVersionUID = 1L;
+	private final AcaoDAO acaoDAO = new AcaoDAO();
     private JTextField txtDataVendaAcao;
     private JComboBox<Acao> cmbAcaoVenda; 
     private Acao acaoSelecionadaVenda = null;
@@ -33,9 +35,13 @@ public class PainelVenderAcao extends JPanel {
     private JLabel lblQuantidadeVenda;
     private JLabel lblPrecoCompraVenda;
     private OperacoesListener listener;
+    private FrmOperacoesConsolidadas frmOperacoes;
 
     
-    public PainelVenderAcao() {
+    public PainelVenderAcao(OperacoesListener listener) {
+    	this.listener = listener;
+    	this.frmOperacoes = (FrmOperacoesConsolidadas) listener; 
+    	
         this.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
         this.setLayout(new GridLayout(5, 1, 0, 0)); 
         
@@ -117,7 +123,7 @@ public class PainelVenderAcao extends JPanel {
     
     public void carregarAcoesVenda() {
         try {
-            List<Acao> acoes = acaoDAO.obterAcoesAbertas(); 
+            List<Acao> acoes = acaoDAO.obterAcoesAbertas(frmOperacoes.getTipoOperacao()); 
             cmbAcaoVenda.removeAllItems();
             
             for (Acao acao : acoes) {

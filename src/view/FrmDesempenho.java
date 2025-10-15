@@ -2,14 +2,11 @@ package view;
 
 
 import util.Desempenho;
-import util.Relatorio;
 import util.Utils;
-
 import javax.swing.*;
-
 import dao.AcaoDAO;
 import model.Acao;
-
+import model.TipoOperacaoEnum;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +15,9 @@ import java.util.TreeMap;
 
 public class FrmDesempenho extends JInternalFrame {
 
-    private JTextArea textAreaRelatorio;
+	private static final long serialVersionUID = 1L;
+	private JTextArea textAreaRelatorio;
+    TipoOperacaoEnum tipoOperacao = TipoOperacaoEnum.GANHA_GANHA;
 
     public FrmDesempenho() {
         super("Desempenho", true, true, true, true);
@@ -49,7 +48,7 @@ public class FrmDesempenho extends JInternalFrame {
 
     private void executarCarregamento() {
 
-		List<Acao> acoes = new AcaoDAO().obterAcoesFechadas();
+		List<Acao> acoes = new AcaoDAO().obterAcoesFechadas(tipoOperacao.getDbValue());
 		
 		List<Acao> acoesProcessadas = new ArrayList<>();
 		for (Acao acao : acoes) { 

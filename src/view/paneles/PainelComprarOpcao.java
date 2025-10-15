@@ -27,7 +27,8 @@ import view.OperacoesListener;
 
 public class PainelComprarOpcao extends JPanel {
 
-    private final OpcaoDAO opcaoDAO = new OpcaoDAO();
+	private static final long serialVersionUID = 1L;
+	private final OpcaoDAO opcaoDAO = new OpcaoDAO();
     private JTextField txtDataCompraOpcao;
     private JComboBox<Opcao> cmbOpcaoCompra; 
     JLabel lblPrecoVenda ;

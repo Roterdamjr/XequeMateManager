@@ -7,14 +7,14 @@ import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import dao.AcaoDAO;
-import model.Acao; // Importe seus modelos e DAOs
 import util.Utils;
 import view.FrmOperacoesConsolidadas;
 import view.OperacoesListener;
 
 public class PainelComprarAcao extends JPanel {
 
-    private final AcaoDAO acaoDAO = new AcaoDAO();
+	private static final long serialVersionUID = 1L;
+	private final AcaoDAO acaoDAO = new AcaoDAO();
     private JTextField txtDataCompraAcao;
     private JTextField txtAcaoCompra;
     private JTextField txtQuantidadeCompraAcao;

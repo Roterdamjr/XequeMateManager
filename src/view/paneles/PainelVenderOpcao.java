@@ -24,11 +24,13 @@ import dao.AcaoDAO;
 import dao.OpcaoDAO;
 import model.Acao;
 import util.Utils;
+import view.FrmOperacoesConsolidadas;
 import view.OperacoesListener;
 
 public class PainelVenderOpcao extends JPanel {
 
-    private final AcaoDAO acaoDAO = new AcaoDAO();
+	private static final long serialVersionUID = 1L;
+	private final AcaoDAO acaoDAO = new AcaoDAO();
     private final OpcaoDAO opcaoDAO = new OpcaoDAO();
     
     private JTextField txtDataVendaOpcao;
@@ -39,9 +41,11 @@ public class PainelVenderOpcao extends JPanel {
     private JTextField txtOpcaoVenda; 
     private JTextField txtQuantidade;
     private OperacoesListener listener;
-
+    private FrmOperacoesConsolidadas frmOperacoes;
+    
     public PainelVenderOpcao(OperacoesListener listener) {
     	this.listener = listener;
+    	this.frmOperacoes = (FrmOperacoesConsolidadas) listener; 
     	
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.setLayout(new GridLayout(7, 1, 0, 0));
@@ -130,7 +134,7 @@ public class PainelVenderOpcao extends JPanel {
     public void carregarAcoesVenda() {
 
         try {
-            List<Acao> acoes = acaoDAO.obterAcoesAbertas(); 
+            List<Acao> acoes = acaoDAO.obterAcoesAbertas(frmOperacoes.getTipoOperacao()); 
             cmbAcaoOpcaoVenda.removeAllItems();
             
             for (Acao acao : acoes) {
