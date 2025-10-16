@@ -21,7 +21,6 @@ public class FrmPrincipal extends JFrame implements ActionListener {
 	private JDesktopPane desktopPane;
     
     private FrmOperacoesConsolidadas frmOperacoesConsolidadas;
-    // VARIÁVEIS DO FrmRelatorio ANTIGO SÃO SUBSTITUÍDAS
     private FrmRelatorioOperacoesAbertas frmRelatorioAbertas; 
     private FrmRelatorioOperacoesFechadas frmRelatorioFechadas; 
     private FrmDesempenho frmDesempenho;
@@ -48,9 +47,9 @@ public class FrmPrincipal extends JFrame implements ActionListener {
         JMenuBar menuBar = new JMenuBar();
         
         JMenu menuOperacoes = new JMenu("Operações");
-        JMenuItem itemConsolidadas = new JMenuItem("Consolidadas");
-        itemConsolidadas.addActionListener(this);
-        menuOperacoes.add(itemConsolidadas);
+        JMenuItem itemRegistrarOperacao = new JMenuItem("Registrar");
+        itemRegistrarOperacao.addActionListener(this);
+        menuOperacoes.add(itemRegistrarOperacao);
         
         JMenu menuRelatorios = new JMenu("Relatórios");
         // NOVOS ITENS DE MENU
@@ -60,19 +59,22 @@ public class FrmPrincipal extends JFrame implements ActionListener {
         itemRelatorioFechadas.addActionListener(this);
         menuRelatorios.add(itemRelatorioAbertas);
         menuRelatorios.add(itemRelatorioFechadas);
-
-        JMenuItem itemDesempenho = new JMenuItem("Desempenho");
-        itemDesempenho.addActionListener(this);
-
-        JMenuItem itemAtualizarCotacoes = new JMenuItem("Atualizar Cotações");
-        itemAtualizarCotacoes.addActionListener(this);
         
         menuBar.add(menuOperacoes);
         menuBar.add(menuRelatorios);
-        menuBar.add(itemDesempenho);
-        menuBar.add(itemAtualizarCotacoes);
+                
+        JMenuItem itemAtualizarCotacoes = new JMenuItem("Atualizar Cotações");
+        menuRelatorios.add(itemAtualizarCotacoes);
+        itemAtualizarCotacoes.addActionListener(this);
         
         this.setJMenuBar(menuBar);
+        
+        JMenu mnuEerramentas = new JMenu("Eerramentas");
+        menuBar.add(mnuEerramentas);
+        
+        JMenuItem itemDesempenho = new JMenuItem("Desempenho");
+        mnuEerramentas.add(itemDesempenho);
+        itemDesempenho.addActionListener(this);
     }
     
     @Override
@@ -81,7 +83,7 @@ public class FrmPrincipal extends JFrame implements ActionListener {
     		atualizarCotacoes();
     	} else {
     		String className = "";
-    		if (e.getActionCommand().equals("Consolidadas")) {
+    		if (e.getActionCommand().equals("Registrar")) {
     			className = FrmOperacoesConsolidadas.class.getName();
     		} else if (e.getActionCommand().equals("Operações Abertas")) { 
     			className = FrmRelatorioOperacoesAbertas.class.getName();

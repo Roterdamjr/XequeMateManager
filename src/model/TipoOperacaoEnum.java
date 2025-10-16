@@ -1,9 +1,9 @@
 package model;
 
 public enum TipoOperacaoEnum {
+	DIVIDENDO3X("DIV"),
     GANHA_GANHA("GAN"),
-    TRES_POR_UM("3x1"),
-    DIVIDENDO3X("DIV"),
+    TRES_PRA_UM("3x1"),
     ESTRATEGICA("EST");
 
     private final String dbValue;

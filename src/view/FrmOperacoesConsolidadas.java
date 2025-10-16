@@ -178,7 +178,7 @@ public class FrmOperacoesConsolidadas extends JInternalFrame implements Operacoe
             setTipoOperacao(TipoOperacaoEnum.GANHA_GANHA.getDbValue() );
         } else if (e.getSource() == rb3x1) {
             corSelecionada = Color.decode("#FFCCCC"); // Rosa Claro (Exemplo)
-            setTipoOperacao(TipoOperacaoEnum.TRES_POR_UM.getDbValue());
+            setTipoOperacao(TipoOperacaoEnum.TRES_PRA_UM.getDbValue());
         } else if (e.getSource() == rbEstrategica) {
             corSelecionada = Color.decode("#FFFFCC"); // Amarelo Pastel (Exemplo)
             setTipoOperacao(TipoOperacaoEnum.ESTRATEGICA.getDbValue());
