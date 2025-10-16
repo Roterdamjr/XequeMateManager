@@ -1,7 +1,8 @@
 package view;
 
 import java.awt.Color;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -13,14 +14,16 @@ import javax.swing.SwingUtilities;
 
 import util.CotacaoManager;
 
-public class FrmPrincipal extends JFrame {
+public class FrmPrincipal extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
 	private JDesktopPane desktopPane;
     
     private FrmOperacoesConsolidadas frmOperacoesConsolidadas;
-    private FrmRelatorio frmRelatorio;
+    // VARIÁVEIS DO FrmRelatorio ANTIGO SÃO SUBSTITUÍDAS
+    private FrmRelatorioOperacoesAbertas frmRelatorioAbertas; 
+    private FrmRelatorioOperacoesFechadas frmRelatorioFechadas; 
     private FrmDesempenho frmDesempenho;
     
     public FrmPrincipal() {
@@ -45,39 +48,56 @@ public class FrmPrincipal extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         
         JMenu menuOperacoes = new JMenu("Operações");
-        JMenuItem itemREgMovimento = new JMenuItem("Registrar Movimento");
-        menuOperacoes.add(itemREgMovimento);
-        itemREgMovimento.addActionListener(e -> callOnlyOnce(FrmOperacoesConsolidadas.class.getName()));
-
-        JMenu menuVisualizar = new JMenu("Visualizar");
+        JMenuItem itemConsolidadas = new JMenuItem("Consolidadas");
+        itemConsolidadas.addActionListener(this);
+        menuOperacoes.add(itemConsolidadas);
         
-        JMenuItem itemRelatorio = new JMenuItem("Relatorio");
-        menuVisualizar.add(itemRelatorio);
-        itemRelatorio.addActionListener(e -> callOnlyOnce(FrmRelatorio.class.getName()));
+        JMenu menuRelatorios = new JMenu("Relatórios");
+        // NOVOS ITENS DE MENU
+        JMenuItem itemRelatorioAbertas = new JMenuItem("Operações Abertas");
+        itemRelatorioAbertas.addActionListener(this);
+        JMenuItem itemRelatorioFechadas = new JMenuItem("Operações Fechadas");
+        itemRelatorioFechadas.addActionListener(this);
+        menuRelatorios.add(itemRelatorioAbertas);
+        menuRelatorios.add(itemRelatorioFechadas);
+
+        JMenuItem itemDesempenho = new JMenuItem("Desempenho");
+        itemDesempenho.addActionListener(this);
+
+        JMenuItem itemAtualizarCotacoes = new JMenuItem("Atualizar Cotações");
+        itemAtualizarCotacoes.addActionListener(this);
         
         menuBar.add(menuOperacoes);
+        menuBar.add(menuRelatorios);
+        menuBar.add(itemDesempenho);
+        menuBar.add(itemAtualizarCotacoes);
         
-        
-
-        menuBar.add(menuVisualizar);
-        
-        JMenuItem itemDesempenhoMensal = new JMenuItem("Desempenho Mensal");
-        menuVisualizar.add(itemDesempenhoMensal);
-        itemDesempenhoMensal.addActionListener(e -> callOnlyOnce(FrmDesempenho.class.getName()));
-        
-        setJMenuBar(menuBar);
-        
-        JMenu mnNewMenu = new JMenu("Ferramentas");
-        menuBar.add(mnNewMenu);
-        
-        JMenuItem itemCotacoes = new JMenuItem("Atualizar Cotações");
-        itemCotacoes.addActionListener(e -> atualizarCotacoes());
-        mnNewMenu.add(itemCotacoes);
+        this.setJMenuBar(menuBar);
     }
     
-    private void callOnlyOnce(String className) {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+    	if (e.getActionCommand().equals("Atualizar Cotações")) {
+    		atualizarCotacoes();
+    	} else {
+    		String className = "";
+    		if (e.getActionCommand().equals("Consolidadas")) {
+    			className = FrmOperacoesConsolidadas.class.getName();
+    		} else if (e.getActionCommand().equals("Operações Abertas")) { 
+    			className = FrmRelatorioOperacoesAbertas.class.getName();
+    		} else if (e.getActionCommand().equals("Operações Fechadas")) { 
+    			className = FrmRelatorioOperacoesFechadas.class.getName();
+    		} else if (e.getActionCommand().equals("Desempenho")) {
+    			className = FrmDesempenho.class.getName();
+    		}
+    		
+    		abrirFrame(className);
+    	}
+    }
+
+    private void abrirFrame(String className) {
         JInternalFrame frameToOpen = null;
-        
+
         if (className.equals(FrmOperacoesConsolidadas.class.getName())) {
             if (frmOperacoesConsolidadas == null || frmOperacoesConsolidadas.isClosed()) {
             	frmOperacoesConsolidadas = new FrmOperacoesConsolidadas();
@@ -85,11 +105,16 @@ public class FrmPrincipal extends JFrame {
             }
             frameToOpen = frmOperacoesConsolidadas;
 
-	    } else if (className.equals(FrmRelatorio.class.getName())) {
-	        if (frmRelatorio == null || frmRelatorio.isClosed()) {
-	        	frmRelatorio = new FrmRelatorio();
+	    } else if (className.equals(FrmRelatorioOperacoesAbertas.class.getName())) { 
+	        if (frmRelatorioAbertas == null || frmRelatorioAbertas.isClosed()) {
+	        	frmRelatorioAbertas = new FrmRelatorioOperacoesAbertas();
 	        }
-	        frameToOpen = frmRelatorio;
+	        frameToOpen = frmRelatorioAbertas;
+	    } else if (className.equals(FrmRelatorioOperacoesFechadas.class.getName())) { 
+	        if (frmRelatorioFechadas == null || frmRelatorioFechadas.isClosed()) {
+	        	frmRelatorioFechadas = new FrmRelatorioOperacoesFechadas();
+	        }
+	        frameToOpen = frmRelatorioFechadas;
 	    } else if (className.equals(FrmDesempenho.class.getName())) {
 	        if (frmDesempenho == null || frmDesempenho.isClosed()) {
 	        	frmDesempenho = new FrmDesempenho();
@@ -115,7 +140,7 @@ public class FrmPrincipal extends JFrame {
     	CotacaoManager.atualizarCotacoesNoDatabase();
     	JOptionPane.showMessageDialog(this, 
     			"Cotações atualizadas com sucesso!", 
-    			"Sucesso", 
+    			"Atualização Concluída", 
     			JOptionPane.INFORMATION_MESSAGE);
     }
 

@@ -1,17 +1,16 @@
 package view;
 
 
-import util.Relatorio;
-
 import javax.swing.*;
 
 import model.TipoOperacaoEnum;
+import relat.RelatorioOperacoesAbertas;
+import relat.RelatorioOperacoesFechadas;
 
 import java.awt.*;
 import java.util.List;
 
 public class FrmRelatorio extends JInternalFrame {
-
 
 	private static final long serialVersionUID = 1L;
 	private JTextArea textAreaRelatorio;
@@ -24,7 +23,7 @@ public class FrmRelatorio extends JInternalFrame {
         
         setupUI();
         executarCarregamento(() -> {
-            return Relatorio.gerarRelatorio(tipoOperacao, true);
+            return new RelatorioOperacoesAbertas(tipoOperacao).gerarRelatorio();
         });
     }
 
@@ -56,14 +55,13 @@ public class FrmRelatorio extends JInternalFrame {
         
         rbAbertas.addActionListener(e -> {
         	executarCarregamento(() -> {
-                return Relatorio.gerarRelatorio(tipoOperacao,true);
+        		return new RelatorioOperacoesAbertas(tipoOperacao).gerarRelatorio();
             });
         });
         
         rbFechadas.addActionListener(e -> {
         	executarCarregamento(() -> {
-  
-                return Relatorio.gerarRelatorio(tipoOperacao,false);
+        		return new RelatorioOperacoesFechadas(tipoOperacao).gerarRelatorio();
             });
         });
     }

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import dao.AcaoDAO;
 import model.Acao;
-import util.Desempenho;
+import relat.Desempenho;
 
 public class TestaDesempenho {
 	 public static void main(String[] args) {

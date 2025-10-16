@@ -1,4 +1,4 @@
-package util;
+package relat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +9,8 @@ import dao.OpcaoDAO;
 import model.Acao;
 import model.Opcao;
 import model.Operacao;
+import util.OperacaoAnalyticsDividendos3X;
+import util.Utils;
 
 public class Desempenho {
    public static Map<String, Double> calcularlDesempenhoMensal(List<Acao> acoes) {

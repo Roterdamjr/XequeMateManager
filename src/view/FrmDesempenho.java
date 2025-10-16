@@ -1,12 +1,13 @@
 package view;
 
 
-import util.Desempenho;
 import util.Utils;
 import javax.swing.*;
 import dao.AcaoDAO;
 import model.Acao;
 import model.TipoOperacaoEnum;
+import relat.Desempenho;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
