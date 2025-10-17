@@ -1,9 +1,9 @@
 package util;
 
 
-public class OperacaoAnalyticsGanhaGanha extends OperacaoAnalytics{
+public class OperacaoAnalyticsGanhaGanha extends OperacaoAnalyticsBase{
 
-		protected double calcularPrecoVenda(double strike, 
+		protected double calcularResultado(double strike, 
 					double cotacao, 
 					double precoVenda,
 					boolean isOperacaoAberta) {

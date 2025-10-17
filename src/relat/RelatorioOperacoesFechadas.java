@@ -14,13 +14,13 @@ public class RelatorioOperacoesFechadas extends BaseRelatorio {
         super(tipoOperacao);
     }
 
-    /**
-     * Implementa o método abstrato para buscar apenas ações fechadas.
-     * Requer que AcaoDAO tenha um método obterAcoesFechadas(String tipoOperacaoDb).
-     */
     @Override
     protected List<Acao> obterAcoes() {
-        // Assume que 'acaoDAO' foi inicializado em BaseRelatorio
-        return acaoDAO.obterAcoesFechadas(this.tipoOperacao.getDbValue());
+        return acaoDAO.obterAcoesFechadasOrdenadasPorData(this.tipoOperacao.getDbValue());
+    }
+    
+    @Override
+    protected boolean isOperacaoAberta() {
+        return false; 
     }
 }

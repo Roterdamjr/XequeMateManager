@@ -12,7 +12,6 @@ public class FrmRelatorioOperacoesFechadas extends BaseFrmRelatorio {
     private static final long serialVersionUID = 1L;
 
     public FrmRelatorioOperacoesFechadas() {
-        // Chama o novo construtor da BaseFrmRelatorio passando o título
         super("Relatório de Operações Fechadas"); 
     }
 

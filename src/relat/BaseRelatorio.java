@@ -8,18 +8,16 @@ import dao.OpcaoDAO;
 import model.Acao;
 import model.Dividendo;
 import model.Opcao;
+import model.Operacao;
+import model.OperacaoDividendo;
 import model.ResultadoOperacao;
 import model.TipoOperacaoEnum;
+import util.OperacaoAnalyticsDividendos3X;
 import util.Utils;
 
-/**
- * Classe base abstrata para a geração de relatórios de operações.
- * Contém a lógica de formatação comum, mas delega a busca das ações
- * (abertas ou fechadas) para as subclasses.
- */
+
 public abstract class BaseRelatorio {
-    
-    // Variáveis estáticas e constantes originais, agora protegidas para acesso das subclasses
+
     protected static final String CABECALHO_1 = 	"\t %s | Investimento: %s |RESULTADO : %s | %s%%";
     protected static final String CABECALHO_2 = 	"\t       | Qtde: %d | Compra: %s | Strike: %s | PM: %s | Cotação: %s";
     protected static final String CABECALHO_3 = 	"\t       | Qtde: %d | Compra: %s | Venda: %s | PM: %s ";
@@ -28,22 +26,17 @@ public abstract class BaseRelatorio {
     protected double somaParaMediaPercentualTotal = 0;
     protected int contadorParaMediaPercentualTotal = 0;
 
-    // DAOs necessários para a lógica de formatação/cálculo, agora como instâncias da classe
     protected final AcaoDAO acaoDAO = new AcaoDAO();
     protected final OpcaoDAO opcaoDAO = new OpcaoDAO();
     protected final DividendoDAO dividendoDAO = new DividendoDAO();
-    
-    // Filtro principal da operação
+    protected abstract boolean isOperacaoAberta();
+
     protected final TipoOperacaoEnum tipoOperacao;
     
     public BaseRelatorio(TipoOperacaoEnum tipoOperacao) {
         this.tipoOperacao = tipoOperacao;
     }
-    
-    /**
-     * Método abstrato: Deve ser implementado pelas subclasses para buscar a lista de Ações
-     * (abertas ou fechadas) do banco de dados.
-     */
+
     protected abstract List<Acao> obterAcoes();
     
     /**
@@ -53,7 +46,7 @@ public abstract class BaseRelatorio {
         
         List<String> linhas = new ArrayList<>();
         
-        // 1. CHAMA O MÉTODO POLIMÓRFICO: Decide se busca abertas ou fechadas
+
         List<Acao> acoes = obterAcoes(); 
         
         // Se a lista de ações estiver vazia, retorna a mensagem.
@@ -66,21 +59,14 @@ public abstract class BaseRelatorio {
         linhas.add("RELATÓRIO POR ESTRATÉGIA: " + tipoOperacao.name().replace("_", " "));
         linhas.add("==========================================================================================================");
 
-        // Zera os contadores globais antes de iniciar o loop
         somaParaMediaPercentualTotal = 0;
         contadorParaMediaPercentualTotal = 0;
 
-        // 2. LOOP DE FORMATAÇÃO (Lógica comum do seu Relatorio.java)
         for (Acao acao : acoes) {
-            
-            // Simulação da lógica de cálculo de ResultadoOperacao (mantendo a estrutura original)
             ResultadoOperacao resultadoOperacao = calcularResultado(acao); 
 
-            // Cálculo do Retorno Percentual Total (mantendo a lógica original)
             double retornoPercentualTotal = 0.0;
-            // ... (A lógica de cálculo de porcentagem está na sua classe original e deve ser movida para cá)
-            
-            // Construção da linha de cabeçalho
+
             String cabecalho1 = String.format(CABECALHO_1,
                     acao.getAtivo(),
                     Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoCompraAcao() * acao.getQuantidade()),
@@ -89,9 +75,7 @@ public abstract class BaseRelatorio {
             );
             linhas.add(cabecalho1);
 
-            // Determina qual CABECALHO_X usar (depende se a operação está fechada ou aberta)
             if (acao.getDataVenda() == null || acao.getDataVenda().trim().isEmpty()) {
-                // Operação Aberta - Usa Cotação Atual
                 String linhaAcao = String.format(CABECALHO_2,
                         acao.getQuantidade(),
                         Utils.formatarParaDuasDecimais(acao.getPrecoCompra()),
@@ -101,7 +85,6 @@ public abstract class BaseRelatorio {
                 );
                 linhas.add(linhaAcao);
             } else {
-                // Operação Fechada - Usa Preço de Venda
                 String linhaAcao = String.format(CABECALHO_3,
                         acao.getQuantidade(),
                         Utils.formatarParaDuasDecimais(acao.getPrecoCompra()),
@@ -115,7 +98,7 @@ public abstract class BaseRelatorio {
             contadorParaMediaPercentualTotal++;
             
             // INFORMAÇÕES ADICIONAIS DE OPÇÕES
-            List<Opcao> opcoes = opcaoDAO.obterOpcoesPorIdAcao(acao.getId()); // Adapte se o OpcaoDAO não tiver este método
+            List<Opcao> opcoes = opcaoDAO.obterOpcoesPorIdAcao(acao.getId()); 
             if (opcoes != null && !opcoes.isEmpty()) {
                 linhas.add("    -> Opções:");
                 for (Opcao opcao : opcoes) {
@@ -139,8 +122,7 @@ public abstract class BaseRelatorio {
 
             linhas.add("----------------------------------------------------------------------------------------------------------");
         }
-        
-        // CÁLCULO DA MÉDIA FINAL (mantendo a lógica original)
+
         if (contadorParaMediaPercentualTotal > 0) {
             double media = somaParaMediaPercentualTotal / contadorParaMediaPercentualTotal;
             linhas.add(String.format("\tMÉDIA PERCENTUAL TOTAL: %s%%", Utils.formatarParaDuasDecimais(media)));
@@ -149,12 +131,24 @@ public abstract class BaseRelatorio {
         return linhas;
     }
     
-    // Método auxiliar (deve existir no seu código original ou ser criado)
-    private ResultadoOperacao calcularResultado(Acao acao) {
-        // Esta lógica deve ser a mesma do seu código original para ResultadoOperacao
-        // ... CÁLCULO COMPLEXO E RETORNO DE NOVO ResultadoOperacao(...)
+    private ResultadoOperacao calcularResultado(Acao ac) {
+    	Acao acao = new AcaoDAO().obterAcaoPorId(ac.getId());
+	    List<Opcao> opcoes =  new OpcaoDAO().obterOpcoesPorIdAcao(acao.getId());
+    	Operacao operacao = new Operacao(acao,opcoes) ;
+    
+    	
+    	if(ac.getId()==2) {
+    		int a=0;
+    	}
         
-        // Retorno dummy para compilação.
-        return new ResultadoOperacao(acao.getAtivo(), acao.getQuantidade(), acao.getPrecoCompra(), acao.getPrecoVenda(), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    	try {
+        	return
+				new OperacaoAnalyticsDividendos3X().sumarizaResultado(operacao,  isOperacaoAberta());
+        }catch (Exception e) {
+			System.out.println("Erro em obterResumoDaOperacao. Ativo: " + operacao.getAcao().getAtivo());
+			return null;
+		}
     }
+
+
 }

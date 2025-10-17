@@ -62,19 +62,19 @@ public class FrmPrincipal extends JFrame implements ActionListener {
         
         menuBar.add(menuOperacoes);
         menuBar.add(menuRelatorios);
-                
-        JMenuItem itemAtualizarCotacoes = new JMenuItem("Atualizar Cotações");
-        menuRelatorios.add(itemAtualizarCotacoes);
-        itemAtualizarCotacoes.addActionListener(this);
+        
+        JMenuItem itemDesempenho = new JMenuItem("Desempenho");
+        menuRelatorios.add(itemDesempenho);
+        itemDesempenho.addActionListener(this);
         
         this.setJMenuBar(menuBar);
         
         JMenu mnuEerramentas = new JMenu("Eerramentas");
         menuBar.add(mnuEerramentas);
         
-        JMenuItem itemDesempenho = new JMenuItem("Desempenho");
-        mnuEerramentas.add(itemDesempenho);
-        itemDesempenho.addActionListener(this);
+        JMenuItem itemAtualizarCotacoes = new JMenuItem("Atualizar Cotações");
+        mnuEerramentas.add(itemAtualizarCotacoes);
+        itemAtualizarCotacoes.addActionListener(this);
     }
     
     @Override

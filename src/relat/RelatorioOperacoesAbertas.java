@@ -13,11 +13,14 @@ public class RelatorioOperacoesAbertas extends BaseRelatorio {
     public RelatorioOperacoesAbertas(TipoOperacaoEnum tipoOperacao) {
         super(tipoOperacao);
     }
-
+    
     @Override
     protected List<Acao> obterAcoes() {
-        // Assume que 'acaoDAO' foi inicializado em BaseRelatorio
-        // Assume que o método em AcaoDAO aceita o valor do ENUM para filtrar
         return acaoDAO.obterAcoesAbertas(this.tipoOperacao.getDbValue());
+    }
+    
+    @Override
+    protected boolean isOperacaoAberta() {
+        return true; 
     }
 }

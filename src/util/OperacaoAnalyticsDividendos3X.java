@@ -1,7 +1,7 @@
 package util;
 
 
-public class OperacaoAnalyticsDividendos3X extends OperacaoAnalytics{
+public class OperacaoAnalyticsDividendos3X extends OperacaoAnalyticsBase{
 
 	   protected double calcularPrecoVenda(double strike, 
 			   						double cotacao, 

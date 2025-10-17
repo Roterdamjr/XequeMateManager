@@ -11,7 +11,7 @@ import model.Opcao;
 import model.Operacao;
 import model.ResultadoOperacao;
 
-public abstract class OperacaoAnalytics {
+public abstract class OperacaoAnalyticsBase {
 	
 	protected abstract double calcularPrecoVenda(double strike, 
 												double cotacao, 
@@ -45,7 +45,6 @@ public abstract class OperacaoAnalytics {
 		double strike = OpcaoDAO.obterStrikeUltimaOpcaoVendida(acao.getId());
 		
 		double precoMedio = acao.getPrecoCompra()  - resultadoDasOpcoes - resultadoDosDividendos;
-		
 
         double precoVendaCalculo = calcularPrecoVenda(strike, 
 					        		cotacao, 
