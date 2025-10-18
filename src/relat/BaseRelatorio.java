@@ -65,12 +65,14 @@ public abstract class BaseRelatorio {
         for (Acao acao : acoes) {
             ResultadoOperacao resultadoOperacao = calcularResultado(acao); 
 
-            double retornoPercentualTotal = 0.0;
-
+            double investimento = resultadoOperacao.getPrecoCompraAcao() * acao.getQuantidade();
+            double resultado = resultadoOperacao.getResultado();
+            double retornoPercentualTotal = resultado / investimento * 100;
+            
             String cabecalho1 = String.format(CABECALHO_1,
                     acao.getAtivo(),
-                    Utils.formatarParaDuasDecimais(resultadoOperacao.getPrecoCompraAcao() * acao.getQuantidade()),
-                    Utils.formatarParaDuasDecimais(resultadoOperacao.getResultado()),
+                    Utils.formatarParaDuasDecimais(investimento),
+                    Utils.formatarParaDuasDecimais(resultado),
                     Utils.formatarParaDuasDecimais(retornoPercentualTotal)
             );
             linhas.add(cabecalho1);

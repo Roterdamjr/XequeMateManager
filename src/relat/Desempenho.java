@@ -44,7 +44,14 @@ public class Desempenho {
         String dtVenda = acao.getDataVenda();
 
         Map<String, Integer> mapaDiasPorMes = Utils.contarDiasPorMes(dtCompra, dtVenda);
-        int totalDias = Utils.calcularTotalDias(dtCompra, dtVenda);
+        
+        int totalDias=0;
+        try {
+        	totalDias = Utils.calcularTotalDias(dtCompra, dtVenda);
+        }catch (Exception e) {
+        	System.out.println("erro em : " + acao);
+		}
+        
         
         double valorInvestido = acao.getQuantidade() * acao.getPrecoCompra();
         if (valorInvestido == 0) {

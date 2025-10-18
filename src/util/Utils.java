@@ -60,32 +60,28 @@ public class Utils {
          */
 	public static Map<String, Integer> contarDiasPorMes(String dtCompraString, String dtVendaString) {
 	    
-	    // Define o formato de data (dd/MM/yyyy)
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	    
-	    // Converte as Strings para objetos LocalDate
-	    LocalDate dataAtual = LocalDate.parse(dtCompraString, formatter);
-	    LocalDate dataFim = LocalDate.parse(dtVendaString, formatter);
-	
-	    // Map para armazenar os resultados (LinkedHashMap mantém a ordem de inserção)
-	    Map<String, Integer> diasPorMes = new LinkedHashMap<>();
-	    
-	    // Define o formato para a chave do Map (MM/yyyy)
-	    DateTimeFormatter mesAnoFormatter = DateTimeFormatter.ofPattern("MM/yyyy");
-	
-	    // Loop principal: Itera do dia da compra até o dia da venda (inclusive)
-	    while (!dataAtual.isAfter(dataFim)) {
-	        
-	        String mesAno = dataAtual.format(mesAnoFormatter);
-	        
-	        // Adiciona 1 ao contador daquele mês/ano
-	        diasPorMes.merge(mesAno, 1, Integer::sum);
-	        
-	        // Move para o próximo dia
-	        dataAtual = dataAtual.plusDays(1);
+	    try {
+		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+		    LocalDate dataAtual = LocalDate.parse(dtCompraString, formatter);
+		    LocalDate dataFim = LocalDate.parse(dtVendaString, formatter);
+
+		    Map<String, Integer> diasPorMes = new LinkedHashMap<>();
+		    
+		    DateTimeFormatter mesAnoFormatter = DateTimeFormatter.ofPattern("MM/yyyy");
+
+		    while (!dataAtual.isAfter(dataFim)) {		        
+		        String mesAno = dataAtual.format(mesAnoFormatter);
+		        diasPorMes.merge(mesAno, 1, Integer::sum);
+		        dataAtual = dataAtual.plusDays(1);
+		    }
+		    
+		    return diasPorMes;
+		}catch(Exception e) {
+			System.out.println("DAta compra: " + dtCompraString);
+	    	return null;
 	    }
 	    
-	    return diasPorMes;
 	}
 
 	public static int calcularTotalDias(String dtCompraString, String dtVendaString) {

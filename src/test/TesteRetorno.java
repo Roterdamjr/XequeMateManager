@@ -24,14 +24,14 @@ package test;
   [ 03/2025 ] Total: 5,0768%
   
 ===== RETORNO TOTAL ACUMULADO POR MÊS =====
-[ 08/2025 ] Total: 6,7405%
-[ 05/2025 ] Total: 22,2282%
-[ 06/2025 ] Total: 11,1853%
-[ 02/2025 ] Total: 4,2556%
-[ 04/2025 ] Total: 28,4277%
-[ 07/2025 ] Total: 5,5310%
-[ 09/2025 ] Total: 1,1300%
-[ 03/2025 ] Total: 27,8112%
+  [ 08/2025 ] Total: 6,7405%
+  [ 05/2025 ] Total: 33,7063%
+  [ 06/2025 ] Total: 11,1853%
+  [ 02/2025 ] Total: 4,4653%
+  [ 04/2025 ] Total: 43,5176%
+  [ 07/2025 ] Total: 5,5310%
+  [ 09/2025 ] Total: 1,1300%
+  [ 03/2025 ] Total: 30,0821%
 
 */
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class TesteRetorno {
 
 	 public static void main(String[] args) {
 
-		List<Acao> acoes = new AcaoDAO().obterAcoesFechadas("DIV");
+		List<Acao> acoes = new AcaoDAO().obterAcoesFechadas("GAN");
 		
 		List<Acao> acoesProcessadas = new ArrayList<>();
 		for (Acao acao : acoes) { 
@@ -94,7 +94,6 @@ public class TesteRetorno {
         List<Opcao> opcoes = new OpcaoDAO().obterOpcoesPorIdAcao(acao.getId());
         Operacao op = new Operacao(acao, opcoes); 
         
-        //Double resultadoEmValor = new OperacaoAnalyticsDividendos3X().sumarizaResultado(op, false).getResultado();
         Double resultadoEmValor = new OperacaoAnalyticsGanhaGanha().sumarizaResultado(op, false).getResultado();
         String dtCompra = acao.getDataCompra();
         String dtVenda = acao.getDataVenda();
