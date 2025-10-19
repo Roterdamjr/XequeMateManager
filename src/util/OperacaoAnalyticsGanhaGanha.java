@@ -17,6 +17,6 @@ public class OperacaoAnalyticsGanhaGanha extends OperacaoAnalyticsBase{
 			} else {
 			return precoVenda;
 			}
-}
+	   }
 
 }

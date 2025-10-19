@@ -76,6 +76,42 @@ public class AcaoDAO {
         return acoes;
     }
     
+    public List<Acao> obterAcoesAbertasOrdenadasPorData(String tipoOperacao) {
+    	
+        String sql = "SELECT  * FROM  tb_acao WHERE "
+        		+ " TIPO_OPERACAO=? "
+        		+ " and data_venda is NULL "
+        		+ " ORDER BY  "
+        		+ "    SUBSTR(data_compra, 7, 4) || '-' || "
+        		+ "    SUBSTR(data_compra, 4, 2) || '-' || "
+        		+ "    SUBSTR(data_compra, 1, 2), "
+        		+ "    ativo";
+        
+        List<Acao> acoes = new ArrayList<>();
+
+        try (Connection conn = DatabaseManager.connect();
+        	PreparedStatement stmt = conn.prepareStatement(sql)){
+        
+        	stmt.setString(1, tipoOperacao);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Acao acao = new Acao();
+                acao.setId(rs.getInt("id"));
+                acao.setAtivo(rs.getString("ativo"));
+                acao.setQuantidade(rs.getInt("quantidade"));
+                acao.setPrecoCompra(rs.getDouble("preco_compra"));
+                acao.setPrecoVenda(rs.getDouble("preco_venda"));
+                acao.setDataCompra(rs.getString("data_compra"));
+                acao.setDataVenda(rs.getString("data_venda"));
+                acoes.add(acao);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return acoes;
+    }
+    
     public List<Acao> obterAcoesFechadas(String tipoOperacao) {
         String sql = "SELECT id, ativo, quantidade, preco_compra, preco_venda,data_compra,data_venda "
         		+ "FROM TB_ACAO WHERE "

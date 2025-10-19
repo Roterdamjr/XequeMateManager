@@ -16,7 +16,7 @@ public class RelatorioOperacoesAbertas extends BaseRelatorio {
     
     @Override
     protected List<Acao> obterAcoes() {
-        return acaoDAO.obterAcoesAbertas(this.tipoOperacao.getDbValue());
+        return acaoDAO.obterAcoesAbertasOrdenadasPorData(this.tipoOperacao.getDbValue());
     }
     
     @Override
