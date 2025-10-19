@@ -15,9 +15,52 @@ public class OpcaoDAO {
      * O campo data_compra IS NULL indica que a opção está disponível para compra.
      */
     public List<Opcao> obterOpcoesNaoCompradas() {
-        // Exemplo de SQL: Seleciona opções criadas (data_venda NOT NULL) e não compradas (data_compra IS NULL)
-        String sql = "SELECT id, opcao, quantidade, preco_venda, strike "
-        		+ " FROM TB_OPCAO WHERE data_compra IS NULL ORDER BY opcao";
+
+/*
+ * SELECT
+  T1.id,
+  T1.opcao,
+  T1.data_venda,
+  T1.quantidade,
+  T1.preco_venda,
+  T1.strike,
+  T2.ativo AS ativo_acao
+FROM TB_OPCAO AS T1
+JOIN TB_ACAO AS T2
+  ON T1.id_acao = T2.id
+WHERE
+  T2.data_venda IS  NULL 
+  and tipo_operacao='DIV'
+GROUP BY
+  T2.ativo
+HAVING
+  SUBSTR(T1.data_venda, 7, 4) || '-' || SUBSTR(T1.data_venda, 4, 2) || '-' || SUBSTR(T1.data_venda, 1, 2) =
+  MAX(SUBSTR(T1.data_venda, 7, 4) || '-' || SUBSTR(T1.data_venda, 4, 2) || '-' || SUBSTR(T1.data_venda, 1, 2))
+ORDER BY
+  T2.ativo;
+ */
+    	
+        String sql = "SELECT\r\n"
+        		+ "  T1.id,\r\n"
+        		+ "  T1.opcao,\r\n"
+        		+ "  T1.data_venda,\r\n"
+        		+ "  T1.quantidade,\r\n"
+        		+ "  T1.preco_venda,\r\n"
+        		+ "  T1.strike,\r\n"
+        		+ "  T2.ativo AS ativo_acao\r\n"
+        		+ "FROM TB_OPCAO AS T1\r\n"
+        		+ "JOIN TB_ACAO AS T2\r\n"
+        		+ "  ON T1.id_acao = T2.id\r\n"
+        		+ "WHERE\r\n"
+        		+ "  T2.data_venda IS  NULL \r\n"
+        		+ "  and tipo_operacao='DIV'\r\n"
+        		+ "GROUP BY\r\n"
+        		+ "  T2.ativo\r\n"
+        		+ "HAVING\r\n"
+        		+ "  SUBSTR(T1.data_venda, 7, 4) || '-' || SUBSTR(T1.data_venda, 4, 2) || '-' || SUBSTR(T1.data_venda, 1, 2) =\r\n"
+        		+ "  MAX(SUBSTR(T1.data_venda, 7, 4) || '-' || SUBSTR(T1.data_venda, 4, 2) || '-' || SUBSTR(T1.data_venda, 1, 2))\r\n"
+        		+ "ORDER BY\r\n"
+        		+ "  T2.ativo;";
         List<Opcao> opcoes = new ArrayList<>();
 
         try (Connection conn = DatabaseManager.connect();
