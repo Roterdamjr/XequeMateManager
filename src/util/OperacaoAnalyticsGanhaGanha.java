@@ -1,6 +1,7 @@
 package util;
 
 
+import dao.OpcaoDAO;
 import model.Acao;
 
 public class OperacaoAnalyticsGanhaGanha extends OperacaoAnalyticsBase{
@@ -10,12 +11,20 @@ public class OperacaoAnalyticsGanhaGanha extends OperacaoAnalyticsBase{
 											double cotacao, 
 											double precoVenda,
 											boolean isOperacaoAberta) {
-
-					
+	
+		   double strike_call = new OpcaoDAO().ob
+				   strike_put=0;
+		   
 			if (isOperacaoAberta){
-			return (strike < cotacao) ? strike : cotacao;
+				if (cotacao > strike_call) {
+					return strike;
+				}else if (cotacao <= strike_call && cotacao >= strike_put) {
+					return cotacao;
+				}else {
+					return strike_put;
+				}
 			} else {
-			return precoVenda;
+				return precoVenda;
 			}
 	   }
 
