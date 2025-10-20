@@ -118,4 +118,23 @@ public class Utils {
 	            return mes1.compareTo(mes2);
 	        }
 	    };
+	    
+	    public static String identificarTipoOpcao(String codigoOpcao) {
+	    	/*
+	    	 * informa se´call ou put
+	    	 */
+	        if (codigoOpcao == null || codigoOpcao.length() < 5) {
+	            return "Código Inválido";
+	        }
+
+	        char letraTipo = codigoOpcao.toUpperCase().charAt(4);
+
+	        if (letraTipo >= 'A' && letraTipo <= 'L') {
+	            return "CALL";
+	        } else if (letraTipo >= 'M' && letraTipo <= 'X') {
+	            return "PUT";
+	        } else {
+	            return "Tipo Desconhecido";
+	        }
+	    }
 }

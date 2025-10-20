@@ -137,11 +137,6 @@ public abstract class BaseRelatorio {
     	Acao acao = new AcaoDAO().obterAcaoPorId(ac.getId());
 	    List<Opcao> opcoes =  new OpcaoDAO().obterOpcoesPorIdAcao(acao.getId());
     	Operacao operacao = new Operacao(acao,opcoes) ;
-    
-    	
-    	if(ac.getId()==2) {
-    		int a=0;
-    	}
         
     	try {
         	return

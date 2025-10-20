@@ -14,9 +14,9 @@ import model.ResultadoOperacao;
 public abstract class OperacaoAnalyticsBase {
 	
 	protected abstract double calcularPrecoVenda(Acao acao,
-			double strike, 
-			double cotacao, 
-			double precoVenda,
+		//	double strike, 
+		//	double cotacao, 
+		//	double precoVenda,
 			boolean isOperacaoAberta);
 	
 	public ResultadoOperacao sumarizaResultado(Operacao operacao, boolean isOperacaoAberta) {
@@ -50,11 +50,7 @@ public abstract class OperacaoAnalyticsBase {
 		/*
 		 * utiliza método concreto
 		 */
-        double precoVendaCalculo = calcularPrecoVenda(acao,
-        		strike, 
-        		cotacao, 
-        		acao.getPrecoVenda(), 
-        		isOperacaoAberta);
+        double precoVendaCalculo = calcularPrecoVenda(acao,isOperacaoAberta);
         /*         */
         
 		Double resultado = quantidade * (precoVendaCalculo - precoMedio);
