@@ -20,7 +20,7 @@ import javax.swing.JTextField;
 import dao.AcaoDAO;
 import model.Acao;
 import util.Utils;
-import view.FrmOperacoesConsolidadas;
+import view.FrmrRegistroOperacoes;
 import view.OperacoesListener;
 import javax.swing.border.BevelBorder;
 
@@ -35,12 +35,12 @@ public class PainelVenderAcao extends JPanel {
     private JLabel lblQuantidadeVenda;
     private JLabel lblPrecoCompraVenda;
     private OperacoesListener listener;
-    private FrmOperacoesConsolidadas frmOperacoes;
+    private FrmrRegistroOperacoes frmOperacoes;
 
     
     public PainelVenderAcao(OperacoesListener listener) {
     	this.listener = listener;
-    	this.frmOperacoes = (FrmOperacoesConsolidadas) listener; 
+    	this.frmOperacoes = (FrmrRegistroOperacoes) listener; 
     	
         this.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
         this.setLayout(new GridLayout(5, 1, 0, 0)); 

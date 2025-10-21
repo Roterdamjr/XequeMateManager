@@ -24,7 +24,7 @@ import dao.AcaoDAO;
 import dao.OpcaoDAO;
 import model.Acao;
 import util.Utils;
-import view.FrmOperacoesConsolidadas;
+import view.FrmrRegistroOperacoes;
 import view.OperacoesListener;
 
 public class PainelVenderOpcao extends JPanel {
@@ -41,11 +41,11 @@ public class PainelVenderOpcao extends JPanel {
     private JTextField txtOpcaoVenda; 
     private JTextField txtQuantidade;
     private OperacoesListener listener;
-    private FrmOperacoesConsolidadas frmOperacoes;
+    private FrmrRegistroOperacoes frmOperacoes;
     
     public PainelVenderOpcao(OperacoesListener listener) {
     	this.listener = listener;
-    	this.frmOperacoes = (FrmOperacoesConsolidadas) listener; 
+    	this.frmOperacoes = (FrmrRegistroOperacoes) listener; 
     	
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.setLayout(new GridLayout(7, 1, 0, 0));
@@ -81,17 +81,19 @@ public class PainelVenderOpcao extends JPanel {
 
         // 5. Strike
         JPanel panelStrike = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelStrike.add(new JLabel("Strike           "));
-        txtStrikeVendaOpcao = new JTextField(5);
-        panelStrike.add(txtStrikeVendaOpcao);
         this.add(panelStrike);
+        JLabel label = new JLabel("Preço Venda ");
+        panelStrike.add(label);
+        txtPrecoVendaOpcao = new JTextField(5);
+        panelStrike.add(txtPrecoVendaOpcao);
         
         // 6. Preço Venda
         JPanel panelPrecoVenda = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelPrecoVenda.add(new JLabel("Preço Venda "));
-        txtPrecoVendaOpcao = new JTextField(5);
-        panelPrecoVenda.add(txtPrecoVendaOpcao);
         this.add(panelPrecoVenda);
+        JLabel label_1 = new JLabel("Strike           ");
+        panelPrecoVenda.add(label_1);
+        txtStrikeVendaOpcao = new JTextField(5);
+        panelPrecoVenda.add(txtStrikeVendaOpcao);
         
         // 7. Botões
         JPanel panelBotoes = new JPanel();

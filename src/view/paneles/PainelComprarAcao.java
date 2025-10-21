@@ -8,7 +8,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import dao.AcaoDAO;
 import util.Utils;
-import view.FrmOperacoesConsolidadas;
+import view.FrmrRegistroOperacoes;
 import view.OperacoesListener;
 
 public class PainelComprarAcao extends JPanel {
@@ -20,11 +20,11 @@ public class PainelComprarAcao extends JPanel {
     private JTextField txtQuantidadeCompraAcao;
     private JTextField txtPrecoCompraAcao;
     private OperacoesListener listener;
-    private FrmOperacoesConsolidadas frmOperacoes;
+    private FrmrRegistroOperacoes frmOperacoes;
 
     public PainelComprarAcao(OperacoesListener listener) {
     	this.listener = listener;
-    	this.frmOperacoes = (FrmOperacoesConsolidadas) listener; 
+    	this.frmOperacoes = (FrmrRegistroOperacoes) listener; 
     	   	
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.setLayout(new GridLayout(6, 1, 0, 0)); // Aumentei para 6 para incluir o Tipo Estratégia

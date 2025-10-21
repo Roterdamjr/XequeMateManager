@@ -18,7 +18,7 @@ import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup; 
 import java.awt.Color;
 
-public class FrmOperacoesConsolidadas extends JInternalFrame implements OperacoesListener,ActionListener{
+public class FrmrRegistroOperacoes extends JInternalFrame implements OperacoesListener,ActionListener{
 
 	private static final long serialVersionUID = 1L;
 
@@ -40,7 +40,7 @@ public class FrmOperacoesConsolidadas extends JInternalFrame implements Operacoe
 	public String getTipoOperacao() {return tipoOperacao;}
 	public void setTipoOperacao(String tipoOperacao) {	this.tipoOperacao = tipoOperacao;}
 	
-    public FrmOperacoesConsolidadas() {
+    public FrmrRegistroOperacoes() {
         setTitle("Operações - Compra/Venda Unificada");
         setClosable(true);
         setMaximizable(true);

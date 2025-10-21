@@ -4,7 +4,7 @@ import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import view.FrmOperacoesConsolidadas;
+import view.FrmrRegistroOperacoes;
 
 public class TestOperacoesConsolidadas {
 
@@ -19,7 +19,7 @@ public class TestOperacoesConsolidadas {
             JDesktopPane desktopPane = new JDesktopPane();
             testFrame.setContentPane(desktopPane);
 
-            FrmOperacoesConsolidadas frame = new FrmOperacoesConsolidadas();
+            FrmrRegistroOperacoes frame = new FrmrRegistroOperacoes();
             
             frame.setSize(550, 450);
             frame.setLocation(20, 20); 

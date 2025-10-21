@@ -13,6 +13,7 @@ import model.OperacaoDividendo;
 import model.ResultadoOperacao;
 import model.TipoOperacaoEnum;
 import util.OperacaoAnalyticsDividendos3X;
+import util.OperacaoAnalyticsGanhaGanha;
 import util.Utils;
 
 
@@ -139,12 +140,18 @@ public abstract class BaseRelatorio {
     	Operacao operacao = new Operacao(acao,opcoes) ;
         
     	try {
-        	return
-				new OperacaoAnalyticsDividendos3X().sumarizaResultado(operacao,  isOperacaoAberta());
-        }catch (Exception e) {
-			System.out.println("Erro em obterResumoDaOperacao. Ativo: " + operacao.getAcao().getAtivo());
-			return null;
-		}
+    	    switch (tipoOperacao) {
+    	        case DIVIDENDO3X:
+    	            return new OperacaoAnalyticsDividendos3X().sumarizaResultado(operacao, isOperacaoAberta());
+    	        case GANHA_GANHA:
+    	            return new OperacaoAnalyticsGanhaGanha().sumarizaResultado(operacao, isOperacaoAberta());	            
+    	        default:
+    	            return null; 
+    	    }
+    	} catch (Exception e) {
+    	    System.out.println("Erro em obterResumoDaOperacao. Ativo: " + operacao.getAcao().getAtivo());
+    	    return null;
+    	}
     }
 
 

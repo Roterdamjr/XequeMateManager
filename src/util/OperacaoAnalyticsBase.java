@@ -14,14 +14,15 @@ import model.ResultadoOperacao;
 public abstract class OperacaoAnalyticsBase {
 	
 	protected abstract double calcularPrecoVenda(Acao acao,
-		//	double strike, 
-		//	double cotacao, 
-		//	double precoVenda,
 			boolean isOperacaoAberta);
 	
 	public ResultadoOperacao sumarizaResultado(Operacao operacao, boolean isOperacaoAberta) {
 		 
 		Acao acao = operacao.getAcao();
+		
+		if (acao.getId()==9) {
+			int a=1;
+		}
 		
 		List<Opcao> opcoes = operacao.getOpcoes();
 	    List<Dividendo> dividendos = new DividendoDAO().buscarPorAcao(acao.getId());

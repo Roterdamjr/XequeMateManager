@@ -17,7 +17,7 @@ import dao.DividendoDAO; // Presumindo que você terá um DAO para Dividendo
 import model.Acao;
 import model.Dividendo; // Presumindo que você terá um modelo Dividendo
 import util.Utils;
-import view.FrmOperacoesConsolidadas;
+import view.FrmrRegistroOperacoes;
 import view.OperacoesListener;
 
 public class PainelDividendo extends JPanel {
@@ -31,11 +31,11 @@ public class PainelDividendo extends JPanel {
     private JTextField txtValor;
     private Acao acaoSelecionada = null;
     private OperacoesListener listener;
-    private FrmOperacoesConsolidadas frmOperacoes;
+    private FrmrRegistroOperacoes frmOperacoes;
 
     public PainelDividendo(OperacoesListener listener) {
     	this.listener = listener;
-    	this.frmOperacoes = (FrmOperacoesConsolidadas) listener; 
+    	this.frmOperacoes = (FrmrRegistroOperacoes) listener; 
     	
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.setLayout(new GridLayout(3, 1, 0, 0));

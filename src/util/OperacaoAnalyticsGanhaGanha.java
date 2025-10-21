@@ -38,8 +38,10 @@ public class OperacaoAnalyticsGanhaGanha extends OperacaoAnalyticsBase{
    }
    
    public static void main(String[] args) {
+	   Acao acao = new Acao(44);
+	   acao.setAtivo("SLCE3");
 	   double pv =new OperacaoAnalyticsGanhaGanha().calcularPrecoVenda(
-			   new Acao(44),
+			   acao,
 			   true
 			   );
 	   

@@ -20,7 +20,7 @@ public class FrmPrincipal extends JFrame implements ActionListener {
 
 	private JDesktopPane desktopPane;
     
-    private FrmOperacoesConsolidadas frmOperacoesConsolidadas;
+    private FrmrRegistroOperacoes frmOperacoesConsolidadas;
     private FrmRelatorioOperacoesAbertas frmRelatorioAbertas; 
     private FrmRelatorioOperacoesFechadas frmRelatorioFechadas; 
     private FrmDesempenho frmDesempenho;
@@ -84,7 +84,7 @@ public class FrmPrincipal extends JFrame implements ActionListener {
     	} else {
     		String className = "";
     		if (e.getActionCommand().equals("Registrar")) {
-    			className = FrmOperacoesConsolidadas.class.getName();
+    			className = FrmrRegistroOperacoes.class.getName();
     		} else if (e.getActionCommand().equals("Operações Abertas")) { 
     			className = FrmRelatorioOperacoesAbertas.class.getName();
     		} else if (e.getActionCommand().equals("Operações Fechadas")) { 
@@ -100,9 +100,9 @@ public class FrmPrincipal extends JFrame implements ActionListener {
     private void abrirFrame(String className) {
         JInternalFrame frameToOpen = null;
 
-        if (className.equals(FrmOperacoesConsolidadas.class.getName())) {
+        if (className.equals(FrmrRegistroOperacoes.class.getName())) {
             if (frmOperacoesConsolidadas == null || frmOperacoesConsolidadas.isClosed()) {
-            	frmOperacoesConsolidadas = new FrmOperacoesConsolidadas();
+            	frmOperacoesConsolidadas = new FrmrRegistroOperacoes();
             	frmOperacoesConsolidadas.setLocation(50, 50);
             }
             frameToOpen = frmOperacoesConsolidadas;
