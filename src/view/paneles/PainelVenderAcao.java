@@ -85,6 +85,8 @@ public class PainelVenderAcao extends JPanel {
         
         // 5. Botões
         JPanel panelBotoes = new JPanel();
+        FlowLayout flowLayout = (FlowLayout) panelBotoes.getLayout();
+        flowLayout.setAlignment(FlowLayout.RIGHT);
         JButton btnSair = new JButton("Sair");
         btnSair.setFont(new Font("Tahoma", Font.BOLD, 14));
         // Ação de Sair deve ser tratada pelo pai, ou injetar um listener

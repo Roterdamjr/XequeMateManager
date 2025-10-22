@@ -57,6 +57,8 @@ public class PainelDividendo extends JPanel {
         
         // 3. Botões
         JPanel panelBotoes = new JPanel();
+        FlowLayout flowLayout = (FlowLayout) panelBotoes.getLayout();
+        flowLayout.setAlignment(FlowLayout.RIGHT);
         JButton btnSair = new JButton("Sair");
         btnSair.setFont(new Font("Tahoma", Font.BOLD, 14));
         panelBotoes.add(btnSair);

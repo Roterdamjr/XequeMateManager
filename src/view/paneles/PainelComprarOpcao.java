@@ -10,12 +10,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
@@ -24,6 +26,7 @@ import dao.OpcaoDAO;
 import model.Opcao;
 import util.Utils;
 import view.OperacoesListener;
+import javax.swing.border.BevelBorder;
 
 public class PainelComprarOpcao extends JPanel {
 
@@ -31,15 +34,39 @@ public class PainelComprarOpcao extends JPanel {
 	private final OpcaoDAO opcaoDAO = new OpcaoDAO();
     private JTextField txtDataCompraOpcao;
     private JComboBox<Opcao> cmbOpcaoCompra; 
-    JLabel lblPrecoVenda ;
+    private JTextField txtOpcaoCompraManual; 
+    JLabel lblPrecoVenda; 
+    private JTextField txtPrecoVenda; 
     private Opcao opcaoSelecionadaCompra = null;
-    private JTextField txtPrecoCompraOpcao;
-    private JLabel lblQuantidadeCompraOpcao;
+    private JTextField txtPrecoCompra;
+    private JLabel lblQuantidadeCompraOpcao; 
+    private JTextField txtQuantidadeCompraManual; 
     private OperacoesListener listener;
-
+    
+    // Controles de Modo
+    private JRadioButton rbRecompra;
+    private JRadioButton rbCompra;
+    private boolean isModoRecompra = true; // Flag para o modo atual
+    
     public PainelComprarOpcao() {
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
-        this.setLayout(new GridLayout(6, 1, 0, 0));
+        this.setLayout(new GridLayout(7, 1, 0, 0)); // Aumentado para 7 linhas
+        
+        // 0. Controles de Modo
+        JPanel panelModo = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelModo.add(new JLabel("Modo"));
+        
+        rbRecompra = new JRadioButton("Recompra");
+        rbCompra = new JRadioButton("Compra");
+        
+        ButtonGroup grupoModo = new ButtonGroup();
+        grupoModo.add(rbRecompra);
+        grupoModo.add(rbCompra);
+        rbRecompra.setSelected(true);
+        
+        panelModo.add(rbRecompra);
+        panelModo.add(rbCompra);
+        this.add(panelModo);
         
         // 1. Data
         JPanel panelData = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -50,39 +77,54 @@ public class PainelComprarOpcao extends JPanel {
         
         // 2. Opção
         JPanel panelOpcao = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelOpcao.add(new JLabel("Opção                 "));
+        panelOpcao.add(new JLabel("Opção                  "));
+        
+        // Componentes Alternativos para Opção
         cmbOpcaoCompra = new JComboBox<>();
         cmbOpcaoCompra.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        cmbOpcaoCompra.setPreferredSize(new JTextField(20).getPreferredSize()); // Ajusta o tamanho
+        
+        txtOpcaoCompraManual = new JTextField(8); // Modo B
+        
         panelOpcao.add(cmbOpcaoCompra);
+        panelOpcao.add(txtOpcaoCompraManual);
         this.add(panelOpcao);
         
-        // 3. Detalhes (Quantidade e Preço Venda da Opção - LABELS)
-        JPanel panelDetalhes = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelDetalhes.add(new JLabel("Quantidade:         "));
-        lblQuantidadeCompraOpcao = new JLabel("N/D");
-        panelDetalhes.add(lblQuantidadeCompraOpcao);
-        this.add(panelDetalhes);
+        // 3. Detalhes (Quantidade - LABELS/TEXTFIELD)
+        JPanel panelQuantidade = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelQuantidade.add(new JLabel("Quantidade:         "));
+        
+        // Componentes Alternativos para Quantidade
+        lblQuantidadeCompraOpcao = new JLabel("N/D"); // Modo A
+        txtQuantidadeCompraManual = new JTextField(7); // Modo B
+        
+        panelQuantidade.add(lblQuantidadeCompraOpcao);
+        panelQuantidade.add(txtQuantidadeCompraManual);
+        this.add(panelQuantidade);
 
         // 4. Preço Compra
         JPanel panelPrecoCompra = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelPrecoCompra.add(new JLabel("Preço Compra       "));
-        txtPrecoCompraOpcao = new JTextField(10);
-        panelPrecoCompra.add(txtPrecoCompraOpcao);
+        panelPrecoCompra.add(new JLabel("Preço Compra     "));
+        txtPrecoCompra = new JTextField(7);
+        panelPrecoCompra.add(txtPrecoCompra);
         this.add(panelPrecoCompra);
         
-        // 5. Botões
-        JPanel paneld = new JPanel();
-        FlowLayout flowLayout = (FlowLayout) paneld.getLayout();
-        flowLayout.setAlignment(FlowLayout.LEFT);
-        add(paneld);
+        // 5. Preço Venda (LABELS/TEXTFIELD)
+        JPanel panelPrecoVenda = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelPrecoVenda.add(new JLabel(" Preço Venda:      "));
         
-        JLabel lbl = new JLabel(" Preço Venda:        ");
-        paneld.add(lbl);
+        // Componentes Alternativos para Preço Venda
+        lblPrecoVenda = new JLabel("N/D"); // Modo A
+        txtPrecoVenda = new JTextField(10); // Modo B
         
-        lblPrecoVenda = new JLabel("N/D");
-        paneld.add(lblPrecoVenda);
+        panelPrecoVenda.add(lblPrecoVenda);
+        panelPrecoVenda.add(txtPrecoVenda);
+        this.add(panelPrecoVenda);
         
+        // 6. Botões
         JPanel panelBotoes = new JPanel();
+        FlowLayout flowLayout = (FlowLayout) panelBotoes.getLayout();
+        flowLayout.setAlignment(FlowLayout.RIGHT); // Centraliza os botões (opcional)
         add(panelBotoes);
         
         JButton btnSair = new JButton("Sair");
@@ -92,30 +134,78 @@ public class PainelComprarOpcao extends JPanel {
         JButton btnSalvar = new JButton("Salvar");
         btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 14));
         panelBotoes.add(btnSalvar);
-
+        
+        // ******************** Listeners ********************
         cmbOpcaoCompra.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
+                if (e.getStateChange() == ItemEvent.SELECTED && isModoRecompra) {
                     opcaoSelecionadaCompra = (Opcao) cmbOpcaoCompra.getSelectedItem();
                     atualizarLabels();
                 }
             }
         });
         
+        // Listener para os RadioButtons (Alternância de Modo)
+        rbRecompra.addActionListener(e -> setModo(true));
+        rbCompra.addActionListener(e -> setModo(false));
+        
         btnSalvar.addActionListener(e -> cmdSalvar_Click());
         
+        // Inicialização
+        setModo(rbRecompra.isSelected()); // Configura o modo inicial (A)
         limparPainel();
+    }
+    
+    /**
+     * Alterna entre o Modo A (Combo/Labels) e o Modo B (Textos Manuais).
+     * @param modoA Se true, define o Modo A. Se false, define o Modo B.
+     */
+    private void setModo(boolean isRecompra) {
+        this.isModoRecompra = isRecompra;
+        
+        cmbOpcaoCompra.setVisible(isRecompra);
+        txtOpcaoCompraManual.setVisible(!isRecompra);
+
+        lblQuantidadeCompraOpcao.setVisible(isRecompra);
+        txtQuantidadeCompraManual.setVisible(!isRecompra);
+
+        lblPrecoVenda.setVisible(isRecompra);
+        txtPrecoVenda.setVisible(!isRecompra);
+
+        if (isRecompra) {
+            carregarOpcoesCompra();
+            atualizarLabels();
+        } else {
+            // Limpa campos manuais quando muda para o modo B
+            txtOpcaoCompraManual.setText("");
+            txtQuantidadeCompraManual.setText("");
+            txtPrecoVenda.setText("");
+        }
+        
+        // Garante que o container se reorganize
+        this.revalidate();
+        this.repaint();
     }
 
     public void limparPainel() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         txtDataCompraOpcao.setText(dateFormat.format(new Date()));
-        txtPrecoCompraOpcao.setText("");
-        carregarOpcoesCompra();
+        txtPrecoCompra.setText("");
+        txtOpcaoCompraManual.setText("");
+        txtQuantidadeCompraManual.setText("");
+        txtPrecoVenda.setText("");
+        
+        if (isModoRecompra) {
+            carregarOpcoesCompra();
+        } else {
+            opcaoSelecionadaCompra = null;
+        }
         atualizarLabels();
     }
 
     public void carregarOpcoesCompra() {
+        if (!isModoRecompra) return; // Carrega apenas no Modo A
+
         try {
             List<Opcao> opcoes = opcaoDAO.obterOpcoesNaoCompradas(); 
             
@@ -139,6 +229,12 @@ public class PainelComprarOpcao extends JPanel {
     }
     
     private void atualizarLabels() {
+        if (!isModoRecompra) {
+            lblQuantidadeCompraOpcao.setText("N/D");
+            lblPrecoVenda.setText("N/D");
+            return;
+        }
+        
         if (opcaoSelecionadaCompra != null) {
             lblQuantidadeCompraOpcao.setText(String.valueOf(opcaoSelecionadaCompra.getQuantidade()));
             lblPrecoVenda.setText(String.format("R$ %.2f", opcaoSelecionadaCompra.getPrecoVenda())); 
@@ -167,62 +263,138 @@ public class PainelComprarOpcao extends JPanel {
 		}
     }
 
-    private void cmdSalvar_Click() {
-
-        if (opcaoSelecionadaCompra == null) {
+    private boolean validarCamposDeCompra(String opcaoManualText,
+		    								String quantidadeManualText ,
+		    								String precoManualText) {
+    	
+        if (opcaoManualText.isEmpty()) {
             JOptionPane.showMessageDialog(this, 
-                "Nenhuma Opção selecionada para compra.", 
-                "Erro de Seleção", 
+                "O campo Opção deve ser preenchido no Modo B.", 
+                "Erro de Validação", 
                 JOptionPane.INFORMATION_MESSAGE);
-            return; 
+            txtOpcaoCompraManual.requestFocusInWindow();
+            return false;
         }
+        
+        if (quantidadeManualText.isEmpty() || !Utils.isNumeric(quantidadeManualText)) {
+             JOptionPane.showMessageDialog(this, 
+                "O campo Quantidade deve ser preenchido corretamente com um valor numérico.", 
+                "Erro de Validação", 
+                JOptionPane.INFORMATION_MESSAGE);
+             txtQuantidadeCompraManual.requestFocusInWindow();
+             return false ;
+        }
+        
+        if (precoManualText.isEmpty() || !Utils.isNumeric(precoManualText.replace(",", "."))) {
+             JOptionPane.showMessageDialog(this, 
+                "O campo Preço Venda deve ser preenchido corretamente com um valor numérico.", 
+                "Erro de Validação", 
+                JOptionPane.INFORMATION_MESSAGE);
+             txtPrecoVenda.requestFocusInWindow();
+             
+             return false;
+        }
+        return true;
+    }
+    
+    private void cmdSalvar_Click() {
         
         if (!validarData()) return;
 
-        String precoCompraText = txtPrecoCompraOpcao.getText().trim();
-
-        if (precoCompraText.isEmpty() || !Utils.isNumeric(precoCompraText)) {
+        String precoCompraText = txtPrecoCompra.getText().trim();
+        
+        if (precoCompraText.isEmpty() || !Utils.isNumeric(precoCompraText.replace(",", "."))) {
             JOptionPane.showMessageDialog(this, 
 						                "O campo Preço Compra deve ser preenchido corretamente com um valor numérico.", 
 						                "Erro de Validação", 
 						                JOptionPane.INFORMATION_MESSAGE);
             
-            txtPrecoCompraOpcao.requestFocusInWindow();
+            txtPrecoCompra.requestFocusInWindow();
             return; 
         }
-
+        
         try {
             double precoCompraDouble = Double.parseDouble(precoCompraText.replace(",", "."));
-  
-            opcaoDAO.comprarOpcao(opcaoSelecionadaCompra.getId(), 
-            					txtDataCompraOpcao.getText().trim(), 
-            					precoCompraDouble);
-            
-            JOptionPane.showMessageDialog(this, 
+
+            if (isModoRecompra) {
+               
+                opcaoDAO.recomprarOpcao(opcaoSelecionadaCompra.getId(), 
+				    					txtDataCompraOpcao.getText().trim(), 
+				    					precoCompraDouble);
+                
+                JOptionPane.showMessageDialog(this, 
 					            		"Opção inserida com sucesso!", 
 					            		"Sucesso", 
 					            		JOptionPane.INFORMATION_MESSAGE);
             
-            limparPainel();
+                limparPainel();
+                
+                if (listener != null) {
+                    listener.onOperacaoSalvaSucesso();
+                }
             
-            carregarOpcoesCompra();
-            
-            if (listener != null) {
-                listener.onOperacaoSalvaSucesso();
-            }
+            }else{            
+            	// --- Modo Compra---
 
+	            
+                String opcaoManualText = txtOpcaoCompraManual.getText().trim();
+                String quantidadeManualText = txtQuantidadeCompraManual.getText().trim();
+                String precoCompraManualText = txtPrecoCompra.getText().trim();
+ 
+	            if (!validarCamposDeCompra(opcaoManualText, quantidadeManualText,precoCompraManualText ))
+                	return;
+	            
+	           	double precoCompraManualDouble = Double.parseDouble(txtPrecoCompra.replace(",", "."));
+	            int quantidadeManualInt = Integer.parseInt(quantidadeManualText);        
+                
+
+/*
+                opcaoDAO.comprarOpcao( idAcao, 
+                		txtDataCompraOpcao.getText().trim(), 
+                		opcaoManualText, 
+                		quantidadeManualInt,
+						String strike,
+						precoCompraDouble
+	            		);
+	            		*/
+                /*
+                double precoVendaManualDouble = Double.parseDouble(precoVendaManualText.replace(",", "."));
+                int quantidadeManualInt = Integer.parseInt(quantidadeManualText);
+                
+                idOpcao = opcaoDAO.criarNovaOpcaoEComprar(
+                                opcaoManualText,
+                                quantidadeManualInt,
+                                precoVendaManualDouble,
+                                txtDataCompraOpcao.getText().trim(),
+                                precoCompraDouble);
+                */
+               
+                 JOptionPane.showMessageDialog(this, 
+                    "Implementação do Salvar no Modo B (Opção Manual) pendente no OpcaoDAO.", 
+                    "Aviso", 
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+                
+            }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, 
                 "Erro ao converter o preço. Use formato numérico.", 
                 "Erro de Formato", 
                 JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+             JOptionPane.showMessageDialog(this, 
+                "Erro ao salvar a opção: " + e.getMessage(), 
+                "Erro de BD", 
+                JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    // O método main e o OperacoesListener foram omitidos para brevidade, mas devem permanecer.
     public static void main(String[] args) {
         // Usa a Event-Dispatch Thread (EDT) para garantir a segurança no Swing
         SwingUtilities.invokeLater(() -> {
             // 1. Cria a janela principal
-            JFrame frame = new JFrame("Teste Visual PainelVenderOpcao");
+            JFrame frame = new JFrame("Teste Visual PainelComprarOpcao - Modos A/B");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
             PainelComprarOpcao painel = new PainelComprarOpcao();

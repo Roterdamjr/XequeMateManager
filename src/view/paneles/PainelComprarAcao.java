@@ -59,6 +59,8 @@ public class PainelComprarAcao extends JPanel {
         
         // 5. Botões
         JPanel panelBotoes = new JPanel();
+        FlowLayout flowLayout = (FlowLayout) panelBotoes.getLayout();
+        flowLayout.setAlignment(FlowLayout.RIGHT);
         JButton btnSair = new JButton("Sair");
         btnSair.setFont(new Font("Tahoma", Font.BOLD, 14));
         btnSair.addActionListener(e -> { 

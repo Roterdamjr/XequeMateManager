@@ -119,7 +119,7 @@ ORDER BY
     /**
      * Registra a compra de uma opção existente.
      */
-    public void comprarOpcao(int id, String dataCompra, double precoCompra) {
+    public void recomprarOpcao(int id, String dataCompra, double precoCompra) {
         String sql = "UPDATE TB_OPCAO SET data_compra = ?, preco_compra = ? WHERE id = ?";
 
         try (Connection conn = DatabaseManager.connect();
@@ -134,6 +134,7 @@ ORDER BY
             System.out.println("Erro ao comprar opção: " + e.getMessage());
         }
     }
+    
     public void venderOpcao(int idAcao,  String dataVenda,String opcao, String quantidade,
     						String strike,double precoVenda) {
     	
@@ -161,6 +162,36 @@ ORDER BY
         }
     }
     
+    public void comprarOpcao(int idAcao, 
+    						String dataCompra, 
+    						String opcao, 
+    						String quantidade,
+							String strike,
+							double precoCompra) {
+
+		String sql = "INSERT INTO TB_OPCAO (id_acao, data_compra, opcao, quantidade, "
+					+ "strike, preco_compra) VALUES (?, ?, ?, ?, ?, ?)";
+		
+		try (Connection conn = DatabaseManager.connect();
+			PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			
+			// Tratamento de tipos para o banco de dados
+			double quantidadeDouble = Double.parseDouble(quantidade.replace(",", "."));
+			double strikeDouble = Double.parseDouble(strike.replace(",", "."));
+			
+			pstmt.setInt(1, idAcao);
+			pstmt.setString(2, dataCompra);
+			pstmt.setString(3, opcao);
+			pstmt.setDouble(4, quantidadeDouble);
+			pstmt.setDouble(5, strikeDouble);
+			pstmt.setDouble(6, precoCompra); 
+			
+			pstmt.executeUpdate();
+		
+		} catch (SQLException e) {
+			System.out.println("Erro ao vender/inserir opção: " + e.getMessage());
+		}
+}
 
      /**
       * Retorna o valor de 'strike' da última opção vendida pertencente a uma Ação específica.
