@@ -6,10 +6,12 @@ import java.awt.GridLayout;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import dao.AcaoDAO;
@@ -21,7 +23,6 @@ import view.FrmrRegistroOperacoes;
 import view.OperacoesListener;
 
 public class PainelDividendo extends JPanel {
-
 
 	private static final long serialVersionUID = 1L;
 	private final AcaoDAO acaoDAO = new AcaoDAO();
@@ -68,6 +69,14 @@ public class PainelDividendo extends JPanel {
         btnSalvar.addActionListener(e -> cmdSalvar_Click());
         panelBotoes.add(btnSalvar);
         this.add(panelBotoes);
+        
+        btnSair.addActionListener(e -> {
+            // Obtém o Frame (Janela) que contém este painel
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            if (topFrame != null) {
+                topFrame.dispose(); // Fecha a janela
+            }
+        });
         
         limparPainel();
     }

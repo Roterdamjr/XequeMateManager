@@ -15,30 +15,6 @@ public class OpcaoDAO {
      * O campo data_compra IS NULL indica que a opção está disponível para compra.
      */
     public List<Opcao> obterOpcoesNaoCompradas() {
-
-/*
- * SELECT
-  T1.id,
-  T1.opcao,
-  T1.data_venda,
-  T1.quantidade,
-  T1.preco_venda,
-  T1.strike,
-  T2.ativo AS ativo_acao
-FROM TB_OPCAO AS T1
-JOIN TB_ACAO AS T2
-  ON T1.id_acao = T2.id
-WHERE
-  T2.data_venda IS  NULL 
-  and tipo_operacao='DIV'
-GROUP BY
-  T2.ativo
-HAVING
-  SUBSTR(T1.data_venda, 7, 4) || '-' || SUBSTR(T1.data_venda, 4, 2) || '-' || SUBSTR(T1.data_venda, 1, 2) =
-  MAX(SUBSTR(T1.data_venda, 7, 4) || '-' || SUBSTR(T1.data_venda, 4, 2) || '-' || SUBSTR(T1.data_venda, 1, 2))
-ORDER BY
-  T2.ativo;
- */
     	
         String sql = "SELECT\r\n"
         		+ "  T1.id,\r\n"

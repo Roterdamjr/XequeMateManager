@@ -11,11 +11,12 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
+import javax.swing.SwingUtilities;
 
 import dao.AcaoDAO;
 import model.Acao;
@@ -99,6 +100,14 @@ public class PainelVenderAcao extends JPanel {
 
         panelBotoes.add(btnSalvar);
         this.add(panelBotoes);
+        
+        btnSair.addActionListener(e -> {
+            // Obtém o Frame (Janela) que contém este painel
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            if (topFrame != null) {
+                topFrame.dispose(); // Fecha a janela
+            }
+        });
 
         // Listener para o ComboBox (ItemListener migrado de FrmVenderAcao.java)
         cmbAcaoVenda.addItemListener(new ItemListener() {

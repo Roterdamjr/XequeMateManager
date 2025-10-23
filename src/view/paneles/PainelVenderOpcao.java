@@ -109,6 +109,14 @@ public class PainelVenderOpcao extends JPanel {
         panelBotoes.add(btnSalvar);
         this.add(panelBotoes);
         
+        btnSair.addActionListener(e -> {
+            // Obtém o Frame (Janela) que contém este painel
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            if (topFrame != null) {
+                topFrame.dispose(); // Fecha a janela
+            }
+        });
+        
         // Listener para o ComboBox (Ação)
         cmbAcaoOpcaoVenda.addItemListener(new ItemListener() {
             @Override

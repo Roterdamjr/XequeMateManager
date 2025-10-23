@@ -71,6 +71,14 @@ public class PainelComprarAcao extends JPanel {
         btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 14));
        
         btnSalvar.addActionListener(e -> cmdSalvar_Click());
+        
+        btnSair.addActionListener(e -> {
+            // Obtém o Frame (Janela) que contém este painel
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            if (topFrame != null) {
+                topFrame.dispose(); 
+            }
+        });
 
         panelBotoes.add(btnSalvar);
         this.add(panelBotoes);
