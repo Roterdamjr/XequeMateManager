@@ -120,7 +120,7 @@ public class FrmrRegistroOperacoes extends JInternalFrame implements OperacoesLi
     }
 
     private JPanel criarPainelComprarOpcao() {
-        painelComprarOpcao = new PainelComprarOpcao();
+        painelComprarOpcao = new PainelComprarOpcao(this);
         return painelComprarOpcao;
     }
     
