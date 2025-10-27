@@ -58,6 +58,10 @@ public class PainelComprarOpcao extends JPanel {
     
     private JPanel panelAcao; // Variável de instância adicionada
     
+    // ******************** CORREÇÃO: Variável de instância para o Painel de Preço Venda/Compra ********************
+    private JPanel panelPrecoCompra; 
+    // ******************** FIM CORREÇÃO ********************
+    
     public PainelComprarOpcao(OperacoesListener listener) {
     	this.listener = listener;
     	this.frmOperacoes = (FrmrRegistroOperacoes) listener; 
@@ -125,7 +129,7 @@ public class PainelComprarOpcao extends JPanel {
         panelQuantidade.add(txtQuantidadeCompraManual);
         this.add(panelQuantidade);
         
-        // 5. Strike (Antiga Posição 4)
+        // 5. Preço Compra (Antiga Posição 4) - Rótulo "Preço Compra"
         JPanel panelStrike = new JPanel(new FlowLayout(FlowLayout.LEFT));
         this.add(panelStrike);
         JLabel label_1 = new JLabel("Preço Compra     ");
@@ -133,8 +137,9 @@ public class PainelComprarOpcao extends JPanel {
         txtPrecoCompra = new JTextField(7);
         panelStrike.add(txtPrecoCompra);
         
-        // 6. Preço Compra (Antiga Posição 5)
-        JPanel panelPrecoCompra = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        // ******************** 6. Preço Venda (Antiga Posição 5) ********************
+        // CORREÇÃO: Atribuição à variável de instância
+        panelPrecoCompra = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
         this.add(panelPrecoCompra);
         JLabel label_2 = new JLabel(" Preço Venda:      ");
         panelPrecoCompra.add(label_2);
@@ -144,8 +149,9 @@ public class PainelComprarOpcao extends JPanel {
         panelPrecoCompra.add(lblPrecoVenda);
         txtPrecoVenda = new JTextField(10);
         panelPrecoCompra.add(txtPrecoVenda);
+        // ******************** FIM CORREÇÃO ********************
         
-        // 7. Preço Venda (LABELS/TEXTFIELD) (Antiga Posição 6)
+        // 7. Preço Venda (LABELS/TEXTFIELD) (Antiga Posição 6) - Rótulo "Strike"
         JPanel panelPrecoVenda = new JPanel(new FlowLayout(FlowLayout.LEFT));
         this.add(panelPrecoVenda);
         JLabel lblStrike_1 = new JLabel("Strike                    ");
@@ -239,6 +245,10 @@ public class PainelComprarOpcao extends JPanel {
         lblPrecoVenda.setVisible(isRecompra);
         txtPrecoVenda.setVisible(!isRecompra);
 
+        // ******************** CORREÇÃO: Oculta o painel inteiro de Preço Venda no Modo Compra ********************
+        panelPrecoCompra.setVisible(isRecompra); 
+        // ******************** FIM CORREÇÃO ********************
+        
         if (isRecompra) {
             carregarOpcoesCompra();
             atualizarLabels();
@@ -262,7 +272,7 @@ public class PainelComprarOpcao extends JPanel {
         txtDataCompraOpcao.setText(dateFormat.format(new Date()));
         txtPrecoCompra.setText("");
         txtOpcaoCompraManual.setText("");
-        txtQuantidadeCompraManual.setText("");
+        txtQuantidadeCompraManual.setText("100");
         txtStrike.setText(""); // Limpa Strike
         txtPrecoVenda.setText("");
         
@@ -401,6 +411,9 @@ public class PainelComprarOpcao extends JPanel {
              return false;
         }
         
+        // ******************** Não é necessário validar Preço Venda no Modo Compra (já que o painel será ocultado) ********************
+        // A Lógica para Preço Venda manual no Modo Compra (se você decidir reexibi-lo):
+        /*
         if (precoVendaManualText.isEmpty() || !Utils.isNumeric(precoVendaManualText.replace(",", "."))) {
              JOptionPane.showMessageDialog(this, 
                 "O campo Preço Venda deve ser preenchido corretamente com um valor numérico.", 
@@ -410,6 +423,9 @@ public class PainelComprarOpcao extends JPanel {
              
              return false;
         }
+        */
+        // ******************** FIM ********************
+        
         return true;
     }
     
@@ -464,29 +480,30 @@ public class PainelComprarOpcao extends JPanel {
                 String quantidadeManualText = txtQuantidadeCompraManual.getText().trim();
                 String strikeText = txtStrike.getText().trim(); // Novo campo
                 String precoVendaManualText = txtPrecoVenda.getText().trim(); // Preço Venda no Modo Compra
-                
+
 	            if (!validarCamposDeCompra(opcaoManualText, quantidadeManualText, strikeText, precoVendaManualText))
                 	return;
 
-	           	double precoVendaManualDouble = Double.parseDouble(precoVendaManualText.replace(",", "."));
-	           	double strikeDouble = Double.parseDouble(strikeText.replace(",", ".")); // Novo parse
-	           	
-	            int quantidadeManualInt = Integer.parseInt(quantidadeManualText);        
 	            int idAcaoBase = acaoSelecionadaOpcaoCompra.getId(); // Captura o ID da Ação selecionada
-
 	            
                 opcaoDAO.comprarOpcao( idAcaoBase, // Usa o ID da Ação selecionada
                 		txtDataCompraOpcao.getText().trim(), 
                 		opcaoManualText, 
                 		quantidadeManualText,
                 		strikeText, 
-						precoVendaManualDouble
+                		precoCompraDouble
 	            		);
 
                 JOptionPane.showMessageDialog(this, 
 	            		"Opção lançada com sucesso!", 
 	            		"Sucesso", 
 	            		JOptionPane.INFORMATION_MESSAGE);
+                
+                limparPainel();
+                
+                if (listener != null) {
+                    listener.onOperacaoSalvaSucesso();
+                }
                 
                 return;
                 

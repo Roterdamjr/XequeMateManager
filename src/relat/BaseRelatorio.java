@@ -14,6 +14,7 @@ import model.ResultadoOperacao;
 import model.TipoOperacaoEnum;
 import util.OperacaoAnalyticsDividendos3X;
 import util.OperacaoAnalyticsGanhaGanha;
+import util.OperacaoAnalyticsTresPraUm;
 import util.Utils;
 
 
@@ -65,10 +66,13 @@ public abstract class BaseRelatorio {
 
         for (Acao acao : acoes) {
             ResultadoOperacao resultadoOperacao = calcularResultado(acao); 
-
+if(resultadoOperacao == null) {
+	System.out.println(acao.getId()+ ","+acao);
+}
             double investimento = resultadoOperacao.getPrecoCompraAcao() * acao.getQuantidade();
             double resultado = resultadoOperacao.getResultado();
             double retornoPercentualTotal = resultado / investimento * 100;
+
             
             String cabecalho1 = String.format(CABECALHO_1,
                     acao.getAtivo(),
@@ -135,6 +139,9 @@ public abstract class BaseRelatorio {
     }
     
     private ResultadoOperacao calcularResultado(Acao ac) {
+    	if(ac.getId()==47) {
+    		int a =1;
+    	}
     	Acao acao = new AcaoDAO().obterAcaoPorId(ac.getId());
 	    List<Opcao> opcoes =  new OpcaoDAO().obterOpcoesPorIdAcao(acao.getId());
     	Operacao operacao = new Operacao(acao,opcoes) ;
@@ -144,7 +151,9 @@ public abstract class BaseRelatorio {
     	        case DIVIDENDO3X:
     	            return new OperacaoAnalyticsDividendos3X().sumarizaResultado(operacao, isOperacaoAberta());
     	        case GANHA_GANHA:
-    	            return new OperacaoAnalyticsGanhaGanha().sumarizaResultado(operacao, isOperacaoAberta());	            
+    	            return new OperacaoAnalyticsGanhaGanha().sumarizaResultado(operacao, isOperacaoAberta());
+    	        case TRES_PRA_UM:
+    	        	return new OperacaoAnalyticsTresPraUm().sumarizaResultado(operacao, isOperacaoAberta());
     	        default:
     	            return null; 
     	    }

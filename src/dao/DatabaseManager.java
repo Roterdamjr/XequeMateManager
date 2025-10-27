@@ -6,10 +6,10 @@ import java.sql.SQLException;
 public class DatabaseManager {
 	//trabalho
    // private static final String DB_PATH = "jdbc:sqlite:C:/workspace/XequeMateManager/db/XequeMate.db";
-   private static final String DB_PATH = "jdbc:sqlite:C:/workspace/XequeMateManager/db/XequeMateDBTeste.db";
+   //private static final String DB_PATH = "jdbc:sqlite:C:/workspace/XequeMateManager/db/XequeMateDBTeste.db";
    
    //casa
- // private static final String DB_PATH = "jdbc:sqlite:C:\\Eclipse_worksapce\\XequeMateManager\\db\\XequeMate.db";
+private static final String DB_PATH = "jdbc:sqlite:C:\\Eclipse_worksapce\\XequeMateManager\\db\\XequeMate.db";
  // private static final String DB_PATH = "jdbc:sqlite:C:\\Eclipse_worksapce\\XequeMateManager\\db\\XequeMateDBTeste.db";
 
     public static Connection connect() {
