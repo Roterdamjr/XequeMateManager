@@ -205,7 +205,6 @@ public class PainelComprarOpcao extends JPanel {
         btnSalvar.addActionListener(e -> cmdSalvar_Click());
         
         btnSair.addActionListener(e -> {
-            // Obtém o Frame (Janela) que contém este painel
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             if (topFrame != null) {
                 topFrame.dispose(); // Fecha a janela
@@ -213,9 +212,18 @@ public class PainelComprarOpcao extends JPanel {
         });
         
         
-        // Inicialização
-        setModo(rbRecompra.isSelected()); // Configura o modo inicial (A)
+        // Inicialização   
+       
+        setModo(rbRecompra.isSelected()); 
         limparPainel();
+        
+        SwingUtilities.invokeLater(() -> {
+            // O getRootPane retorna null se o componente não estiver anexado a uma hierarquia de topo.
+            javax.swing.JRootPane rootPane = SwingUtilities.getRootPane(this);
+            if (rootPane != null) {
+                rootPane.setDefaultButton(btnSalvar);
+            }
+        });
     }
     
     /**

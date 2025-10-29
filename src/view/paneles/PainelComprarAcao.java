@@ -85,6 +85,14 @@ public class PainelComprarAcao extends JPanel {
 
         limparPainel();
         
+        SwingUtilities.invokeLater(() -> {
+            // O getRootPane retorna null se o componente não estiver anexado a uma hierarquia de topo.
+            javax.swing.JRootPane rootPane = SwingUtilities.getRootPane(this);
+            if (rootPane != null) {
+                rootPane.setDefaultButton(btnSalvar);
+            }
+        });
+        
     }
 
     

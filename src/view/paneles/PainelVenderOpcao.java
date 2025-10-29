@@ -127,8 +127,15 @@ public class PainelVenderOpcao extends JPanel {
                 }
             }
         });
-        
+
         limparPainel();
+        
+        SwingUtilities.invokeLater(() -> {
+            javax.swing.JRootPane rootPane = SwingUtilities.getRootPane(this);
+            if (rootPane != null) {
+                rootPane.setDefaultButton(btnSalvar);
+            }
+        });
     }
  
     public void limparPainel() {
