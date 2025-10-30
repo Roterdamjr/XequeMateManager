@@ -1,6 +1,5 @@
 package view;
 
-
 import util.Utils;
 import javax.swing.*;
 import dao.AcaoDAO;
@@ -18,7 +17,6 @@ public class FrmDesempenho extends JInternalFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JTextArea textAreaRelatorio;
-    TipoOperacaoEnum tipoOperacao = TipoOperacaoEnum.GANHA_GANHA;
 
     public FrmDesempenho() {
         super("Desempenho", true, true, true, true);
@@ -27,7 +25,12 @@ public class FrmDesempenho extends JInternalFrame {
         
         setupUI();
         
-        executarCarregamento() ;
+        textAreaRelatorio.setText(""); 
+        executarCarregamento(TipoOperacaoEnum.DIVIDENDO3X) ;
+        textAreaRelatorio.append("\n\n==========================================\n\n");
+        executarCarregamento(TipoOperacaoEnum.GANHA_GANHA) ;
+        textAreaRelatorio.append("\n\n==========================================\n\n");
+        executarCarregamento(TipoOperacaoEnum.TRES_PRA_UM) ;
     }
 
     private void setupUI() {
@@ -44,10 +47,9 @@ public class FrmDesempenho extends JInternalFrame {
         JPanel panelNorth = new JPanel(new FlowLayout(FlowLayout.LEFT));
         getContentPane().add(panelNorth, BorderLayout.NORTH);
         
-
     }
 
-    private void executarCarregamento() {
+    private void executarCarregamento(TipoOperacaoEnum tipoOperacao) {
 
 		List<Acao> acoes = new AcaoDAO().obterAcoesFechadas(tipoOperacao.getDbValue());
 		
@@ -64,6 +66,11 @@ public class FrmDesempenho extends JInternalFrame {
         totaisOrdenados.putAll(totaisPorMes);
         
 		List<String> linhas = new ArrayList<String>();
+		
+		// 1. Título do Relatório
+		linhas.add("RELATÓRIO: " + tipoOperacao.getDbValue());
+		linhas.add("-------------------------");
+		
 		double soma=0;
         for (Map.Entry<String, Double> entry : totaisOrdenados.entrySet()) {
             String mes = entry.getKey();
@@ -76,22 +83,28 @@ public class FrmDesempenho extends JInternalFrame {
         }
         
         linhas.add("-------------------------"); 
-        linhas.add( "Média : " +  
-                    Utils.formatarParaDuasDecimais(soma / totaisOrdenados.size() * 100)
-                    +"%"
-        );
-
+        
+        // Verifica se há dados para evitar divisão por zero
+        if (totaisOrdenados.size() > 0) {
+             linhas.add( "Média : " +  
+                        Utils.formatarParaDuasDecimais(soma / totaisOrdenados.size() * 100)
+                        +"%"
+            );
+        } else {
+             linhas.add("Média : 0.00%");
+             linhas.add("(Sem dados para este tipo de operação)");
+        }
+       
+        
         try {
-            textAreaRelatorio.setText(String.join("\n", linhas));
+  
+            textAreaRelatorio.append(String.join("\n", linhas));
         } catch (Exception e) {
-            textAreaRelatorio.setText("Erro ao carregar o relatório:\n" + e.getMessage());
+            textAreaRelatorio.append("\nErro ao carregar o relatório:\n" + e.getMessage());
             e.printStackTrace();
         }
     }
     
-    // =========================================================
-    // BLOCO DE CÓDIGO PARA TESTE (RUN AS JAVA APPLICATION)
-    // =========================================================
     public static void main(String[] args) {
         // Garante que a GUI seja construída no Event Dispatch Thread (EDT)
         SwingUtilities.invokeLater(() -> {
@@ -122,4 +135,5 @@ public class FrmDesempenho extends JInternalFrame {
             frame.setVisible(true);
         });
     }
+    
 }

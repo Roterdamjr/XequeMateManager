@@ -529,13 +529,11 @@ public class PainelComprarOpcao extends JPanel {
         }
     }
     public static void main(String[] args) {
-        // Usa a Event-Dispatch Thread (EDT) para garantir a segurança no Swing
+
         SwingUtilities.invokeLater(() -> {
-            // 1. Cria a janela principal
             JFrame frame = new JFrame("Teste Visual PainelComprarOpcao - Modos A/B");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            
-            // 2. Cria um Listener de teste (Mock)
+
             OperacoesListener mockListener = new OperacoesListener() {
                 // Implementação mínima para evitar NullPointerException
                 @Override

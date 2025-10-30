@@ -53,7 +53,7 @@ public class TesteRetorno {
 
 	 public static void main(String[] args) {
 
-		List<Acao> acoes = new AcaoDAO().obterAcoesFechadas("GAN");
+		List<Acao> acoes = new AcaoDAO().obterAcoesFechadas("3x1");
 		
 		List<Acao> acoesProcessadas = new ArrayList<>();
 		for (Acao acao : acoes) { 
