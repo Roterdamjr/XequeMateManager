@@ -50,7 +50,7 @@ import util.OperacaoAnalyticsGanhaGanha;
 import util.Utils;
 
 public class TesteRetorno {
-
+/**/
 	 public static void main(String[] args) {
 
 		List<Acao> acoes = new AcaoDAO().obterAcoesFechadas("3x1");
