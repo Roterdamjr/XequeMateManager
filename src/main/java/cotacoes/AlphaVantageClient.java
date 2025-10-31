@@ -1,7 +1,10 @@
-package test;
+package cotacoes;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import dao.AcaoDAO;
+import model.Acao;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -11,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.Arrays; // 💡 NOVO IMPORT
 
 public class AlphaVantageClient {
@@ -22,7 +26,10 @@ public class AlphaVantageClient {
     private static final OkHttpClient CLIENT = new OkHttpClient();
 
     public static void main(String[] args) {
-        List<String> ativos = Arrays.asList("PETR4.SA", "VALE3.SA", "ITSA4.SA");
+        
+    	//List<String> ativos = Arrays.asList("ABEV3.SA", "VALE3.SA", "ITSA4.SA");
+       
+        List<String> ativos =new AcaoDAO().obterNomeDeAcoesAbertas();
 
         System.out.println("Buscando cotações diárias para os ativos: " + ativos + "...");
         

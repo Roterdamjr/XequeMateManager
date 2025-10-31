@@ -43,7 +43,31 @@ public class AcaoDAO {
             System.out.println(e.getMessage());
         }
     }
+    
+    public List<String> obterNomeDeAcoesAbertas() {
+    	
+        String sql = "SELECT distinct  ativo "
+        		+ "FROM TB_ACAO WHERE data_venda IS NULL "
+        		+ " ORDER BY ativo";
+        
+        List<String> acoes = new ArrayList<>();
 
+        try (Connection conn = DatabaseManager.connect();
+        	PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Acao acao = new Acao();
+                acao.setAtivo(rs.getString("ativo"));
+                acoes.add(acao.getAtivo());
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return acoes;
+    }
+    
     public List<Acao> obterAcoesAbertas(String tipoOperacao) {
     	
         String sql = "SELECT id, ativo, quantidade, preco_compra, preco_venda,data_compra,data_venda "

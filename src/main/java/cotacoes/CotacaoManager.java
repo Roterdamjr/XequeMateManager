@@ -1,4 +1,4 @@
-package util;
+package cotacoes;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;

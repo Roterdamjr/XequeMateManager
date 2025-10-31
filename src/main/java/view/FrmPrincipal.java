@@ -12,7 +12,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import util.CotacaoManager;
+import cotacoes.CotacaoManager;
 
 public class FrmPrincipal extends JFrame implements ActionListener {
 
