@@ -2,10 +2,13 @@ package cotacoes;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dao.AcaoDAO;
+import dao.CotacaoDAO;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -15,62 +18,74 @@ public class BrapiClient {
 
     private static final String BRAPI_TOKEN = "pHLWGjXiKZqHXtXuge7cwR"; 
     private static final String BASE_URL = "https://brapi.dev/api/quote/";
+    private static final OkHttpClient CLIENT = new OkHttpClient();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final long DELAY_MS = 500; 
 
     public static void main(String[] args) {
-    	List<String> ativos =new AcaoDAO().obterNomeDeAcoesAbertas();
-    	for(String ativo:ativos) {
-    		processaUmAtivo(ativo);
-    	}
-    	
+    	System.out.println("inciaindo");
+        atualizarTodasCotacoes();
+        System.out.println("Fim do procedimento");
     }
     
-    private static void processaUmAtivo(String  ticket) {
-        System.out.println("Buscando cotação para " + ticket + " via brapi...");
+    public static void atualizarTodasCotacoes() {
+        List<String> ativos = new AcaoDAO().obterNomeDeAcoesAbertas();
+        Map<String, Double> cotacoesParaInserir = new TreeMap<>();
         
+        if (ativos == null || ativos.isEmpty()) {
+            return;
+        }
+
+        for (String ativo : ativos) {
+            processaUmAtivo(ativo, cotacoesParaInserir);
+  
+            try {
+                Thread.sleep(DELAY_MS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+
+        if (!cotacoesParaInserir.isEmpty()) {
+            new CotacaoDAO().limparEInserir(cotacoesParaInserir);
+        }
+    }
+
+    private static void processaUmAtivo(String ticket, Map<String, Double> cotacoesParaInserir) {
         String url = BASE_URL + ticket + "?token=" + BRAPI_TOKEN;
         
         try {
-            OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url(url)
                     .build();
 
-            try (Response response = client.newCall(request).execute()) {
+            try (Response response = CLIENT.newCall(request).execute()) {
                 if (!response.isSuccessful()) {
-                    throw new IOException("Erro na requisição: " + response.code() + " " + response.message());
+                    return; 
                 }
 
                 String jsonResponse = response.body().string();
-                processJson(jsonResponse);
+                parseJson(jsonResponse, cotacoesParaInserir);
             }
         } catch (IOException e) {
-            System.err.println("❌ Ocorreu um erro de I/O ou HTTP: " + e.getMessage());
+        	e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("❌ Ocorreu um erro inesperado: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
-    private static void processJson(String jsonResponse) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        
-        // Mapeia o JSON para o objeto de resposta principal
-        BrapiQuoteResponse response = mapper.readValue(jsonResponse, BrapiQuoteResponse.class);
+    private static void parseJson(String jsonResponse, Map<String, Double> cotacoesParaInserir) throws IOException {
+        BrapiQuoteResponse response = MAPPER.readValue(jsonResponse, BrapiQuoteResponse.class);
 
-        // 4. Extrai a cotação
         if (response.getResults() != null && !response.getResults().isEmpty()) {
-            QuoteData cotacao = response.getResults().get(0); // Pega o primeiro (e único) resultado
+            QuoteData cotacao = response.getResults().get(0); 
             
-            System.out.println("\n✅ Conexão BEM-SUCEDIDA e dados recebidos!");
-          //  System.out.println("-".repeat(40));
-            System.out.printf("  Ativo: %s (%s)%n", cotacao.getSymbol(), cotacao.getShortName());
-            System.out.printf("  Preço Atual: R$ %.2f%n", cotacao.getRegularMarketPrice());
-            System.out.printf("  Última Atualização: %s%n", cotacao.getRegularMarketTime());
-        //    System.out.println("-".repeat(40));
-            
-        } else {
-            System.err.println("\n⚠️ Não foi possível encontrar a cotação (o array 'results' está vazio).");
-            System.err.println("Verifique o token ou o código do ativo.");
+            String ativo = cotacao.getSymbol();
+            Double preco = cotacao.getRegularMarketPrice();
+
+            if (ativo != null && preco != null) {
+                cotacoesParaInserir.put(ativo, preco);
+            }
         }
     }
 }
