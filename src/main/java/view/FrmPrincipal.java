@@ -12,6 +12,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import cotacoes.BrapManager;
 import cotacoes.CotacaoManager;
 
 public class FrmPrincipal extends JFrame implements ActionListener {
@@ -140,10 +141,12 @@ public class FrmPrincipal extends JFrame implements ActionListener {
     
     private void atualizarCotacoes() {
     	CotacaoManager.atualizarCotacoesNoDatabase();
+    	String ret = BrapManager.atualizarCotacoesNoDatabase(); 
+
     	JOptionPane.showMessageDialog(this, 
-    			"Cotações atualizadas com sucesso!", 
+    			ret, 
     			"Atualização Concluída", 
-    			JOptionPane.INFORMATION_MESSAGE);
+    			JOptionPane.INFORMATION_MESSAGE);   		
     }
 
     public static void main(String[] args) {
