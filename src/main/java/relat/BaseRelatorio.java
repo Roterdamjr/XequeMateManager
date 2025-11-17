@@ -13,6 +13,7 @@ import model.OperacaoDividendo;
 import model.ResultadoOperacao;
 import model.TipoOperacaoEnum;
 import util.OperacaoAnalyticsDividendos3X;
+import util.OperacaoAnalyticsEstategica;
 import util.OperacaoAnalyticsGanhaGanha;
 import util.OperacaoAnalyticsTresPraUm;
 import util.Utils;
@@ -66,9 +67,7 @@ public abstract class BaseRelatorio {
 
         for (Acao acao : acoes) {
             ResultadoOperacao resultadoOperacao = calcularResultado(acao); 
-if(resultadoOperacao == null) {
-	System.out.println(acao.getId()+ ","+acao);
-}
+
             double investimento = resultadoOperacao.getPrecoCompraAcao() * acao.getQuantidade();
             double resultado = resultadoOperacao.getResultado();
             double retornoPercentualTotal = resultado / investimento * 100;
@@ -154,6 +153,8 @@ if(resultadoOperacao == null) {
     	            return new OperacaoAnalyticsGanhaGanha().sumarizaResultado(operacao, isOperacaoAberta());
     	        case TRES_PRA_UM:
     	        	return new OperacaoAnalyticsTresPraUm().sumarizaResultado(operacao, isOperacaoAberta());
+    	        case ESTRATEGICA:
+    	        	return new OperacaoAnalyticsEstategica().sumarizaResultado(operacao, isOperacaoAberta());
     	        default:
     	            return null; 
     	    }

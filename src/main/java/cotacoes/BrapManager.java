@@ -47,6 +47,7 @@ public class BrapManager {
         }
 
         for (String ativo : ativos) {
+        	System.err.println("Atualizando...  " + ativo);
             String erro = processaUmAtivo(ativo, cotacoesParaInserir);
  
             if (erro != null) {

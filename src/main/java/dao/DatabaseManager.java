@@ -9,8 +9,8 @@ public class DatabaseManager {
    //private static final String DB_PATH = "jdbc:sqlite:C:/workspace/XequeMateManager/db/XequeMateDBTeste.db";
    
    //casa
-//private static final String DB_PATH = "jdbc:sqlite:C:\\Eclipse_worksapce\\XequeMateManager\\db\\XequeMate.db";
-  private static final String DB_PATH = "jdbc:sqlite:C:\\Eclipse_worksapce\\XequeMateManager\\db\\XequeMateDBTeste.db";
+private static final String DB_PATH = "jdbc:sqlite:db\\XequeMate.db";
+//  private static final String DB_PATH = "jdbc:sqlite:db\\XequeMateDBTeste.db";
 
     public static Connection connect() {
         Connection conn = null;

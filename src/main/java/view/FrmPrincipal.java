@@ -140,7 +140,8 @@ public class FrmPrincipal extends JFrame implements ActionListener {
     }
     
     private void atualizarCotacoes() {
-    	CotacaoManager.atualizarCotacoesNoDatabase();
+    	//CotacaoManager.atualizarCotacoesNoDatabase();
+    	
     	String ret = BrapManager.atualizarCotacoesNoDatabase(); 
 
     	JOptionPane.showMessageDialog(this, 

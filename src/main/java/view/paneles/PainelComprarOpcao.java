@@ -56,11 +56,8 @@ public class PainelComprarOpcao extends JPanel {
     private boolean isModoRecompra = true; // Flag para o modo atual
     private FrmrRegistroOperacoes frmOperacoes;
     
-    private JPanel panelAcao; // Variável de instância adicionada
-    
-    // ******************** CORREÇÃO: Variável de instância para o Painel de Preço Venda/Compra ********************
+    private JPanel panelAcao; 
     private JPanel panelPrecoCompra; 
-    // ******************** FIM CORREÇÃO ********************
     
     public PainelComprarOpcao(OperacoesListener listener) {
     	this.listener = listener;
@@ -475,8 +472,10 @@ public class PainelComprarOpcao extends JPanel {
             
             }else{            
             	// --- Modo Compra---
+            	String tipoOpeeracao = frmOperacoes.getTipoOperacao();
             	
-            	if (acaoSelecionadaOpcaoCompra == null) {
+            	
+            	if (acaoSelecionadaOpcaoCompra == null && tipoOpeeracao != "EST") {
                     JOptionPane.showMessageDialog(this, 
                         "Nenhuma Ação selecionada para a compra da Opção.", 
                         "Erro de Seleção", 
@@ -486,13 +485,16 @@ public class PainelComprarOpcao extends JPanel {
 
                 String opcaoManualText = txtOpcaoCompraManual.getText().trim();
                 String quantidadeManualText = txtQuantidadeCompraManual.getText().trim();
-                String strikeText = txtStrike.getText().trim(); // Novo campo
-                String precoVendaManualText = txtPrecoVenda.getText().trim(); // Preço Venda no Modo Compra
+                String strikeText = txtStrike.getText().trim(); 
+                String precoVendaManualText = txtPrecoVenda.getText().trim(); 
 
 	            if (!validarCamposDeCompra(opcaoManualText, quantidadeManualText, strikeText, precoVendaManualText))
                 	return;
 
-	            int idAcaoBase = acaoSelecionadaOpcaoCompra.getId(); // Captura o ID da Ação selecionada
+	            int idAcaoBase=0;
+	            if(tipoOpeeracao != "EST") {
+	            	idAcaoBase = acaoSelecionadaOpcaoCompra.getId(); // Captura o ID da Ação selecionada
+	            }
 	            
                 opcaoDAO.comprarOpcao( idAcaoBase, // Usa o ID da Ação selecionada
                 		txtDataCompraOpcao.getText().trim(), 
