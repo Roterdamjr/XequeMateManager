@@ -44,11 +44,10 @@ public class AcaoDAO {
         }
     }
     
-    public List<String> obterNomeDeAcoesAbertas() {
+    public List<String> obterNomeDeAcoes() {
     	
         String sql = "SELECT distinct  ativo "
-        		+ "FROM TB_ACAO WHERE data_venda IS NULL "
-        		+ " ORDER BY ativo";
+        		+ "FROM TB_ACAO  ORDER BY ativo";
         
         List<String> acoes = new ArrayList<>();
 

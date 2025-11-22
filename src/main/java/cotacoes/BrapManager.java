@@ -38,7 +38,7 @@ public class BrapManager {
     }
     
     public static String atualizarTodasCotacoes() {
-        List<String> ativos = new AcaoDAO().obterNomeDeAcoesAbertas();
+        List<String> ativos = new AcaoDAO().obterNomeDeAcoes();
         Map<String, Double> cotacoesParaInserir = new TreeMap<>();
         
         if (ativos == null || ativos.isEmpty()) {
