@@ -20,5 +20,8 @@ private static final String DB_PATH = "jdbc:sqlite:db\\XequeMate.db";
             System.out.println("Erro ao conectar com o banco de dados: " + e.getMessage());
         }
         return conn;
+        
+        
+        
     }
 }
