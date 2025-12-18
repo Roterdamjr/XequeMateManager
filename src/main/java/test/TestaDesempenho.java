@@ -19,13 +19,13 @@ public class TestaDesempenho {
 		        acoesProcessadas.add(acao);
 		    }
 		}
-		
-		Map<String, Double> totaisPorMes = Desempenho.calcularlDesempenhoMensal(acoesProcessadas);
+		/*
+		Desempenho.DesempenhoConsolidado resultado =  Desempenho.calcularlDesempenhoMensal(acoesProcessadas)  ;
         for (Map.Entry<String, Double> entry : totaisPorMes.entrySet()) {
             String mes = entry.getKey();
             Double valorTotal = entry.getValue();
             System.out.printf("  [ %s ] Total: %.4f%%%n", mes, valorTotal * 100);
-        }
+        }*/
    }
 
 }

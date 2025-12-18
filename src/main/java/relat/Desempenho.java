@@ -13,9 +13,11 @@ import util.OperacaoAnalyticsDividendos3X;
 import util.Utils;
 
 public class Desempenho {
-   public static Map<String, Double> calcularlDesempenhoMensal(List<Acao> acoes) {
+	
+   public  static DesempenhoConsolidado calcularlDesempenhoMensal(List<Acao> acoes) {
 
-        Map<String, Double> totaisPorMes = new HashMap<>();
+        Map<String, Double> totaisPorMesEmPercentual = new HashMap<>();
+        Map<String, Double> totaisPorMesEmValor = new HashMap<>();
 
         for (Acao acao : acoes) {
             List<Object[]> retornosIndividuais = calcularRetornoMensalPorAcao(acao);
@@ -23,11 +25,15 @@ public class Desempenho {
             for (Object[] par : retornosIndividuais) {
                 String mes = (String) par[0];
                 Double retorno = (Double) par[1];
+                Double retornoEmValor = (Double) par[2];
 
-                totaisPorMes.put(mes, totaisPorMes.getOrDefault(mes, 0.0) + retorno);
+                totaisPorMesEmPercentual.put(mes, totaisPorMesEmPercentual.getOrDefault(mes, 0.0) + retorno);
+                totaisPorMesEmValor.put(mes, totaisPorMesEmValor.getOrDefault(mes, 0.0) + retornoEmValor);
+                
+                System.out.println(mes + ", " +  acao.getAtivo()+ ", " + retornoEmValor);
             }
         }
-        return totaisPorMes;
+        return new DesempenhoConsolidado(totaisPorMesEmPercentual, totaisPorMesEmValor);
     }
 
     public static List<Object[]> calcularRetornoMensalPorAcao(Acao acao) {
@@ -65,12 +71,24 @@ public class Desempenho {
             Double retornoPercentual = ((double) qtDiasNoMes / totalDias) * retornoPercentualTotal;
             
             Double retornoEmValor =            ((double) qtDiasNoMes / totalDias) *  resultadoEmValor;
-            System.out.println(acao.getAtivo()+ ": " + retornoEmValor);
+            
             		
-            Object[] parMesValor = new Object[] { entry.getKey(), retornoPercentual };
-            retornoMensal.add(parMesValor);
+            Object[] linhaRetorno = new Object[] { 	entry.getKey(), 
+            										retornoPercentual ,
+            										retornoEmValor};
+            retornoMensal.add(linhaRetorno);
         }
         
         return retornoMensal;
+    }
+    
+    public static class DesempenhoConsolidado {
+        public final Map<String, Double> percentual;
+        public final Map<String, Double> valor;
+
+        public DesempenhoConsolidado(Map<String, Double> p, Map<String, Double> v) {
+            this.percentual = p;
+            this.valor = v;
+        }
     }
 }

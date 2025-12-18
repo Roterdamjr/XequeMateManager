@@ -51,54 +51,55 @@ public class FrmDesempenho extends JInternalFrame {
 
     private void executarCarregamento(TipoOperacaoEnum tipoOperacao) {
 
-		List<Acao> acoes = new AcaoDAO().obterAcoesFechadas(tipoOperacao.getDbValue());
-		
-		List<Acao> acoesProcessadas = new ArrayList<>();
-		for (Acao acao : acoes) { 
-		    if (acao != null) {
-		        acoesProcessadas.add(acao);
-		    }
-		}
-		
-		Map<String, Double> totaisPorMes = Desempenho.calcularlDesempenhoMensal(acoesProcessadas);
-		
-        Map<String, Double> totaisOrdenados = new TreeMap<>(Utils.MES_ANO_COMPARATOR);
-        totaisOrdenados.putAll(totaisPorMes);
+        List<Acao> acoes = new AcaoDAO().obterAcoesFechadas(tipoOperacao.getDbValue());
         
-		List<String> linhas = new ArrayList<String>();
-		
-		// 1. Título do Relatório
-		linhas.add("RELATÓRIO: " + tipoOperacao.getDbValue());
-		linhas.add("-------------------------");
-		
-		double soma=0;
+        List<Acao> acoesProcessadas = new ArrayList<>();
+        for (Acao acao : acoes) { 
+            if (acao != null) {
+                acoesProcessadas.add(acao);
+            }
+        }
+        
+        // 1. Chamada ajustada para receber o objeto consolidado
+        Desempenho.DesempenhoConsolidado resultado =  Desempenho.calcularlDesempenhoMensal(acoesProcessadas)  ;
+        
+        // 2. Extraímos apenas o mapa de valores
+        Map<String, Double> totaisPorMesEmValor = resultado.valor;
+        
+        // 3. Ordenação (mantendo sua lógica de TreeMap com Comparator)
+        Map<String, Double> totaisOrdenados = new TreeMap<>(Utils.MES_ANO_COMPARATOR);
+        totaisOrdenados.putAll(totaisPorMesEmValor);
+        
+        List<String> linhas = new ArrayList<String>();
+        
+        // Título do Relatório
+        linhas.add("RELATÓRIO FINANCEIRO: " + tipoOperacao.getDbValue());
+        linhas.add("-------------------------");
+        
+        double somaTotal = 0;
         for (Map.Entry<String, Double> entry : totaisOrdenados.entrySet()) {
             String mes = entry.getKey();
-            Double valorTotal = entry.getValue();
-            linhas.add( mes + ": " +  
-            			Utils.formatarParaDuasDecimais(valorTotal * 100)
-            			+"%"
-            );
-            soma+=valorTotal;
+            Double valorFinanceiro = entry.getValue();
+            
+            // Formatação para R$ (ajuste o sufixo conforme preferir)
+            linhas.add(mes + ": R$ " + Utils.formatarParaDuasDecimais(valorFinanceiro));
+            
+            somaTotal += valorFinanceiro;
         }
         
         linhas.add("-------------------------"); 
         
-        // Verifica se há dados para evitar divisão por zero
-        if (totaisOrdenados.size() > 0) {
-             linhas.add( "Média : " +  
-                        Utils.formatarParaDuasDecimais(soma / totaisOrdenados.size() * 100)
-                        +"%"
-            );
+        // Totais e Médias
+        if (!totaisOrdenados.isEmpty()) {
+             linhas.add("Soma Total: R$ " + Utils.formatarParaDuasDecimais(somaTotal));
+             linhas.add("Média Mensal: R$ " + Utils.formatarParaDuasDecimais(somaTotal / totaisOrdenados.size()));
         } else {
-             linhas.add("Média : 0.00%");
-             linhas.add("(Sem dados para este tipo de operação)");
+             linhas.add("Média : R$ 0.00");
+             linhas.add("(Sem dados financeiros para este tipo de operação)");
         }
-       
         
         try {
-  
-            textAreaRelatorio.append(String.join("\n", linhas));
+            textAreaRelatorio.append(String.join("\n", linhas) + "\n\n");
         } catch (Exception e) {
             textAreaRelatorio.append("\nErro ao carregar o relatório:\n" + e.getMessage());
             e.printStackTrace();
