@@ -64,6 +64,9 @@ public class Desempenho {
             int qtDiasNoMes = entry.getValue();
             Double retornoPercentual = ((double) qtDiasNoMes / totalDias) * retornoPercentualTotal;
             
+            Double retornoEmValor =            ((double) qtDiasNoMes / totalDias) *  resultadoEmValor;
+            System.out.println(acao.getAtivo()+ ": " + retornoEmValor);
+            		
             Object[] parMesValor = new Object[] { entry.getKey(), retornoPercentual };
             retornoMensal.add(parMesValor);
         }
