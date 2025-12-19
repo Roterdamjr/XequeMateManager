@@ -22,14 +22,21 @@ public class OperacaoAnalyticsTresPraUm extends OperacaoAnalyticsBase{
 			   strike_put = op.getStrike();
 		   }
 	   }
+	   
+	   double maximo = (strike_call > strike_put) ? strike_call : strike_put;
+	   double minimo = (strike_call < strike_put) ? strike_call : strike_put;
 
+		if(acao.getId()==58){
+			int a=1;
+			a++;
+		}
 		if (isOperacaoAberta){
-			if (cotacao > strike_call) {
-				return strike_call;
-			}else if (cotacao <= strike_call && cotacao >= strike_put) {
+			if (cotacao > maximo) {
+				return maximo;
+			}else if (cotacao <= maximo && cotacao >= minimo) {
 				return cotacao;
 			}else {
-				return strike_put;
+				return minimo;
 			}
 		} else {
 			return acao.getPrecoVenda();

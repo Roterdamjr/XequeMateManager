@@ -20,9 +20,7 @@ public abstract class OperacaoAnalyticsBase {
 		 
 		Acao acao = operacao.getAcao();
 		
-		if (acao.getId()==9) {
-			int a=1;
-		}
+
 		
 		List<Opcao> opcoes = operacao.getOpcoes();
 	    List<Dividendo> dividendos = new DividendoDAO().buscarPorAcao(acao.getId());
@@ -51,6 +49,7 @@ public abstract class OperacaoAnalyticsBase {
 		/*
 		 * utiliza método concreto
 		 */
+
         double precoVendaCalculo = calcularPrecoVenda(acao,isOperacaoAberta);
         /*         */
         
