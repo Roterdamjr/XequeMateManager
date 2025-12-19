@@ -14,27 +14,36 @@ import util.Utils;
 
 public class Desempenho {
 	
-   public  static DesempenhoConsolidado calcularlDesempenhoMensal(List<Acao> acoes) {
+	public static DesempenhoConsolidado calcularlDesempenhoMensal(List<Acao> acoes) {
+	    Map<String, Double> somaPercentualPorMes = new HashMap<>();
+	    Map<String, Double> totaisPorMesEmValor = new HashMap<>();
+	    Map<String, Integer> contagemPorMes = new HashMap<>();
 
-        Map<String, Double> totaisPorMesEmPercentual = new HashMap<>();
-        Map<String, Double> totaisPorMesEmValor = new HashMap<>();
+	    for (Acao acao : acoes) {
+	        List<Object[]> retornosIndividuais = calcularRetornoMensalPorAcao(acao);
+	        
+	        for (Object[] par : retornosIndividuais) {
+	            String mes = (String) par[0];
+	            Double retorno = (Double) par[1];
+	            Double retornoEmValor = (Double) par[2];
 
-        for (Acao acao : acoes) {
-            List<Object[]> retornosIndividuais = calcularRetornoMensalPorAcao(acao);
-            
-            for (Object[] par : retornosIndividuais) {
-                String mes = (String) par[0];
-                Double retorno = (Double) par[1];
-                Double retornoEmValor = (Double) par[2];
+	            somaPercentualPorMes.merge(mes, retorno, Double::sum);
+	            totaisPorMesEmValor.merge(mes, retornoEmValor, Double::sum);
 
-                totaisPorMesEmPercentual.put(mes, totaisPorMesEmPercentual.getOrDefault(mes, 0.0) + retorno);
-                totaisPorMesEmValor.put(mes, totaisPorMesEmValor.getOrDefault(mes, 0.0) + retornoEmValor);
-                
-                System.out.println(mes + ", " +  acao.getAtivo()+ ", " + retornoEmValor);
-            }
-        }
-        return new DesempenhoConsolidado(totaisPorMesEmPercentual, totaisPorMesEmValor);
-    }
+	            contagemPorMes.merge(mes, 1, Integer::sum);
+	            
+	            System.out.println(mes + "; " + acao.getAtivo() + "; " + retornoEmValor + ";" + retorno);
+	        }
+	    }
+
+	    Map<String, Double> mediaPercentualPorMes = new HashMap<>();
+	    somaPercentualPorMes.forEach((mes, soma) -> {
+	        double media = soma / contagemPorMes.get(mes);
+	        mediaPercentualPorMes.put(mes, media);
+	    });
+
+	    return new DesempenhoConsolidado(mediaPercentualPorMes, totaisPorMesEmValor);
+	}
 
     public static List<Object[]> calcularRetornoMensalPorAcao(Acao acao) {
     	/*

@@ -25,6 +25,7 @@ public class FrmPrincipal extends JFrame implements ActionListener {
     private FrmRelatorioOperacoesAbertas frmRelatorioAbertas; 
     private FrmRelatorioOperacoesFechadas frmRelatorioFechadas; 
     private FrmDesempenho frmDesempenho;
+    private FrmDesempenhoPercentual frmDesempenhoPercentual;
     
     public FrmPrincipal() {
         setTitle("XequeMate Investimentos - Principal");
@@ -66,7 +67,11 @@ public class FrmPrincipal extends JFrame implements ActionListener {
         
         JMenuItem itemDesempenho = new JMenuItem("Desempenho");
         menuRelatorios.add(itemDesempenho);
-        itemDesempenho.addActionListener(this);
+        
+     // Localize este bloco no seu método setupMenuBar()
+        JMenuItem mnuDesempenhoPercentual = new JMenuItem("Desempenho Percentual");
+        mnuDesempenhoPercentual.addActionListener(this); // ADICIONE ESTA LINHA
+        menuRelatorios.add(mnuDesempenhoPercentual);
         
         this.setJMenuBar(menuBar);
         
@@ -92,6 +97,8 @@ public class FrmPrincipal extends JFrame implements ActionListener {
     			className = FrmRelatorioOperacoesFechadas.class.getName();
     		} else if (e.getActionCommand().equals("Desempenho")) {
     			className = FrmDesempenho.class.getName();
+    		} else if (e.getActionCommand().equals("Desempenho Percentual")) {
+    			className = FrmDesempenhoPercentual.class.getName();
     		}
     		
     		abrirFrame(className);
@@ -122,7 +129,12 @@ public class FrmPrincipal extends JFrame implements ActionListener {
 	        if (frmDesempenho == null || frmDesempenho.isClosed()) {
 	        	frmDesempenho = new FrmDesempenho();
 	        }
-	        frameToOpen = frmDesempenho;        
+	        frameToOpen = frmDesempenho;   
+	    } else if (className.equals(FrmDesempenhoPercentual.class.getName())) {
+	        if (frmDesempenhoPercentual == null || frmDesempenhoPercentual.isClosed()) {
+	        	frmDesempenhoPercentual = new FrmDesempenhoPercentual();
+	        }
+	        frameToOpen = frmDesempenhoPercentual;  
 	    }
         
         

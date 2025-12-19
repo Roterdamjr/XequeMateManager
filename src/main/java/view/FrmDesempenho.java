@@ -50,7 +50,7 @@ public class FrmDesempenho extends JInternalFrame {
     }
 
     private void executarCarregamento(TipoOperacaoEnum tipoOperacao) {
-
+    	System.out.println(tipoOperacao);
         List<Acao> acoes = new AcaoDAO().obterAcoesFechadas(tipoOperacao.getDbValue());
         
         List<Acao> acoesProcessadas = new ArrayList<>();
@@ -59,11 +59,11 @@ public class FrmDesempenho extends JInternalFrame {
                 acoesProcessadas.add(acao);
             }
         }
-        
-        // 1. Chamada ajustada para receber o objeto consolidado
+        //DesempenhoConsolidado é uma tupla contendo 
+        // Em Reais (resultado.valor)
+        // Em Percentual (resultado.percentual)
         Desempenho.DesempenhoConsolidado resultado =  Desempenho.calcularlDesempenhoMensal(acoesProcessadas)  ;
-        
-        // 2. Extraímos apenas o mapa de valores
+
         Map<String, Double> totaisPorMesEmValor = resultado.valor;
         
         // 3. Ordenação (mantendo sua lógica de TreeMap com Comparator)
@@ -72,7 +72,6 @@ public class FrmDesempenho extends JInternalFrame {
         
         List<String> linhas = new ArrayList<String>();
         
-        // Título do Relatório
         linhas.add("RELATÓRIO FINANCEIRO: " + tipoOperacao.getDbValue());
         linhas.add("-------------------------");
         
@@ -80,8 +79,7 @@ public class FrmDesempenho extends JInternalFrame {
         for (Map.Entry<String, Double> entry : totaisOrdenados.entrySet()) {
             String mes = entry.getKey();
             Double valorFinanceiro = entry.getValue();
-            
-            // Formatação para R$ (ajuste o sufixo conforme preferir)
+ 
             linhas.add(mes + ": R$ " + Utils.formatarParaDuasDecimais(valorFinanceiro));
             
             somaTotal += valorFinanceiro;
