@@ -51,7 +51,7 @@ public class BrapManager {
             String erro = processaUmAtivo(ativo, cotacoesParaInserir);
  
             if (erro != null) {
-                return erro;
+            	continue;
             }
   
             try {
